@@ -1,19 +1,44 @@
 {
   "name": "@apollo-mock-operations/core",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.1",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/dts/index.d.ts",
   "author": "Frank Cooke",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build:cjs": "swc src -d dist/cjs --config-file ../../.swcrc -C module.type=commonjs",
+    "build:esm": "swc src -d dist/esm --config-file ../../.swcrc -C module.type=es6",
+    "build:ts": "tsc",
+    "build": "yarn clean && concurrently \"yarn build:cjs\" \"yarn build:esm\" \"yarn build:ts\"",
+    "clean": "rimraf dist",
+    "clean:deps": "rimraf node_modules",
+    "check:types": "tsc --project tsconfig.type.json",
+    "lint": "eslint src/**/*.ts"
+  },
   "devDependencies": {
-    "@types/react": "^17.0.39",
-    "typescript": "^4.5.5"
+    "@apollo/client": "^3.7.2",
+    "@types/react": "^18.0.26",
+    "graphql": "^16.6.0",
+    "react": "^18.2.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.9",
     "@graphql-tools/merge": "^8.2.3",
     "@graphql-tools/mock": "^8.5.2",
     "@graphql-tools/utils": "^8.6.2",
-    "graphql": "^16.3.0",
-    "react": "^17.0.2"
+    "deepmerge": "^4.2.2"
+  },
+  "peerDependencies": {
+    "@apollo/client": "3.*",
+    "graphql": "16.*",
+    "react": "17.*"
   }
 }

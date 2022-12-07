@@ -1,0 +1,92 @@
+.userContainer {
+  padding: 1rem;
+  letter-spacing: 0.0185rem;
+}
+
+.usersTitle {
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+.usersCodeBlock {
+  background-color: #f8f8f8;
+  padding: 0.875rem;
+  font-size: 0.75rem;
+}
+
+.formControl {
+  display: grid;
+  grid-template-columns: max-content;
+  margin-bottom: 1rem;
+}
+
+.formControl label {
+  margin-bottom: 0.375rem;
+}
+
+.formControl input {
+  padding: 0.5rem;
+  font-size: 16px;
+}
+
+.submitBtn {
+  border: none;
+  border-radius: 4px;
+  background-color: cornflowerblue;
+  padding: 0.5rem 0.75rem;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  padding-inline: 1.5rem;
+}
+
+.userGrid {
+  display: grid;
+  gap: 1rem;
+  margin-block-start: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(325px, 1fr));
+}
+
+.userCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d8d8d8;
+  border-radius: 3px;
+  padding: 1rem;
+  transition: box-shadow .2s ease-in-out;
+}
+
+.userCard:hover {
+  box-shadow: 0 1px 15px -1px rgba(0, 0, 0, 0.25);
+  transition: box-shadow .2s ease-in-out;
+}
+
+.userCard h3 {
+  width: fit-content;
+  margin: 0;
+  cursor: pointer;
+  transition: color .15s ease-in-out;
+}
+
+.userCard h3:hover {
+  color: cornflowerblue;
+  transition: color .15s ease-in-out;
+}
+
+.userCard > p {
+  margin-top: 0.175rem;
+  color: #6a6a6a;
+}
+
+.userCard button {
+  background-color: tomato;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  padding-inline: 1rem;
+  width: 100%;
+  margin-top: auto;
+}
