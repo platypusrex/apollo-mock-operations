@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.options.json",
+  "files": [],
+  "references": [
+    {
+      "path": "examples/server"
+    },
+    {
+      "path": "examples/with-apollo"
+    },
+    {
+      "path": "packages/core"
+    },
+    {
+      "path": "packages/graphql-codegen-plugin"
+    },
+    {
+      "path": "packages/storybook-addon"
+    }
+  ]
+}

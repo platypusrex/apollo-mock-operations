@@ -1,7 +1,10 @@
-import { graphql, GraphQLSchema, print } from 'graphql';
-import { ApolloError, ApolloLink, Observable } from '@apollo/client';
+import { graphql, print } from 'graphql';
+import type { GraphQLSchema } from 'graphql';
+import { ApolloLink, Observable } from '@apollo/client';
+import type { ApolloError } from '@apollo/client';
+import type { CreateLinkOptions } from '../types';
 import { delay } from './delay';
-import { CreateLinkOptions } from '../types';
+import { LOADING_ERROR_CODE } from './generateOperationLoadingError';
 
 export function createMockLink(
   schema: GraphQLSchema,
@@ -14,30 +17,39 @@ export function createMockLink(
   return new ApolloLink((operation) => {
     return new Observable((observer) => {
       const { query, operationName, variables } = operation;
+      const source = print(query);
       delay(delayMs)
-        .then(() => {
-          return graphql({
+        .then(() =>
+          graphql({
             schema,
-            source: print(query),
+            source,
             rootValue,
             contextValue: context,
             variableValues: variables,
-            operationName
-          });
-        })
-        .then((result) => {
-          const onResolved = options.onResolved;
-          onResolved && onResolved({
             operationName,
-            variables,
-            query: print(query),
-            result
           })
+        )
+        // @ts-ignore
+        .then((result) => {
+          const { onResolved } = options;
+          onResolved &&
+            onResolved({
+              operationName,
+              variables,
+              query: source,
+              result,
+            });
+
+          const loading = result.errors?.find(
+            (error) => error?.extensions?.code === LOADING_ERROR_CODE
+          );
+          if (loading) return {};
+
           const originalError = result?.errors?.[0].originalError as ApolloError;
           if (originalError) {
             const { graphQLErrors, networkError } = originalError ?? {};
-            graphQLErrors && observer.next({ errors: graphQLErrors})
-            networkError ? observer.error(networkError.message) : observer.error(originalError.message);
+            graphQLErrors?.length && observer.next({ errors: result?.errors });
+            networkError ? observer.error(networkError) : observer.error(originalError.message);
           } else {
             observer.next(result);
           }

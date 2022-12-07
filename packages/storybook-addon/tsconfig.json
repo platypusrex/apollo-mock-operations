@@ -1,29 +1,19 @@
 {
   "compilerOptions": {
-    "alwaysStrict": true,
-    "declaration": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "importHelpers": true,
-    "jsx": "react-jsx",
-    "lib": ["dom", "esnext"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "dist",
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
-    "target": "es5"
+    "declarationDir": "dist/dts",
+    "outDir": "dist/dts",
+    "rootDir": "src",
+    "emitDeclarationOnly": true
   },
-  "exclude": ["dist", "node_modules"],
-  "include": ["src"]
+  "exclude": [
+    "dist/dts",
+    "tests"
+  ],
+  "extends": "../../tsconfig.options.json",
+  "include": [
+    "src/**/*",
+    "types/**/*",
+    "../../types/**/*"
+  ],
+  "references": []
 }
