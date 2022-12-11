@@ -7,23 +7,20 @@ import { usersQuery } from '../../../gql';
 import { UserCard } from './UserCard';
 import styles from './Users.module.css';
 
-export interface UsersProps {
-  foo?: 'bar';
+interface UsersProps {
+  // prop that controls the @include directive on the user fragment
+  includeUserAddress?: boolean;
 }
 
-interface CreateUserFormValues {
-  name: string;
-  email: string;
-}
-const initialFormState: CreateUserFormValues = {
-  name: '',
-  email: '',
-};
-
-export const Users: React.FC<UsersProps> = () => {
-  const { values, onChange, reset } = useForm<CreateUserFormValues>(initialFormState);
+export const Users: React.FC<UsersProps> = ({ includeUserAddress = true }) => {
+  const { values, onChange, reset } = useForm<{ name: string; email: string; }>({
+    name: '',
+    email: '',
+  });
   const { book, loading: bookLoading } = useBook();
-  const { users, error, loading: usersLoading } = useUsers();
+  const { users, error, loading: usersLoading } = useUsers({
+    variables: { includeAddress: includeUserAddress },
+  });
 
   const { createUser, loading: submitting } = useCreateUser({
     onCompleted: () => {

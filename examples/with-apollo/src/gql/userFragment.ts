@@ -6,7 +6,7 @@ export const userFragment = gql`
     id
     name
     email
-    address {
+    address @include(if: $includeAddress) {
       ...Address
     }
   }

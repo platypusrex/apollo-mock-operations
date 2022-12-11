@@ -160,6 +160,7 @@ declare global {
 
   export type CreateUserMutationVariables = Exact<{
     input: CreateUserInput;
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
   }>;
 
   export type CreateUserMutation = {
@@ -181,6 +182,7 @@ declare global {
 
   export type DeleteUserMutationVariables = Exact<{
     id: Scalars['ID'];
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
   }>;
 
   export type DeleteUserMutation = {
@@ -216,6 +218,7 @@ declare global {
 
   export type UserQueryVariables = Exact<{
     id: Scalars['ID'];
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
   }>;
 
   export type UserQuery = {
@@ -235,7 +238,9 @@ declare global {
     } | null;
   };
 
-  export type UsersQueryVariables = Exact<{ [key: string]: never }>;
+  export type UsersQueryVariables = Exact<{
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
+  }>;
 
   export type UsersQuery = {
     __typename?: 'Query';
@@ -320,6 +325,7 @@ declare global {
 
   export type CreateUserMockOperationArgs = Exact<{
     input: CreateUserInput;
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
   }>;
 
   export type CreateUserMockOperationResult = {
@@ -345,6 +351,7 @@ declare global {
 
   export type DeleteUserMockOperationArgs = Exact<{
     id: Scalars['ID'];
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
   }>;
 
   export type DeleteUserMockOperationResult = {
@@ -370,6 +377,7 @@ declare global {
 
   export type UserMockOperationArgs = Exact<{
     id: Scalars['ID'];
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
   }>;
 
   export type UserMockOperationResult = {
@@ -390,7 +398,9 @@ declare global {
 
   export type UserMockOperation = ResolverType<UserMockOperationResult, UserMockOperationArgs>;
 
-  export type UsersMockOperationArgs = Exact<{ [key: string]: never }>;
+  export type UsersMockOperationArgs = Exact<{
+    includeAddress?: InputMaybe<Scalars['Boolean']>;
+  }>;
 
   export type UsersMockOperationResult = {
     users: Array<{

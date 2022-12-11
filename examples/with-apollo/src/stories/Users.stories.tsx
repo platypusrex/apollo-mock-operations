@@ -7,9 +7,12 @@ import { MockProvider } from '../lib/mocks';
 export default {
   title: 'Example/Users',
   component: Users,
+  args: { includeUserAddress: true },
 } as ComponentMeta<typeof Users>;
 
-const Template: StoryWithApollo<typeof MockProvider, typeof Users> = () => <Users />;
+const Template: StoryWithApollo<typeof MockProvider, typeof Users> = (props) => (
+  <Users {...props} />
+);
 
 export const Success = Template.bind({});
 
