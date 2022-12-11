@@ -9,7 +9,7 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "generate": "graphql-codegen --config codegen.yml",
-    "storybook": "DISABLE_ESLINT_PLUGIN=true concurrently \"start-storybook -p 6006 -s public\" \"yarn generate --watch\"",
+    "storybook": "DISABLE_ESLINT_PLUGIN=true start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
