@@ -11,7 +11,7 @@ mockBuilder.queryOperation('book', (_, { id }) => [
     result: null,
   },
   {
-    state: 'ERROR',
+    state: 'NETWORK_ERROR',
     result: { networkError: new Error('failed with 500') },
   },
   {

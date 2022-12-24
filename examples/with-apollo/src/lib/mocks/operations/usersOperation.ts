@@ -11,7 +11,7 @@ mockBuilder.queryOperation('users', [
     result: { loading: true },
   },
   {
-    state: 'ERROR',
+    state: 'NETWORK_ERROR',
     result: { networkError: new Error('Server responded with 500') },
   },
   {

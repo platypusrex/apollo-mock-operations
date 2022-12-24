@@ -24,7 +24,7 @@ mockBuilder.mutationOperation('createUser', (_, { input: { name, email } }) => [
     },
   },
   {
-    state: 'ERROR',
+    state: 'GQL_ERROR',
     result: {
       graphQLError: new GraphQLError('Error creating user', { extensions: { code: 'FUCK_STICK' } }),
     },

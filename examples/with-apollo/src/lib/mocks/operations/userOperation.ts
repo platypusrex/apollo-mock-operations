@@ -15,7 +15,7 @@ mockBuilder.queryOperation('user', (_, { id }) => [
     result: { networkError: new Error('Server responded with 500') },
   },
   {
-    state: 'ERROR',
+    state: 'GQL_ERROR',
     result: { graphQLError: new GraphQLError('Server responded with 404') },
   },
 ]);
