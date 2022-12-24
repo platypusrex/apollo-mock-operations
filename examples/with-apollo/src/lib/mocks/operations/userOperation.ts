@@ -12,10 +12,10 @@ mockBuilder.queryOperation('user', (_, { id }) => [
   },
   {
     state: 'NETWORK_ERROR',
-    result: { networkError: new Error('network error') },
+    result: { networkError: new Error('Server responded with 500') },
   },
   {
-    state: 'ERROR',
-    result: { graphQLErrors: [new GraphQLError('operation failed')] },
+    state: 'GQL_ERROR',
+    result: { graphQLError: new GraphQLError('Server responded with 404') },
   },
 ]);

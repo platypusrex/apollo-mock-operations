@@ -10,6 +10,23 @@
   margin: 0;
 }
 
+.userResponse {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.userContainer a {
+  color: deepskyblue;
+}
+
+.userContainer a:hover {
+  text-decoration: underline;
+}
+
 .bookGrid {
   display: grid;
   gap: 1rem;

@@ -2,7 +2,8 @@ import { mockBuilder } from './builder';
 import './operations';
 import './models';
 
-const { models, createProvider } = mockBuilder;
+export const { models } = mockBuilder;
 
-export const MockProvider = createProvider();
-export { models };
+export const MockProvider = mockBuilder.createProvider();
+export const Devtools = mockBuilder.createDevtools();
+export const mockLink = mockBuilder.createMockLink();

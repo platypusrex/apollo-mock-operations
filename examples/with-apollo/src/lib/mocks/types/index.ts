@@ -3,17 +3,17 @@ import { OperationModelType, OperationState } from '@apollo-mock-operations/core
 // Operation types
 type UsersOperationState = OperationState<
   UsersMockOperation,
-  'SUCCESS' | 'ERROR' | 'GQL_ERROR' | 'LOADING'
+  'SUCCESS' | 'NETWORK_ERROR' | 'GQL_ERROR' | 'LOADING'
 >;
 type UserOperationState = OperationState<
   UserMockOperation,
-  'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'ERROR'
+  'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'GQL_ERROR'
 >;
-type CreateUserOperationState = OperationState<CreateUserMockOperation, 'SUCCESS'>;
+type CreateUserOperationState = OperationState<CreateUserMockOperation, 'SUCCESS' | 'GQL_ERROR'>;
 type DeleteUserOperationState = OperationState<DeleteUserMockOperation, 'SUCCESS'>;
 type BookOperationState = OperationState<
   BookMockOperation,
-  'SUCCESS' | 'EMPTY' | 'ERROR' | 'LOADING'
+  'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'GQL_ERROR' | 'LOADING'
 >;
 type BooksByAuthorOperationState = OperationState<BooksByAuthorIdMockOperation, 'SUCCESS'>;
 

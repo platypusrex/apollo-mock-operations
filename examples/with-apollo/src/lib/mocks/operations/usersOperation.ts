@@ -11,11 +11,11 @@ mockBuilder.queryOperation('users', [
     result: { loading: true },
   },
   {
-    state: 'ERROR',
+    state: 'NETWORK_ERROR',
     result: { networkError: new Error('Server responded with 500') },
   },
   {
     state: 'GQL_ERROR',
-    result: { graphQLErrors: [new GraphQLError('Server responded with 403')] },
+    result: { graphQLError: new GraphQLError('Server responded with 403') },
   },
 ]);

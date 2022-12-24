@@ -45,6 +45,7 @@ GQLError.parameters = {
 export const FirstUserOnly = Template.bind({});
 FirstUserOnly.parameters = {
   apolloClient: {
+    operationState: { createUser: 'ERROR' },
     mergeOperations: ({ user }) => ({
       users: () => [user.models[0]],
     }),

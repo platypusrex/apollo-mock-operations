@@ -1,0 +1,118 @@
+.mock-devtools__icon {
+  display: inline-block;
+  vertical-align: -0.125em;
+  fill: currentcolor;
+  width: 1em;
+  height: 1em;
+  font-size: 1.875rem;
+  color: #fff;
+  transition: transform 0.2s ease-in-out;
+}
+
+.mock-devtools__icon.close {
+  transform: rotate(45deg);
+  transition: transform 0.2s ease-in-out;
+}
+
+.mock-devtools__button {
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  border: none;
+  box-shadow: 0 1px 10px -1px rgba(0,0,0,0.25);
+  background: #3f20ba;
+  z-index: 1;
+}
+
+.mock-devtools__button:hover {
+  background: #311c87;
+  transition: background 0.2s ease-in-out;
+}
+
+.mock-devtools__content {
+  transition: height 0.2s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateY(350px);
+  background: #fff;
+  border: 1px solid #d8d8d8;
+  overflow-y: scroll;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 0;
+  display: grid;
+}
+
+.mock-devtools__content.visible {
+  box-shadow: 0 0 18px -9px rgba(0,0,0,0.5);
+  height: 350px;
+  transform: translateY(0);
+}
+
+.mock-devtools__content-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #d8d8d8;
+  padding: 0.5rem 1rem;
+}
+
+.mock-devtools__content-header h1 {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.mock-devtools__content-body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 1rem;
+}
+
+.mock-devtools__content-body-query h2 {
+  margin: 0 0 0.875rem;
+  font-size: 0.875rem;
+}
+
+.mock-devtools__content-body-operation {
+  margin-block-end: 0.5rem;
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  grid-auto-flow: column;
+  width: fit-content;
+}
+
+.mock-devtools__content-body-operation p {
+  margin: 0 0 0.125rem;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mock-devtools__form-control {
+  display: flex;
+  align-items: center;
+  margin-block-end: 0.875rem;
+}
+
+.mock-devtools__form-control select {
+  width: fit-content;
+  padding: 0.175rem;
+}
+
+.mock-devtools__form-control input {
+  margin: 0 0.5rem 0 0;
+  padding: 0
+}
+
+.mock-devtools__form-control label {
+  font-size: 14px;
+  margin: 0 0.5rem 0.175rem 0;
+}
+
+.mock-devtools__content-footer {
+  padding: 26px;
+}

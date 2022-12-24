@@ -71,7 +71,7 @@ export class OperationModel<TModel extends OperationType<any, any>> {
   }: {
     data: ResolverReturnType<TModel[keyof TModel]>;
   }): ResolverReturnType<TModel[keyof TModel]> => {
-    this._models.set(this._models.size - 1, data);
+    this._models.set(this._models.size, data);
     return data;
   };
 

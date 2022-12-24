@@ -13,7 +13,7 @@ export const resolvers: Resolvers = {
   Mutation: {
     createUser: (_, { input: { name, email } }) => {
       const newUser = { id: String(userMap.size + 1), name, email };
-      userMap.set(newUser.id, newUser)
+      userMap.set(newUser.id, newUser);
       return newUser;
     },
     deleteUser: (_, { id }) => {
