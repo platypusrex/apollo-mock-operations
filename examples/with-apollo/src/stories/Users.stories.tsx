@@ -27,8 +27,8 @@ export const NetworkError = Template.bind({});
 NetworkError.parameters = {
   apolloClient: {
     operationState: {
-      users: 'ERROR',
-      book: 'ERROR',
+      users: 'NETWORK_ERROR',
+      book: 'NETWORK_ERROR',
     },
   },
 };
@@ -45,7 +45,7 @@ GQLError.parameters = {
 export const FirstUserOnly = Template.bind({});
 FirstUserOnly.parameters = {
   apolloClient: {
-    operationState: { createUser: 'ERROR' },
+    operationState: { createUser: 'GQL_ERROR' },
     mergeOperations: ({ user }) => ({
       users: () => [user.models[0]],
     }),
