@@ -60,7 +60,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
 
   const imports = `import { GraphQLError, GraphQLResolveInfo } from 'graphql';`;
   const headers = `
-export type GraphQLErrors = { graphQLErrors?: GraphQLError | GraphQLError[] };
+export type GraphqlError = { graphQLError?: GraphQLError };
 export type NetworkError = { networkError?: Error };
 export type OperationLoading = { loading?: boolean };
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
@@ -68,7 +68,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => Promise<TResult> | TResult | GraphQLErrors | NetworkError | OperationLoading;
+) => Promise<TResult> | TResult | GraphqlError | NetworkError | OperationLoading;
 
 type ResolverType<TResult, TArgs> = Record<keyof TResult, ResolverFn<TResult[keyof TResult], {}, {}, TArgs>>;  
   `;

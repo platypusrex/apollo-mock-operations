@@ -9373,6 +9373,11 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.1.tgz#26c8a3cee6cc05fbcf1e333cd2fc3e003326c0b5"
   integrity sha512-9iN1ka/9zmX1ZvLV9ewJYEk9h7RyRRtqdK0woXcqohu8EWIerfPUjYJPg0ULy0UqP7cslmdGc8xKDJcojlKiaw==
 
+next-merge-props@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/next-merge-props/-/next-merge-props-1.0.1.tgz#7698971b2bea27f6dcc893568e230c1fa8ed2347"
+  integrity sha512-1QZfP2dnvhANJCbGgBvtstyfE+a17pAYYIAXBesqTD7w6dU7IIqo1KE43NA7MbUv5jrrp2NyduaJpEZ3v2h6Zw==
+
 next@13.0.5:
   version "13.0.5"
   resolved "https://registry.yarnpkg.com/next/-/next-13.0.5.tgz#cddfd6804f84a21721da370e4425980876670173"
@@ -9398,10 +9403,10 @@ next@13.0.5:
     "@next/swc-win32-ia32-msvc" "13.0.5"
     "@next/swc-win32-x64-msvc" "13.0.5"
 
-nextjs-apollo-client@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/nextjs-apollo-client/-/nextjs-apollo-client-0.2.2.tgz#de2e31b892561caab932a8daf0403d6738d9ed89"
-  integrity sha512-kW9MJMSuI6dr6M8M9MC9GVzmFWP4FJS617OJK2YHyo4QTAp3Pcg5buHw2EE00AqfhgHqKuoJo9cDmHJFl63Egw==
+nextjs-apollo-client@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/nextjs-apollo-client/-/nextjs-apollo-client-0.3.0.tgz#78c3a5a038aa8b7d86f107925f61a7bdb5dc6928"
+  integrity sha512-9vBIKnADjInLBCyX8SywAECTQaApnTx1gGXzaidbNwopfgNncTZEXZ81vq33YiMM0EvyNAYsmgWDBT+dFNt9/Q==
   dependencies:
     deepmerge "^4.2.2"
     lodash-es "^4.17.21"

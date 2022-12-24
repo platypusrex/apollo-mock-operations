@@ -8,8 +8,8 @@ import {
   InMemoryCacheConfig,
   NormalizedCacheObject,
 } from '@apollo/client';
-import { OperationModel } from '../OperationModel';
 import { ReactNode } from 'react';
+import { OperationModel } from '../OperationModel';
 
 export type AnyObject<T = any> = Record<string, T>;
 
@@ -17,34 +17,35 @@ export type RequireAtLeastOne<T> = {
   [K in keyof T]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<keyof T, K>>>;
 }[keyof T];
 
-export type RequireOnlyOne<T, Keys extends keyof T = keyof T> =
-  Pick<T, Exclude<keyof T, Keys>>
-  & {
-  [K in Keys]-?:
-  Required<Pick<T, K>>
-  & Partial<Record<Exclude<Keys, K>, undefined>>
-}[Keys];
+export type RequireOnlyOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
+  {
+    [K in Keys]-?: Required<Pick<T, K>> & Partial<Record<Exclude<Keys, K>, undefined>>;
+  }[Keys];
 
 export type NonEmptyArray<T> = [T, ...T[]];
 
-type ExtractReturnTypeKeysByValue<T, V> =
-  { [K in keyof T]-?: T[K] extends V ? never : K }[keyof T]
+type ExtractReturnTypeKeysByValue<T, V> = { [K in keyof T]-?: T[K] extends V ? never : K }[keyof T];
 export type OmitNonPrimitive<T, V> = Pick<T, ExtractReturnTypeKeysByValue<T, V>>;
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type DeepPartial<T> = T extends Function
   ? T
   : T extends object
-    ? { [P in keyof T]?: DeepPartial<T[P]> }
-    : T;
+  ? { [P in keyof T]?: DeepPartial<T[P]> }
+  : T;
 
 export type WhereQuery<T extends OperationType<any, any>> = {
   where: RequireAtLeastOne<
     OmitNonPrimitive<
-      { [K in keyof Omit<ResolverReturnType<T[keyof T]>, '__typename'>]: ResolverReturnType<T[keyof T]>[K] },
+      {
+        [K in keyof Omit<ResolverReturnType<T[keyof T]>, '__typename'>]: ResolverReturnType<
+          T[keyof T]
+        >[K];
+      },
       Maybe<any[] | AnyObject>
     >
   >;
-}
+};
 
 export interface OperationMeta {
   query: string;
@@ -56,6 +57,7 @@ export interface OperationMeta {
 export interface CreateLinkOptions {
   delay?: number;
   onResolved?: (operationMeta: OperationMeta) => void;
+  loading?: boolean;
 }
 
 export interface LinkSchemaProps extends CreateLinkOptions {
@@ -79,7 +81,10 @@ type ClientOptions = Pick<
 
 type CacheOptions = Omit<InMemoryCacheConfig, 'addTypename'>;
 
-export interface MockProviderProps<TOperationState extends OperationState<any, any>, TModels = any> {
+export interface MockProviderProps<
+  TOperationState extends OperationState<any, any>,
+  TModels = any
+> {
   loading?: boolean;
   operationState?: RequireAtLeastOne<TOperationState['state']>;
   mergeOperations?:
@@ -109,15 +114,15 @@ export type CreateOperationState<
   TModels = any
 > =
   | ((
-  parent: Parameters<TMockOperation>[0],
-  args: Parameters<TMockOperation>[1],
-  context: Parameters<TMockOperation>[2],
-  info: Parameters<TMockOperation>[3]
-) => NonEmptyArray<OperationStateObject<TOperationState, ReturnType<TMockOperation>, TModels>>)
+      parent: Parameters<TMockOperation>[0],
+      args: Parameters<TMockOperation>[1],
+      context: Parameters<TMockOperation>[2],
+      info: Parameters<TMockOperation>[3]
+    ) => NonEmptyArray<OperationStateObject<TOperationState, ReturnType<TMockOperation>, TModels>>)
   | NonEmptyArray<OperationStateObject<TOperationState, ReturnType<TMockOperation>, TModels>>;
 
 // MockGQLOperations supporting types
-export type GraphQLErrors = { graphQLErrors?: GraphQLError | GraphQLError[] };
+export type GraphqlError = { graphQLError?: GraphQLError };
 export type NetworkError = { networkError?: Error };
 export type OperationLoading = { loading?: boolean };
 
@@ -126,7 +131,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => Promise<TResult> | TResult | GraphQLErrors | NetworkError | OperationLoading;
+) => Promise<TResult> | TResult | GraphqlError | NetworkError | OperationLoading;
 
 export type OperationType<TResult, TArgs> = Record<
   keyof TResult,
@@ -148,24 +153,18 @@ export type OperationModelType<TMockOperation extends OperationType<any, any>> =
   OperationModel<TMockOperation>
 >;
 
-export type ResolverReturnType<T extends (...args: any) => any> =
-  T extends (...args: any) => infer R
-    ? R extends
-      | GraphQLErrors
-      | NetworkError
-      | OperationLoading
-      | Promise<any>
-      ? never
-      : NonNullable<R>
-    : never;
+export type ResolverReturnType<T extends (...args: any) => any> = T extends (
+  ...args: any
+) => infer R
+  ? R extends GraphqlError | NetworkError | OperationLoading | Promise<any>
+    ? never
+    : NonNullable<R>
+  : never;
 
-export type ResolverReturnTypeTwo<T extends OperationType<any, any>> =
-  T[keyof T] extends (...args: any) => infer R
-    ? R extends
-      | GraphQLErrors
-      | NetworkError
-      | OperationLoading
-      | Promise<any>
-      ? never
-      : NonNullable<R>
-    : never;
+export type ResolverReturnTypeTwo<T extends OperationType<any, any>> = T[keyof T] extends (
+  ...args: any
+) => infer R
+  ? R extends GraphqlError | NetworkError | OperationLoading | Promise<any>
+    ? never
+    : NonNullable<R>
+  : never;

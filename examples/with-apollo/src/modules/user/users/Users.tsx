@@ -13,18 +13,31 @@ interface UsersProps {
 }
 
 export const Users: React.FC<UsersProps> = ({ includeUserAddress = true }) => {
-  const { values, onChange, reset } = useForm<{ name: string; email: string; }>({
+  const { values, onChange, reset } = useForm<{ name: string; email: string }>({
     name: '',
     email: '',
   });
-  const { book, loading: bookLoading } = useBook();
-  const { users, error, loading: usersLoading } = useUsers({
+  const { book, loading: bookLoading, error: bookError } = useBook();
+  const {
+    users,
+    error,
+    loading: usersLoading,
+  } = useUsers({
     variables: { includeAddress: includeUserAddress },
   });
 
-  const { createUser, loading: submitting } = useCreateUser({
+  const {
+    createUser,
+    loading: submitting,
+    error: createUserError,
+    reset: resetCreateUser,
+  } = useCreateUser({
     onCompleted: () => {
       reset();
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(error, null, 2));
     },
     update: (cache, { data }) => {
       const result = data?.createUser;
@@ -55,17 +68,17 @@ export const Users: React.FC<UsersProps> = ({ includeUserAddress = true }) => {
   };
 
   if (error?.graphQLErrors.length) {
-    return <div>Graphql error: {error.graphQLErrors[0].message}</div>;
+    return (
+      <div className={styles.usersResponse}>Graphql error: {error.graphQLErrors[0].message}</div>
+    );
   }
 
   if (error?.networkError) {
-    return <div>Network error: {error.networkError?.message}</div>;
+    return <div className={styles.usersResponse}>Network error: {error.networkError?.message}</div>;
   }
 
   const usersList = usersLoading ? (
-    <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
-      Loading users...
-    </div>
+    <div className={styles.usersResponse}>Loading users...</div>
   ) : (
     <div className={styles.userGrid}>
       {users?.map((user) => (
@@ -75,19 +88,32 @@ export const Users: React.FC<UsersProps> = ({ includeUserAddress = true }) => {
   );
 
   const bookContent = bookLoading ? (
-    <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
-      Loading books...
-    </div>
+    <div className={styles.usersResponse}>Loading books...</div>
   ) : (
     <pre className={styles.usersCodeBlock}>
-      <h3>Title: {book?.title}</h3>
-      <code>{JSON.stringify(book, null, 2)}</code>
+      {bookError ? (
+        <code>{JSON.stringify(bookError, null, 2)}</code>
+      ) : (
+        <>
+          <h3>Title: {book?.title}</h3>
+          <code>{JSON.stringify(book, null, 2)}</code>
+        </>
+      )}
     </pre>
   );
 
   return (
     <div className={styles.userContainer}>
       <form onSubmit={handleSubmit}>
+        {createUserError?.graphQLErrors.length && (
+          <div className={styles.errorContainer}>
+            {createUserError?.graphQLErrors.map((error) => (
+              <p>{error.message}</p>
+            ))}
+            <button onClick={resetCreateUser}>X</button>
+          </div>
+        )}
+        <h3>Create user</h3>
         <div className={styles.formControl}>
           <label htmlFor="name">Name</label>
           <input id="name" name="name" type="text" value={values.name} onChange={onChange} />

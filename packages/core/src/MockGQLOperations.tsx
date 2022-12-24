@@ -1,11 +1,16 @@
 import * as React from 'react';
-import { ApolloError, ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import { mergeResolvers } from '@graphql-tools/merge';
 import type { IResolvers } from '@graphql-tools/utils';
 import type { IntrospectionQuery } from 'graphql';
+import { GraphQLError } from 'graphql';
 import type { IntrospectionObjectType } from 'graphql/utilities/getIntrospectionQuery';
 import { OperationModel } from './OperationModel';
+import { getDevToolsComponent } from './dev-tools';
+import type { ApolloMockedDevtools } from './dev-tools/types';
+import { createApolloClient, createLoadingApolloClient, createMockApolloLink } from './utils';
 import type { CreateApolloClient } from './utils';
+import { LOADING_ERROR_CODE, NETWORK_ERROR_CODE } from './constants';
 import type {
   AnyObject,
   CreateOperationState,
@@ -18,11 +23,6 @@ import type {
   ResolverFn,
   ResolverReturnType,
 } from './types';
-import {
-  createApolloClient,
-  createLoadingApolloClient,
-  generateOperationLoadingError,
-} from './utils';
 
 interface MockGQLOperationsCreate<TQueryOperations, TMutationOperations> {
   Query: TQueryOperations;
@@ -38,6 +38,7 @@ interface MockGQLOperationType<TOperationState> {
 
 interface MockGQLOperationsConfig {
   introspectionResult: IntrospectionQuery | any;
+  enableDevTools?: boolean;
 }
 
 export interface MockGQLOperationsType<
@@ -50,14 +51,20 @@ export interface MockGQLOperationsType<
 
 export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
+  private readonly enableDevTools?: boolean;
   private _models: TMockGQLOperations['models'] = {};
   private _operations: MockGQLOperationType<TMockGQLOperations['state']>['operations'] = {
     mutation: [],
     query: [],
   };
+  private _operationMap = {
+    mutation: [],
+    query: [],
+  };
 
-  constructor({ introspectionResult }: MockGQLOperationsConfig) {
+  constructor({ introspectionResult, enableDevTools }: MockGQLOperationsConfig) {
     this.introspectionResult = introspectionResult;
+    this.enableDevTools = enableDevTools;
   }
 
   get operations(): MockGQLOperationType<TMockGQLOperations['state']>['operations'] {
@@ -67,6 +74,22 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   get models(): TMockGQLOperations['models'] {
     return this._models;
   }
+
+  createDevtools = (): React.FC<Omit<ApolloMockedDevtools, 'operationMap'>> => {
+    return getDevToolsComponent({
+      operations: this._operationMap,
+      introspection: this.introspectionResult,
+      enabled: this.enableDevTools,
+    });
+  };
+
+  createMockLink = () => {
+    return createMockApolloLink({
+      mocks: { introspectionResult: this.introspectionResult, resolvers: {} },
+      createOperations: this.createOperations,
+      enabled: this.enableDevTools,
+    });
+  };
 
   createProvider =
     (): React.FC<MockProviderProps<TMockGQLOperations['state'], TMockGQLOperations['models']>> =>
@@ -99,6 +122,9 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     >
   ): void => {
     const operation = this.createOperation(name, state);
+    // @ts-ignore
+    this._operationMap.query = [...this._operationMap.query, { [name]: state }];
+
     if (this._operations) {
       this._operations.query = [...((this._operations.query as any) ?? []), operation];
     }
@@ -113,6 +139,9 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     >
   ): void => {
     const operation = this.createOperation(name, state);
+    // @ts-ignore
+    this._operationMap.mutation = [...this._operationMap.mutation, { [name]: state }];
+
     if (this._operations) {
       this._operations.mutation = [...((this._operations.mutation as any) ?? []), operation];
     }
@@ -149,25 +178,29 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
 
         const currentStateObj = [...currentStateArray].find((s) => s.state === currentState);
         if (!currentStateObj) {
-          // @ts-ignore
-          throw new Error(`${name} operation: unable to match state`);
+          throw new Error(`${String(name)} operation: unable to match state`);
         }
 
         const { result } = currentStateObj;
-        const { loading, graphQLErrors, networkError } = result ?? ({} as any);
+        const payload = typeof result === 'function' ? (result as any)(this._models) : result;
+        const { loading, graphQLError, networkError } = payload ?? ({} as any);
         if (loading) {
-          return generateOperationLoadingError();
+          throw new GraphQLError('loading', {
+            extensions: { code: LOADING_ERROR_CODE },
+          });
         }
 
-        if (graphQLErrors) {
-          return new ApolloError({ graphQLErrors });
+        if (graphQLError) {
+          throw graphQLError;
         }
 
         if (networkError) {
-          return new ApolloError({ networkError });
+          throw new GraphQLError(networkError.message ?? 'Network error', {
+            extensions: { code: NETWORK_ERROR_CODE },
+          });
         }
 
-        return typeof result === 'function' ? (result as any)(this._models) : result;
+        return payload;
       },
     });
 

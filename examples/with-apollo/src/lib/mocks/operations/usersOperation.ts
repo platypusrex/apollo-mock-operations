@@ -16,6 +16,6 @@ mockBuilder.queryOperation('users', [
   },
   {
     state: 'GQL_ERROR',
-    result: { graphQLErrors: [new GraphQLError('Server responded with 403')] },
+    result: { graphQLError: new GraphQLError('Server responded with 403') },
   },
 ]);

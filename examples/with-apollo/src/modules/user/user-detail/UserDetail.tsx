@@ -1,4 +1,5 @@
 import React from 'react';
+import NextLink from 'next/link';
 import { useUser } from '../../../hooks/useUser';
 import { useBooksByAuthor } from '../../../hooks/useBooksByAuthor';
 import styles from './UserDetail.module.css';
@@ -8,26 +9,32 @@ interface UserDetailProps {
 }
 
 export const UserDetail: React.FC<UserDetailProps> = ({ id }) => {
-  const { user } = useUser({
+  const { user, error } = useUser({
     variables: { id },
   });
+
   const { books } = useBooksByAuthor({
     variables: { authorId: id },
   });
 
-  if (!user) {
+  if (error?.graphQLErrors.length) {
     return (
-      <div
-        style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        User not found...:(
-      </div>
+      <div className={styles.userResponse}>GraphQL error: {error.graphQLErrors[0]?.message}</div>
     );
+  }
+
+  if (error?.networkError) {
+    return <div className={styles.userResponse}>Network error: {error.networkError.message}</div>;
+  }
+
+  if (!user) {
+    return <div className={styles.userResponse}>User not found...:(</div>;
   }
 
   return (
     <div className={styles.userDetailContainer}>
       <div className={styles.userContainer}>
+        <NextLink href="/">Back to users</NextLink>
         <h1>{user.name}</h1>
         <p>{user.email}</p>
       </div>

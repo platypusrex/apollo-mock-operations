@@ -9,11 +9,11 @@ type UserOperationState = OperationState<
   UserMockOperation,
   'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'ERROR'
 >;
-type CreateUserOperationState = OperationState<CreateUserMockOperation, 'SUCCESS'>;
+type CreateUserOperationState = OperationState<CreateUserMockOperation, 'SUCCESS' | 'ERROR'>;
 type DeleteUserOperationState = OperationState<DeleteUserMockOperation, 'SUCCESS'>;
 type BookOperationState = OperationState<
   BookMockOperation,
-  'SUCCESS' | 'EMPTY' | 'ERROR' | 'LOADING'
+  'SUCCESS' | 'EMPTY' | 'ERROR' | 'GQL_ERROR' | 'LOADING'
 >;
 type BooksByAuthorOperationState = OperationState<BooksByAuthorIdMockOperation, 'SUCCESS'>;
 

@@ -9,4 +9,5 @@ export interface MockGQLOperationsType {
 
 export const mockBuilder = new MockGQLOperations<MockGQLOperationsType>({
   introspectionResult,
+  enableDevTools: process.env.NEXT_PUBLIC_MOCK_OPERATIONS === 'enabled',
 });
