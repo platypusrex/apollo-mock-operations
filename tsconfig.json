@@ -3,10 +3,16 @@
   "files": [],
   "references": [
     {
+      "path": "examples/common"
+    },
+    {
       "path": "examples/server"
     },
     {
-      "path": "examples/with-apollo"
+      "path": "examples/with-apollo-nextjs"
+    },
+    {
+      "path": "examples/with-apollo-cra"
     },
     {
       "path": "packages/core"
