@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ComponentMeta } from '@storybook/react';
 import { StoryWithApollo } from '@apollo-mock-operations/storybook-addon';
 import { Users } from '@examples/common';
@@ -11,7 +12,14 @@ export default {
 } as ComponentMeta<typeof Users>;
 
 const Template: StoryWithApollo<typeof MockProvider, typeof Users> = (props) => (
-  <Users {...props} />
+  <Users
+    {...props}
+    link={(user) => (
+      <Link to={`user/${user.id}`}>
+        {user.name}
+      </Link>
+    )}
+  />
 );
 
 export const Success = Template.bind({});

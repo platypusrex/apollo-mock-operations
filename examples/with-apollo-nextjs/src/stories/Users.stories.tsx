@@ -3,6 +3,7 @@ import { ComponentMeta } from '@storybook/react';
 import { StoryWithApollo } from '@apollo-mock-operations/storybook-addon';
 import { Users } from '@examples/common';
 import { MockProvider } from '../lib/mocks';
+import NextLink from 'next/link';
 
 export default {
   title: 'Example/Users',
@@ -11,7 +12,12 @@ export default {
 } as ComponentMeta<typeof Users>;
 
 const Template: StoryWithApollo<typeof MockProvider, typeof Users> = (props) => (
-  <Users {...props} />
+  <Users
+    {...props}
+    link={({ name, id }) => (
+      <NextLink href={{ pathname: '/user/[id]', query: { id } }}>{name}</NextLink>
+    )}
+  />
 );
 
 export const Success = Template.bind({});

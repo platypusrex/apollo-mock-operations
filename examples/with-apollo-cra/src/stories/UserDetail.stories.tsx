@@ -1,9 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ComponentMeta } from '@storybook/react';
 import { StoryWithApollo } from '@apollo-mock-operations/storybook-addon';
 import { UserDetail } from '@examples/common';
 import { MockProvider } from '../lib/mocks';
-import NextLink from 'next/link';
 
 export default {
   title: 'Example/UserDetail',
@@ -13,7 +13,7 @@ export default {
 
 const Template: StoryWithApollo<typeof MockProvider, typeof UserDetail> = (props) => (
   <UserDetail {...props}>
-    <NextLink href="/">Back to users</NextLink>
+    <Link to="/">Back to users</Link>
   </UserDetail>
 );
 

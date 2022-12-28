@@ -8,6 +8,7 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "@storybook/preset-create-react-app",
+    "storybook-addon-react-router-v6",
     '@apollo-mock-operations/storybook-addon' // include the mock operation addon to the list of addons
   ],
   "framework": "@storybook/react",

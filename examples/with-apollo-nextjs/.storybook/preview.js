@@ -1,3 +1,4 @@
+import '@examples/common/common.css';
 import '../src/styles/globals.css';
 import { MockProvider as Provider } from '../src/lib/mocks';
 
@@ -9,5 +10,6 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  layout: 'fullscreen',
   apolloClient: { Provider }
 }

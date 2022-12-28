@@ -41,6 +41,7 @@
     "@types/react-dom": "^18.0.0",
     "babel-plugin-named-exports-order": "^0.0.2",
     "prop-types": "^15.8.1",
+    "storybook-addon-react-router-v6": "^0.2.1",
     "typescript": "^4.9.3",
     "webpack": "^5.75.0"
   },
