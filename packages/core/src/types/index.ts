@@ -17,11 +17,6 @@ export type RequireAtLeastOne<T> = {
   [K in keyof T]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<keyof T, K>>>;
 }[keyof T];
 
-export type RequireOnlyOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
-  {
-    [K in Keys]-?: Required<Pick<T, K>> & Partial<Record<Exclude<Keys, K>, undefined>>;
-  }[Keys];
-
 export type NonEmptyArray<T> = [T, ...T[]];
 
 type ExtractReturnTypeKeysByValue<T, V> = { [K in keyof T]-?: T[K] extends V ? never : K }[keyof T];
@@ -86,7 +81,7 @@ export interface MockProviderProps<
   TModels = any
 > {
   loading?: boolean;
-  operationState?: RequireAtLeastOne<TOperationState['state']>;
+  operationState?: RequireAtLeastOne<TOperationState['state']>[number];
   mergeOperations?:
     | RequireAtLeastOne<TOperationState['operation']>
     | ((models: TModels) => RequireAtLeastOne<TOperationState['operation']>);
@@ -103,23 +98,65 @@ export interface ProtectedMockedProviderProps {
 }
 
 // Create operation types
-export interface OperationStateObject<TOperationState, TOperationReturn, TModels> {
+type ResultType = 'graphql-error' | 'network-error' | 'loading' | 'data'
+
+type LoadingResponse = {
+  variant: Extract<ResultType, 'loading'>;
+};
+
+type GraphQLErrorResponse = {
+  variant: Extract<ResultType, 'graphql-error'>;
+  error?: GraphQLError;
+};
+
+type NetworkErrorResponse = {
+  variant: Extract<ResultType, 'network-error'>;
+  error?: Error;
+};
+
+type PayloadResponse<T> =
+  T extends GraphqlError | NetworkError | OperationLoading
+    ? never
+    : T extends Promise<infer U>
+      ? { variant: Extract<ResultType, 'data'>; data: U }
+      : { variant: Extract<ResultType, 'data'>; data: T };
+
+export type OperationResult<T> =
+  | LoadingResponse
+  | GraphQLErrorResponse
+  | NetworkErrorResponse
+  | PayloadResponse<T>;
+
+export interface OperationStateObject<
+  TOperationState extends string,
+  TOperationReturn extends ReturnType<OperationType<any, any>[keyof OperationType<any, any>]>,
+  TModels = any
+> {
   state: TOperationState;
-  result: TOperationReturn | ((models: TModels) => TOperationReturn);
+  result: OperationResult<TOperationReturn> | ((models: TModels) => OperationResult<TOperationReturn>);
 }
+
+export type OperationResultTuple<
+  TOperationState extends readonly string[],
+  TOperationReturn,
+  TModels
+> = {
+  [I in keyof TOperationState]: OperationStateObject<TOperationState[I], TOperationReturn, TModels>
+} & { length: TOperationState['length'] };
+
 
 export type CreateOperationState<
   TMockOperation extends OperationType<any, any>[keyof TMockOperation],
-  TOperationState,
+  TOperationState extends readonly string[],
   TModels = any
 > =
   | ((
-      parent: Parameters<TMockOperation>[0],
-      args: Parameters<TMockOperation>[1],
-      context: Parameters<TMockOperation>[2],
-      info: Parameters<TMockOperation>[3]
-    ) => NonEmptyArray<OperationStateObject<TOperationState, ReturnType<TMockOperation>, TModels>>)
-  | NonEmptyArray<OperationStateObject<TOperationState, ReturnType<TMockOperation>, TModels>>;
+    parent: Parameters<TMockOperation>[0],
+    args: Parameters<TMockOperation>[1],
+    context: Parameters<TMockOperation>[2],
+    info: Parameters<TMockOperation>[3]
+  ) => OperationResultTuple<TOperationState, ReturnType<TMockOperation>, TModels>)
+  | OperationResultTuple<TOperationState, ReturnType<TMockOperation>, TModels>;
 
 // MockGQLOperations supporting types
 export type GraphqlError = { graphQLError?: GraphQLError };
@@ -142,7 +179,7 @@ export type OperationFn<TState, TResult, TArgs> = (
   scenario: TState
 ) => OperationType<TResult, TArgs>;
 
-export interface OperationState<TMockOperation, TOperationState> {
+export interface OperationState<TMockOperation, TOperationState extends readonly string[]> {
   operation: TMockOperation;
   state: Record<keyof TMockOperation, TOperationState>;
 }
@@ -154,14 +191,6 @@ export type OperationModelType<TMockOperation extends OperationType<any, any>> =
 >;
 
 export type ResolverReturnType<T extends (...args: any) => any> = T extends (
-  ...args: any
-) => infer R
-  ? R extends GraphqlError | NetworkError | OperationLoading | Promise<any>
-    ? never
-    : NonNullable<R>
-  : never;
-
-export type ResolverReturnTypeTwo<T extends OperationType<any, any>> = T[keyof T] extends (
   ...args: any
 ) => infer R
   ? R extends GraphqlError | NetworkError | OperationLoading | Promise<any>

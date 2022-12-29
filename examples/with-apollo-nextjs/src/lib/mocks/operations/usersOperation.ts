@@ -4,18 +4,21 @@ import { mockBuilder } from '../builder';
 mockBuilder.queryOperation('users', [
   {
     state: 'SUCCESS',
-    result: ({ user }) => user.models,
+    result: ({ user }) => ({
+      variant: 'data',
+      data: user.models,
+    }),
   },
   {
     state: 'LOADING',
-    result: { loading: true },
+    result: { variant: 'loading' },
   },
   {
     state: 'NETWORK_ERROR',
-    result: { networkError: new Error('Server responded with 500') },
+    result: { variant: 'network-error', error: new Error('Server responded with 500') },
   },
   {
     state: 'GQL_ERROR',
-    result: { graphQLError: new GraphQLError('Server responded with 403') },
+    result: { variant: 'graphql-error', error: new GraphQLError('Server responded with 403') },
   },
 ]);

@@ -4,24 +4,28 @@ import { mockBuilder } from '../builder';
 mockBuilder.queryOperation('book', (_, { id }) => [
   {
     state: 'SUCCESS',
-    result: ({ book }) => book.findOne({ where: { id } }),
+    result: ({ book }) => ({
+      variant: 'data',
+      data: book.findOne({ where: { id } }),
+    }),
   },
   {
     state: 'EMPTY',
-    result: null,
+    result: { variant: 'data', data: null },
   },
   {
     state: 'NETWORK_ERROR',
-    result: { networkError: new Error('failed with 500') },
+    result: { variant: 'network-error', error: new Error('failed with 500') },
   },
   {
     state: 'GQL_ERROR',
     result: {
-      graphQLError: new GraphQLError('failed with 404', { extensions: { code: 'ERROR_CODE' } }),
+      variant: 'graphql-error',
+      error: new GraphQLError('failed with 404', { extensions: { code: 'ERROR_CODE' } }),
     },
   },
   {
     state: 'LOADING',
-    result: { loading: true },
+    result: { variant: 'loading' },
   },
 ]);

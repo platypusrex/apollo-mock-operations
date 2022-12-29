@@ -42,7 +42,7 @@ interface MockGQLOperationsConfig {
 }
 
 export interface MockGQLOperationsType<
-  TOperationState extends Record<'state', OperationState<any, any>>,
+  TOperationState extends Record<'state', OperationState<any, readonly string[]>>,
   TModels extends Record<'models', OperationModel<any>>
 > {
   state: TOperationState;
@@ -168,13 +168,11 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
         info: Parameters<TMockGQLOperations['state']['operation'][K]>[3]
       ): ReturnType<ResolverFn<any, any, any, any>> => {
         const currentState = scenario[name] ? scenario[name] : 'SUCCESS';
-        const currentStateArray: NonEmptyArray<
-          OperationStateObject<
-            TMockGQLOperations['state']['state'][K],
-            ReturnType<TMockGQLOperations['state']['operation'][K]>,
-            TMockGQLOperations['models']
-          >
-        > = typeof state === 'function' ? state(parent, variables, context, info) : state;
+        const currentStateArray = (typeof state === 'function' ? state(parent, variables, context, info) : state) as OperationStateObject<
+          TMockGQLOperations['state']['state'][K],
+          ReturnType<TMockGQLOperations['state']['operation'][K]>,
+          TMockGQLOperations['models']
+        >[];
 
         const currentStateObj = [...currentStateArray].find((s) => s.state === currentState);
         if (!currentStateObj) {
@@ -182,25 +180,30 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
         }
 
         const { result } = currentStateObj;
-        const payload = typeof result === 'function' ? (result as any)(this._models) : result;
-        const { loading, graphQLError, networkError } = payload ?? ({} as any);
-        if (loading) {
-          throw new GraphQLError('loading', {
-            extensions: { code: LOADING_ERROR_CODE },
-          });
-        }
+        const payload = typeof result === 'function' ? result(this._models) : result;
+        const { variant } = payload;
 
-        if (graphQLError) {
-          throw graphQLError;
-        }
+        switch (variant) {
+          case 'data':
+            return payload.data;
+          case 'loading':
+            throw new GraphQLError('loading', {
+              extensions: { code: LOADING_ERROR_CODE },
+            });
+          case 'graphql-error':
+            if (payload.error){
+              throw payload.error;
+            } else {
+              throw new GraphQLError('GraphQL error')
+            }
+          case 'network-error':
+            throw new GraphQLError(payload.error?.message ?? 'Network error', {
+              extensions: { code: NETWORK_ERROR_CODE },
+            });
+          default:
+            console.error(`Invalid operation variant provide - ${variant}`);
 
-        if (networkError) {
-          throw new GraphQLError(networkError.message ?? 'Network error', {
-            extensions: { code: NETWORK_ERROR_CODE },
-          });
         }
-
-        return payload;
       },
     });
 

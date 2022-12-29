@@ -1,8 +1,16 @@
 {
   "extends": "../../tsconfig.options.json",
   "compilerOptions": {
-    "noEmit": true
+    "declarationDir": "dist/dts",
+    "outDir": "dist/dts",
+    "rootDir": "src",
+    "emitDeclarationOnly": true
   },
-  "exclude": ["dist", "node_modules"],
-  "include": ["src/**/*"]
+  "exclude": [
+    "dist/dts",
+    "tests"
+  ],
+  "include": [
+    "src/**/*"
+  ],
 }
