@@ -2,8 +2,8 @@ import React from 'react';
 import { ComponentMeta } from '@storybook/react';
 import { StoryWithApollo } from '@apollo-mock-operations/storybook-addon';
 import { UserDetail } from '@examples/common';
-import { MockProvider } from '../lib/mocks';
 import NextLink from 'next/link';
+import { MockProvider } from '../lib/mocks';
 
 export default {
   title: 'Example/UserDetail',

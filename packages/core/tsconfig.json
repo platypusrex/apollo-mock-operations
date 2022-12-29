@@ -1,19 +1,18 @@
 {
-  "compilerOptions": {
-    "declarationDir": "dist/dts",
-    "outDir": "dist/dts",
-    "rootDir": "src",
-    "emitDeclarationOnly": true
-  },
-  "exclude": [
-    "dist/dts",
-    "tests"
-  ],
   "extends": "../../tsconfig.options.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDirs": ["src", "test"]
+  },
+  "files": [
+    "test/introspection.json"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ],
   "include": [
     "src/**/*",
-    "types/**/*",
-    "../../types/**/*"
-  ],
-  "references": []
+    "test/**/*"
+  ]
 }

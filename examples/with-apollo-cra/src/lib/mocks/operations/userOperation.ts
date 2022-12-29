@@ -4,18 +4,30 @@ import { mockBuilder } from '../builder';
 mockBuilder.queryOperation('user', (_, { id }) => [
   {
     state: 'SUCCESS',
-    result: ({ user }) => user.findOne({ where: { id } }),
+    result: ({ user }) => ({
+      variant: 'data',
+      data: user.findOne({ where: { id } })
+    }),
   },
   {
     state: 'EMPTY',
-    result: null,
+    result: {
+      variant: 'data',
+      data: null,
+    },
   },
   {
     state: 'NETWORK_ERROR',
-    result: { networkError: new Error('Server responded with 500') },
+    result: {
+      variant: 'network-error',
+      error: new Error('Server responded with 500')
+    },
   },
   {
     state: 'GQL_ERROR',
-    result: { graphQLError: new GraphQLError('Server responded with 404') },
+    result: {
+      variant: 'graphql-error',
+      error: new GraphQLError('Server responded with 404')
+    },
   },
 ]);

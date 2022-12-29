@@ -7,26 +7,33 @@ mockBuilder.mutationOperation('createUser', (_, { input: { name, email } }) => [
     result: ({ user }) => {
       if (!name || !email) {
         return {
-          graphQLError: new GraphQLError(`Email and name are required`, {
+          variant: 'graphql-error',
+          error: new GraphQLError(`Email and name are required`, {
             extensions: { code: 'FUCK_STICK' },
           }),
         };
       }
 
-      return user.create({
-        data: {
-          id: String(user.models.length + 1),
-          name,
-          email,
-          address: null,
-        },
-      });
+      return {
+        variant: 'data',
+        data: user.create({
+          data: {
+            id: String(user.models.length + 1),
+            name,
+            email,
+            address: null,
+          },
+        }),
+      };
     },
   },
   {
     state: 'GQL_ERROR',
     result: {
-      graphQLError: new GraphQLError('Error creating user', { extensions: { code: 'FUCK_STICK' } }),
+      variant: 'graphql-error',
+      error: new GraphQLError('Error creating user', {
+        extensions: { code: 'FORBIDDEN' },
+      }),
     },
   },
 ]);

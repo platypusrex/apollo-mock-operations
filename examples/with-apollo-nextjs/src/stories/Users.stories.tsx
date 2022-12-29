@@ -1,9 +1,9 @@
 import React from 'react';
+import NextLink from 'next/link';
 import { ComponentMeta } from '@storybook/react';
 import { StoryWithApollo } from '@apollo-mock-operations/storybook-addon';
 import { Users } from '@examples/common';
 import { MockProvider } from '../lib/mocks';
-import NextLink from 'next/link';
 
 export default {
   title: 'Example/Users',
