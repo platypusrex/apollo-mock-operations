@@ -25,7 +25,18 @@
   border: none;
   box-shadow: 0 1px 10px -1px rgba(0,0,0,0.25);
   background: #3f20ba;
+  transition: background 0.2s ease-in-out;
   z-index: 1;
+}
+
+.mock-devtools__button.close {
+  background: #BA0F30;
+  transition: background 0.2s ease-in-out;
+}
+
+.mock-devtools__button.close:hover {
+  background: #AE002B;
+  transition: background 0.2s ease-in-out;
 }
 
 .mock-devtools__button:hover {

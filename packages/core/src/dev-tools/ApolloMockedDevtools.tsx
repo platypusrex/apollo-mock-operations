@@ -85,7 +85,7 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
     <footer>
       <button
         ref={buttonRef}
-        className="mock-devtools__button"
+        className={`mock-devtools__button ${drawerVisible ? 'close' : ''}`}
         aria-label={drawerVisible ? 'close' : 'open'}
         onClick={toggleDrawer}
       >
