@@ -1,4 +1,4 @@
-import type { AnyObject } from './utility';
+import type { AnyObject } from './util';
 import { GraphQLError, GraphQLResolveInfo } from 'graphql';
 
 // object that include info on any given graphQL operation

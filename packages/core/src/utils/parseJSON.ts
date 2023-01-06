@@ -1,4 +1,4 @@
-export const parseJSON = <T>(value: string | null): T | undefined => {
+export const parseJSON = <T>(value: string | undefined): T | undefined => {
   try {
     return value === 'undefined' ? undefined : JSON.parse(value ?? '');
   } catch {

@@ -37,8 +37,8 @@
     "@storybook/components": "^6.5.14"
   },
   "peerDependencies": {
-    "@apollo/client": "^3.*",
-    "@storybook/react": "^6.*",
-    "react": "^17.*"
+    "@apollo/client": "3.*",
+    "@storybook/react": "6.*",
+    "react": "17.* - 18.x"
   }
 }

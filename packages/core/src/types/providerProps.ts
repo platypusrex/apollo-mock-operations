@@ -8,7 +8,7 @@ import type {
   NormalizedCacheObject
 } from '@apollo/client';
 import type { OperationMeta, OperationState } from './shared';
-import type { RequireAtLeastOne } from './utility';
+import type { RequireAtLeastOne } from './util';
 
 type ClientOptions = Pick<
   ApolloClientOptions<NormalizedCacheObject>,
@@ -28,7 +28,9 @@ export interface MockProviderProps<
   TModels = any
 > {
   loading?: boolean;
-  operationState?: RequireAtLeastOne<TOperationState['state']>[number];
+  operationState?: RequireAtLeastOne<{
+    [K in keyof TOperationState['state']]: TOperationState['state'][K][number]
+  }>
   mergeOperations?:
     | RequireAtLeastOne<TOperationState['operation']>
     | ((models: TModels) => RequireAtLeastOne<TOperationState['operation']>);

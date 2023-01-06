@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { mergeProps } from 'next-merge-props';
 import { getServerSideApolloMockedProps } from '@apollo-mock-operations/core';
 import { getServerSideApolloProps } from '../../lib/apollo';
+import { mockInstance } from '../../lib/mocks/builder';
 
 const UserDetailPage = () => {
   const {
@@ -18,7 +19,7 @@ const UserDetailPage = () => {
 };
 
 export const getServerSideProps = mergeProps(
-  getServerSideApolloMockedProps,
+  getServerSideApolloMockedProps(mockInstance),
   getServerSideApolloProps({
     hydrateQueries: ['user', 'booksByAuthor'],
   })

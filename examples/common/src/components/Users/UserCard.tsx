@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDeleteUser } from '../../hooks';
-import { usersQuery } from '../../gql';
-import { UserFragment, UsersQuery } from '../../typings';
+import { UserFragment } from '../../typings';
 
 interface UserCardProps {
   user: UserFragment;
@@ -10,22 +9,14 @@ interface UserCardProps {
 
 export const UserCard: React.FC<UserCardProps> = ({ user, link }) => {
   const { deleteUser, loading, error } = useDeleteUser({
+    refetchQueries: ['Users'],
     update: (cache, { data }) => {
       const result = data?.deleteUser;
       if (!result) return;
-      const currentUsers = cache.readQuery<UsersQuery>({
-        query: usersQuery,
-      });
 
-      const users = currentUsers?.users;
-      if (!users) return;
-
-      cache.writeQuery<UsersQuery>({
-        query: usersQuery,
-        data: {
-          users: users.filter((user) => user.id !== result.id),
-        },
-      });
+      const normalizedId = cache.identify(result);
+      cache.evict({ id: normalizedId });
+      cache.gc();
     },
   });
 

@@ -15,41 +15,41 @@ const mockBuilder = new MockGQLOperations<MockOperationsState>({
   introspectionResult
 });
 
-mockBuilder.queryOperation('user', (_, { id }) => [
+mockBuilder.query('user', (_, { id }) => [
   {
     state: 'SUCCESS',
-    result: ({ user }) => ({
+    payload: ({ user }) => ({
       variant: 'data',
       data: user.findOne({ where: { id } })
     })
   },
   {
     state: 'NETWORK_ERROR',
-    result: {
+    payload: {
       variant: 'network-error',
       error: new Error('custom network error message')
     }
   },
 ])
 
-mockBuilder.queryOperation('book', [
+mockBuilder.query('book', [
   {
     state: 'SUCCESS',
-    result: ({ book }) => ({
+    payload: ({ book }) => ({
       variant: 'data',
       data: book.findOne({ where: { id: '1' }})
     })
   },
   {
     state: 'GQL_ERROR',
-    result: {
+    payload: {
       variant: 'graphql-error',
     },
   },
   {
     state: 'NETWORK_ERROR',
-    result: {
+    payload: {
       variant: 'network-error',
     },
   },
-])
+]);

@@ -3,7 +3,7 @@ import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { IResolvers } from '@graphql-tools/utils';
 import { LinkSchemaProps } from '../types';
 import { MockGQLOperationsType } from '../MockGQLOperations';
-import { ApolloMockLink } from './ApolloMockLink';
+import { ApolloMockLink } from '../ApolloMockLink';
 
 type CreateMockApolloLinkOptions<TState> = {
   mocks: LinkSchemaProps;

@@ -1,9 +1,9 @@
 import { mockBuilder } from '../builder';
 
-mockBuilder.mutationOperation('deleteUser', (_, { id }) => [
+mockBuilder.mutation('deleteUser', (_, { id }) => [
   {
     state: 'SUCCESS',
-    result: ({ user }) => ({
+    payload: ({ user }) => ({
       variant: 'data',
       data: user.delete({ where: { id } }),
     }),

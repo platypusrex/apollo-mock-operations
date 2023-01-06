@@ -1,7 +1,7 @@
 import { OperationModel } from '../OperationModel';
 import type { Maybe } from '@graphql-tools/utils';
 import type { GraphqlError, NetworkError, OperationLoading, OperationType } from './shared'
-import type { AnyObject, OmitNonPrimitive, RequireAtLeastOne } from './utility';
+import type { AnyObject, OmitNonPrimitive, RequireAtLeastOne } from './util';
 
 export type OperationModelType<TMockOperation extends OperationType<any, any>> = Record<
   keyof TMockOperation,

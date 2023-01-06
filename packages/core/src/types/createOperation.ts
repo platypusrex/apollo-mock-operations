@@ -1,34 +1,34 @@
 import { GraphQLError } from 'graphql';
 import type { GraphqlError, NetworkError, OperationLoading, OperationType } from './shared';
 
-type ResultType = 'graphql-error' | 'network-error' | 'loading' | 'data';
+type PayloadType = 'graphql-error' | 'network-error' | 'loading' | 'data';
 
-type LoadingResponse = {
-  variant: Extract<ResultType, 'loading'>;
+type LoadingPayload = {
+  variant: Extract<PayloadType, 'loading'>;
 };
 
-type GraphQLErrorResponse = {
-  variant: Extract<ResultType, 'graphql-error'>;
+type GraphQLErrorPayload = {
+  variant: Extract<PayloadType, 'graphql-error'>;
   error?: GraphQLError;
 };
 
-type NetworkErrorResponse = {
-  variant: Extract<ResultType, 'network-error'>;
+type NetworkErrorPayload = {
+  variant: Extract<PayloadType, 'network-error'>;
   error?: Error;
 };
 
-type PayloadResponse<T> =
+type DataPayload<T> =
   T extends GraphqlError | NetworkError | OperationLoading
     ? never
     : T extends Promise<infer U>
-      ? { variant: Extract<ResultType, 'data'>; data: U }
-      : { variant: Extract<ResultType, 'data'>; data: T };
+      ? { variant: Extract<PayloadType, 'data'>; data: U }
+      : { variant: Extract<PayloadType, 'data'>; data: T };
 
-export type OperationResult<T> =
-  | LoadingResponse
-  | GraphQLErrorResponse
-  | NetworkErrorResponse
-  | PayloadResponse<T>;
+export type OperationPayload<T> =
+  | LoadingPayload
+  | GraphQLErrorPayload
+  | NetworkErrorPayload
+  | DataPayload<T>;
 
 export interface OperationStateObject<
   TOperationState extends string,
@@ -36,10 +36,10 @@ export interface OperationStateObject<
   TModels = any
 > {
   state: TOperationState;
-  result: OperationResult<TOperationReturn> | ((models: TModels) => OperationResult<TOperationReturn>);
+  payload: OperationPayload<TOperationReturn> | ((models: TModels) => OperationPayload<TOperationReturn>);
 }
 
-export type OperationResultTuple<
+export type OperationPayloadTuple<
   TOperationState extends readonly string[],
   TOperationReturn,
   TModels
@@ -58,5 +58,5 @@ export type CreateOperationState<
   args: Parameters<TMockOperation>[1],
   context: Parameters<TMockOperation>[2],
   info: Parameters<TMockOperation>[3]
-) => OperationResultTuple<TOperationState, ReturnType<TMockOperation>, TModels>)
-  | OperationResultTuple<TOperationState, ReturnType<TMockOperation>, TModels>;
+) => OperationPayloadTuple<TOperationState, ReturnType<TMockOperation>, TModels>)
+  | OperationPayloadTuple<TOperationState, ReturnType<TMockOperation>, TModels>;

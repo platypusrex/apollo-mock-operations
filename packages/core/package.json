@@ -1,11 +1,11 @@
 {
   "name": "@apollo-mock-operations/core",
   "version": "0.0.1",
+  "author": "Frank Cooke",
+  "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/dts/index.d.ts",
-  "author": "Frank Cooke",
-  "license": "MIT",
   "files": [
     "dist/**/*",
     "devtools-styles.css"
@@ -40,6 +40,6 @@
   "peerDependencies": {
     "@apollo/client": "3.*",
     "graphql": "16.*",
-    "react": "17.*"
+    "react": "17.* - 18.*"
   }
 }

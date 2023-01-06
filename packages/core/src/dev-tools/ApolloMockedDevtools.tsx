@@ -5,7 +5,7 @@ import { useCookie } from './hooks';
 import { getInitialOperationState } from './utils';
 import { OperationStateSelect, PlusIcon, OperationSection } from './components';
 import { ApolloMockedDevtools, OperationMap, OperationSessionState } from './types';
-import { SESSION_STORAGE_KEY } from './constants';
+import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
 
 export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap }) => {
   const apolloClient = useApolloClient();
@@ -15,7 +15,7 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const [operationStateCookie, setCookie] = useCookie(
-    SESSION_STORAGE_KEY,
+    APOLLO_MOCK_OPERATION_STATE_KEY,
     JSON.stringify({
       query: {},
       mutation: {},
