@@ -76,7 +76,6 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
       [type]: { ...parsedOperations[type], [key]: value },
     };
     setCookie(JSON.stringify(newOpState));
-
     if (type === 'query') {
       apolloClient.refetchQueries({ include: 'active' });
       await apolloClient.clearStore();
