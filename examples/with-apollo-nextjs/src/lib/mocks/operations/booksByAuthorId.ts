@@ -1,9 +1,9 @@
-import { mockBuilder } from '../builder';
+import { mockInstance } from '../builder';
 
-mockBuilder.queryOperation('booksByAuthorId', (_, { authorId }) => [
+mockInstance.query('booksByAuthorId', (_, { authorId }) => [
   {
     state: 'SUCCESS',
-    result: ({ book }) => ({
+    payload: ({ book }) => ({
       variant: 'data',
       data: book.models.filter((book) => book.authorId === authorId),
     }),

@@ -1,6 +1,6 @@
 import { parseJSON } from '../../utils/parseJSON';
 import { OperationMap, OperationSessionState } from '../types';
-import { SESSION_STORAGE_KEY } from '../constants';
+import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../../constants';
 import { getCookie } from '../hooks';
 
 const getOperationState = (operations: OperationMap['query'] | OperationMap['mutation']) =>
@@ -11,7 +11,7 @@ const getOperationState = (operations: OperationMap['query'] | OperationMap['mut
   }, {});
 
 export const getInitialOperationState = (operationMap: OperationMap) => {
-  const operationState = getCookie(SESSION_STORAGE_KEY);
+  const operationState = getCookie(APOLLO_MOCK_OPERATION_STATE_KEY);
 
   if (operationState) {
     const currentState = parseJSON<OperationSessionState>(operationState);

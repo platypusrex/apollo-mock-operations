@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MockProvider, models } from '../../lib/mocks';
 import { Users } from '@examples/common';
 
-const TestComponent = (props: React.ComponentProps<typeof MockProvider>) => (
+const TestComponent: React.FC<ComponentProps<typeof MockProvider>> = (props) => (
   <MockProvider {...props}>
     <Users />
   </MockProvider>
@@ -67,7 +67,7 @@ describe('Users', () => {
   it('find one from list using operation models', async () => {
     const user = models.user.findFirst();
     render(<TestComponent />);
-    const userCard = await screen.findByText(`User name: ${user?.name}`, { exact: true });
+    const userCard = await screen.findByText(user?.name ?? '', { exact: true });
     expect(userCard).toBeInTheDocument();
   });
 
@@ -75,7 +75,7 @@ describe('Users', () => {
     const users = models.user.models;
     render(<TestComponent />);
     for (const user of users) {
-      const headingNode = await screen.findByText(`User name: ${user.name}`);
+      const headingNode = await screen.findByText(user.name);
       expect(headingNode).toBeInTheDocument();
     }
   });
@@ -84,7 +84,7 @@ describe('Users', () => {
     const deleteUser = jest.fn(() => ({}));
     render(<TestComponent mergeOperations={{ deleteUser }} />);
 
-    const btnNode = await screen.findByText(/Delete Frank/);
+    const btnNode = await screen.findByText(/Delete William/);
     expect(btnNode).toBeInTheDocument();
     fireEvent.click(btnNode);
 

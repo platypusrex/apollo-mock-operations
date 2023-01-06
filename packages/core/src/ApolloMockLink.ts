@@ -2,14 +2,17 @@ import { buildClientSchema, graphql, print } from 'graphql';
 import { addMocksToSchema } from '@graphql-tools/mock';
 import { ApolloLink, FetchResult, Observable, Operation } from '@apollo/client';
 import { IResolvers } from '@graphql-tools/utils';
-import { CreateLinkOptions, LinkSchemaProps } from '../types';
-import { LOADING_ERROR_CODE, NETWORK_ERROR_CODE } from '../constants';
-import { SESSION_STORAGE_KEY } from '../dev-tools/constants';
-import { getCookie } from '../dev-tools/hooks';
-import { reactiveOperationState } from '../dev-tools';
-import { delay } from './delay';
-import { isSSR } from './isSSR';
-import { parseJSON } from './parseJSON';
+import { CreateLinkOptions, LinkSchemaProps } from './types';
+import {
+  LOADING_ERROR_CODE,
+  NETWORK_ERROR_CODE,
+  APOLLO_MOCK_OPERATION_STATE_KEY,
+} from './constants';
+import { getCookie } from './dev-tools/hooks';
+import { reactiveOperationState } from './nextjs';
+import { delay } from './utils/delay';
+import { isSSR } from './utils/isSSR';
+import { parseJSON } from './utils/parseJSON';
 
 type ApolloMockLinkConfig<TState = any> = {
   mocks: LinkSchemaProps;
@@ -36,7 +39,7 @@ export class ApolloMockLink extends ApolloLink {
 
     let storedOperationState;
     if (!isSSR()) {
-      storedOperationState = getCookie(SESSION_STORAGE_KEY);
+      storedOperationState = getCookie(APOLLO_MOCK_OPERATION_STATE_KEY);
     } else {
       storedOperationState = reactiveOperationState();
     }

@@ -1,7 +1,5 @@
-// ----------------------------------------------------------------------------------------
-
+/* eslint-disable */
 import { GraphQLError, GraphQLResolveInfo } from 'graphql';
-import { OperationState } from '../src';
 
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -275,12 +273,4 @@ export type MockOperations = {
   Query: Partial<QueryMockOperations>;
   Mutation: Partial<MutationMockOperations>;
 };
-
-// --------------------------------------------------------------------------------------
-
-type OpStateTuple = ['SUCCESS', 'NETWORK_ERROR', 'GQL_ERROR', 'LOADING'];
-
-export type UsersOperationState = OperationState<
-  UsersMockOperation,
-  OpStateTuple
->;
+/* eslint-enable */

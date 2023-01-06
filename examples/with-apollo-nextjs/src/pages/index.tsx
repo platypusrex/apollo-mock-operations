@@ -3,6 +3,7 @@ import { Users } from '@examples/common';
 import { mergeProps } from 'next-merge-props';
 import { getServerSideApolloMockedProps } from '@apollo-mock-operations/core';
 import { getServerSideApolloProps } from '../lib/apollo';
+import { mockInstance } from '../lib/mocks/builder';
 
 const UsersPage = () => (
   <Users
@@ -13,7 +14,7 @@ const UsersPage = () => (
 );
 
 export const getServerSideProps = mergeProps(
-  getServerSideApolloMockedProps,
+  getServerSideApolloMockedProps(mockInstance),
   getServerSideApolloProps({
     hydrateQueries: ['users', 'book'],
   })

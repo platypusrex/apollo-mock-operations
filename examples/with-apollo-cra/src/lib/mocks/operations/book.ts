@@ -1,34 +1,34 @@
 import { GraphQLError } from 'graphql';
 import { mockBuilder } from '../builder';
 
-mockBuilder.queryOperation('book', (_, { id }) => [
+mockBuilder.query('book', (_, { id }) => [
   {
     state: 'SUCCESS',
-    result: ({ book }) => ({
+    payload: ({ book }) => ({
       variant: 'data',
       data: book.findOne({ where: { id } }),
     }),
   },
   {
     state: 'EMPTY',
-    result: {
+    payload: {
       variant: 'data',
       data: null,
     },
   },
   {
     state: 'NETWORK_ERROR',
-    result: { variant: 'network-error', error: new Error('failed with 500') },
+    payload: { variant: 'network-error', error: new Error('failed with 500') },
   },
   {
     state: 'GQL_ERROR',
-    result: {
+    payload: {
       variant: 'graphql-error',
       error: new GraphQLError('failed with 404', { extensions: { code: 'ERROR_CODE' } }),
     },
   },
   {
     state: 'LOADING',
-    result: { variant: 'loading' },
+    payload: { variant: 'loading' },
   },
 ]);

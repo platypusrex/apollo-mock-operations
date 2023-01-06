@@ -1,6 +1,6 @@
-import { mockBuilder } from '../builder';
+import { mockInstance } from '../builder';
 
-mockBuilder.createModel('user', [
+mockInstance.createModel('user', [
   {
     id: '1',
     name: 'William Shakespeare',

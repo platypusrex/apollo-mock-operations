@@ -5,7 +5,7 @@ import { useCookie } from './hooks';
 import { getInitialOperationState } from './utils';
 import { OperationStateSelect, PlusIcon, OperationSection } from './components';
 import { ApolloMockedDevtools, OperationMap, OperationSessionState } from './types';
-import { SESSION_STORAGE_KEY } from './constants';
+import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
 
 export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap }) => {
   const apolloClient = useApolloClient();
@@ -15,7 +15,7 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const [operationStateCookie, setCookie] = useCookie(
-    SESSION_STORAGE_KEY,
+    APOLLO_MOCK_OPERATION_STATE_KEY,
     JSON.stringify({
       query: {},
       mutation: {},
@@ -43,13 +43,13 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const container = containerRef.current;
+      const button = buttonRef.current;
       if (
-        container &&
-        e.target &&
         drawerVisible &&
+        container &&
+        target &&
         !container.contains(target) &&
-        !target.classList.contains('mock-devtools__button') &&
-        !target.classList.contains('mock-devtools__icon')
+        !button?.contains(target)
       ) {
         setDrawerVisible(false);
       }
@@ -76,16 +76,17 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
       [type]: { ...parsedOperations[type], [key]: value },
     };
     setCookie(JSON.stringify(newOpState));
-
-    apolloClient.refetchQueries({ include: 'active' });
-    await apolloClient.clearStore();
+    if (type === 'query') {
+      apolloClient.refetchQueries({ include: 'active' });
+      await apolloClient.clearStore();
+    }
   };
 
   return (
     <footer>
       <button
         ref={buttonRef}
-        className="mock-devtools__button"
+        className={`mock-devtools__button ${drawerVisible ? 'close' : ''}`}
         aria-label={drawerVisible ? 'close' : 'open'}
         onClick={toggleDrawer}
       >

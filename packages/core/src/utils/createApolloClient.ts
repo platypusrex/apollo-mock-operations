@@ -5,7 +5,7 @@ import type {
   InMemoryCacheConfig,
 } from '@apollo/client';
 import type { LinkSchemaProps } from '../types';
-import { ApolloMockLink } from './ApolloMockLink';
+import { ApolloMockLink } from '../ApolloMockLink';
 
 export interface CreateApolloClient {
   mocks: LinkSchemaProps;

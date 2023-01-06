@@ -33,10 +33,6 @@ export const Users: React.FC<UsersProps> = ({ includeUserAddress = true, link })
     onCompleted: () => {
       reset();
     },
-    onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.log(JSON.stringify(error, null, 2));
-    },
     update: (cache, { data }) => {
       const result = data?.createUser;
       if (!result) return;
@@ -105,8 +101,8 @@ export const Users: React.FC<UsersProps> = ({ includeUserAddress = true, link })
       <form onSubmit={handleSubmit}>
         {createUserError?.graphQLErrors.length && (
           <div className="error-container">
-            {createUserError?.graphQLErrors.map((error) => (
-              <p>{error.message}</p>
+            {createUserError?.graphQLErrors.map((error, i) => (
+              <p key={i}>{error.message}</p>
             ))}
             <button onClick={resetCreateUser}>X</button>
           </div>

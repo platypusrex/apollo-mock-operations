@@ -1,4 +1,7 @@
 import deepmerge from 'deepmerge';
+import { parseJSON } from './utils/parseJSON';
+import { getCookie, setCookie } from './dev-tools/hooks';
+import { APOLLO_MOCK_MODEL_STORE_KEY } from './constants';
 import type {
   DeepPartial,
   NonEmptyArray,
@@ -9,12 +12,41 @@ import type {
 
 export class OperationModel<TModel extends OperationType<any, any>> {
   private _models = new Map<number, ResolverReturnType<TModel[keyof TModel]>>();
+  private readonly _name: keyof TModel;
 
-  constructor(models: NonEmptyArray<ResolverReturnType<TModel[keyof TModel]>>) {
-    models.forEach((model, i) => {
+  constructor(name: keyof TModel, models: NonEmptyArray<ResolverReturnType<TModel[keyof TModel]>>) {
+    this._name = name;
+    models?.forEach((model, i) => {
       this._models.set(i, model);
     });
   }
+
+  public _unsafeForceUpdateModelData = (
+    modelData: NonEmptyArray<ResolverReturnType<TModel[keyof TModel]>>
+  ) => {
+    // TODO: compare and update existing model map rather than replacing with entirely new map
+    const newMap = new Map();
+    modelData.forEach((model, i) => {
+      newMap.set(i, model);
+    });
+    this._models = newMap;
+  };
+
+  private updateOperationModelCookie = (
+    models: Map<number, ResolverReturnType<TModel[keyof TModel]>>
+  ) => {
+    const modelStateCookie = getCookie(APOLLO_MOCK_MODEL_STORE_KEY);
+    if (modelStateCookie) {
+      const parsedModelState = (parseJSON(modelStateCookie) as any) ?? {};
+      setCookie(
+        APOLLO_MOCK_MODEL_STORE_KEY,
+        JSON.stringify({
+          ...parsedModelState,
+          [this._name]: Array.from(models.values()),
+        })
+      );
+    }
+  };
 
   private getModelDataFromQuery = ({
     where,
@@ -72,6 +104,8 @@ export class OperationModel<TModel extends OperationType<any, any>> {
     data: ResolverReturnType<TModel[keyof TModel]>;
   }): ResolverReturnType<TModel[keyof TModel]> => {
     this._models.set(this._models.size, data);
+    this.updateOperationModelCookie(this._models);
+
     return data;
   };
 
@@ -94,6 +128,8 @@ export class OperationModel<TModel extends OperationType<any, any>> {
     const model = result.models[0].data;
     const updatedModel = deepmerge<ResolverReturnType<TModel[keyof TModel]>>(model.data, data);
     this._models.set(model.key, { ...this._models.get(model.key), ...updatedModel });
+    this.updateOperationModelCookie(this._models);
+
     return updatedModel;
   };
 
@@ -105,6 +141,8 @@ export class OperationModel<TModel extends OperationType<any, any>> {
 
     const model = result.models[0];
     this._models.delete(model.key);
+    this.updateOperationModelCookie(this._models);
+
     return model.data;
   };
 }

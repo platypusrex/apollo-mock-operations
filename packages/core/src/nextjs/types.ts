@@ -91,7 +91,3 @@ export type GetServerSideProps<
   Q extends ParsedUrlQuery = ParsedUrlQuery,
   D extends PreviewData = PreviewData
 > = (context: GetServerSidePropsContext<Q, D>) => Promise<GetServerSidePropsResult<P>>;
-
-export type InferGetServerSidePropsType<T extends (args: any) => any> = Awaited<
-  Extract<Awaited<ReturnType<T>>, { props: any }>['props']
->;

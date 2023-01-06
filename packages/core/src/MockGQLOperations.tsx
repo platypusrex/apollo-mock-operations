@@ -5,6 +5,7 @@ import type { IResolvers } from '@graphql-tools/utils';
 import type { IntrospectionQuery } from 'graphql';
 import { GraphQLError } from 'graphql';
 import type { IntrospectionObjectType } from 'graphql/utilities/getIntrospectionQuery';
+import { OperationModels } from './OperationModels';
 import { OperationModel } from './OperationModel';
 import { getDevToolsComponent } from './dev-tools';
 import type { ApolloMockedDevtools } from './dev-tools/types';
@@ -36,6 +37,25 @@ interface MockGQLOperationType<TOperationState> {
   };
 }
 
+interface MockGQLOperationMap<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
+  query: Record<
+    string,
+    CreateOperationState<
+      TMockGQLOperations['state']['operation'][string],
+      TMockGQLOperations['state']['state'][string],
+      TMockGQLOperations['models']
+    >
+  >[];
+  mutation: Record<
+    string,
+    CreateOperationState<
+      TMockGQLOperations['state']['operation'][string],
+      TMockGQLOperations['state']['state'][string],
+      TMockGQLOperations['models']
+    >
+  >[];
+}
+
 interface MockGQLOperationsConfig {
   introspectionResult: IntrospectionQuery | any;
   enableDevTools?: boolean;
@@ -50,6 +70,7 @@ export interface MockGQLOperationsType<
 }
 
 export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
+  private readonly _modelsInstance: OperationModels<any>;
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
   private readonly enableDevTools?: boolean;
   private _models: TMockGQLOperations['models'] = {};
@@ -57,7 +78,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     mutation: [],
     query: [],
   };
-  private _operationMap = {
+  private _operationMap: MockGQLOperationMap<TMockGQLOperations> = {
     mutation: [],
     query: [],
   };
@@ -65,6 +86,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   constructor({ introspectionResult, enableDevTools }: MockGQLOperationsConfig) {
     this.introspectionResult = introspectionResult;
     this.enableDevTools = enableDevTools;
+    this._modelsInstance = OperationModels.getInstance();
   }
 
   get operations(): MockGQLOperationType<TMockGQLOperations['state']>['operations'] {
@@ -72,7 +94,8 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   }
 
   get models(): TMockGQLOperations['models'] {
-    return this._models;
+    const { models, _unsafeForceUpdateModelData } = this._modelsInstance;
+    return { ...models, _unsafeForceUpdateModelData };
   }
 
   createDevtools = (): React.FC<Omit<ApolloMockedDevtools, 'operationMap'>> => {
@@ -107,13 +130,14 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     name: K,
     data: NonEmptyArray<ResolverReturnType<TMockGQLOperations['state']['operation'][K]>>
   ): void => {
+    const modelData = this._modelsInstance.createModel(name, data);
     this._models = {
       ...this._models,
-      [name]: new OperationModel<TMockGQLOperations['state']['operation']>(data),
+      ...modelData,
     };
   };
 
-  queryOperation = <K extends keyof TMockGQLOperations['state']['operation']>(
+  query = <K extends keyof TMockGQLOperations['state']['operation']>(
     name: K,
     state: CreateOperationState<
       TMockGQLOperations['state']['operation'][K],
@@ -122,7 +146,6 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     >
   ): void => {
     const operation = this.createOperation(name, state);
-    // @ts-ignore
     this._operationMap.query = [...this._operationMap.query, { [name]: state }];
 
     if (this._operations) {
@@ -130,7 +153,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     }
   };
 
-  mutationOperation = <K extends keyof TMockGQLOperations['state']['operation']>(
+  mutation = <K extends keyof TMockGQLOperations['state']['operation']>(
     name: K,
     state: CreateOperationState<
       TMockGQLOperations['state']['operation'][K],
@@ -139,7 +162,6 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     >
   ): void => {
     const operation = this.createOperation(name, state);
-    // @ts-ignore
     this._operationMap.mutation = [...this._operationMap.mutation, { [name]: state }];
 
     if (this._operations) {
@@ -168,7 +190,9 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
         info: Parameters<TMockGQLOperations['state']['operation'][K]>[3]
       ): ReturnType<ResolverFn<any, any, any, any>> => {
         const currentState = scenario[name] ? scenario[name] : 'SUCCESS';
-        const currentStateArray = (typeof state === 'function' ? state(parent, variables, context, info) : state) as OperationStateObject<
+        const currentStateArray = (
+          typeof state === 'function' ? state(parent, variables, context, info) : state
+        ) as OperationStateObject<
           TMockGQLOperations['state']['state'][K],
           ReturnType<TMockGQLOperations['state']['operation'][K]>,
           TMockGQLOperations['models']
@@ -179,30 +203,29 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
           throw new Error(`${String(name)} operation: unable to match state`);
         }
 
-        const { result } = currentStateObj;
-        const payload = typeof result === 'function' ? result(this._models) : result;
-        const { variant } = payload;
+        const { payload } = currentStateObj;
+        const result = typeof payload === 'function' ? payload(this._models) : payload;
+        const { variant } = result;
 
         switch (variant) {
           case 'data':
-            return payload.data;
+            return result.data;
           case 'loading':
             throw new GraphQLError('loading', {
               extensions: { code: LOADING_ERROR_CODE },
             });
           case 'graphql-error':
-            if (payload.error){
-              throw payload.error;
+            if (result.error) {
+              throw result.error;
             } else {
-              throw new GraphQLError('GraphQL error')
+              throw new GraphQLError('GraphQL error');
             }
           case 'network-error':
-            throw new GraphQLError(payload.error?.message ?? 'Network error', {
+            throw new GraphQLError(result.error?.message ?? 'Network error', {
               extensions: { code: NETWORK_ERROR_CODE },
             });
           default:
             console.error(`Invalid operation variant provide - ${variant}`);
-
         }
       },
     });

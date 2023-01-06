@@ -1,10 +1,11 @@
 import { GraphQLError } from 'graphql';
 import { mockBuilder } from '../builder';
+import { generateUUID } from '../generateUUID';
 
-mockBuilder.mutationOperation('createUser', (_, { input: { name, email } }) => [
+mockBuilder.mutation('createUser', (_, { input: { name, email } }) => [
   {
     state: 'SUCCESS',
-    result: ({ user }) => {
+    payload: ({ user }) => {
       if (!name || !email) {
         return {
           variant: 'graphql-error',
@@ -18,21 +19,21 @@ mockBuilder.mutationOperation('createUser', (_, { input: { name, email } }) => [
         variant: 'data',
         data: user.create({
           data: {
-            id: String(user.models.length + 1),
+            id: generateUUID(),
             name,
             email,
             address: null,
           },
-        }),
+        })
       };
     },
   },
   {
     state: 'GQL_ERROR',
-    result: {
+    payload: {
       variant: 'graphql-error',
       error: new GraphQLError('Error creating user', {
-        extensions: { code: 'FORBIDDEN' },
+        extensions: { code: 'FORBIDDEN' }
       }),
     },
   },
