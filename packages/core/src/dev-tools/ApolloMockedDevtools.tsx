@@ -43,13 +43,13 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const container = containerRef.current;
+      const button = buttonRef.current;
       if (
-        container &&
-        e.target &&
         drawerVisible &&
+        container &&
+        target &&
         !container.contains(target) &&
-        !target.classList.contains('mock-devtools__button') &&
-        !target.classList.contains('mock-devtools__icon')
+        !button?.contains(target)
       ) {
         setDrawerVisible(false);
       }
@@ -77,8 +77,10 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
     };
     setCookie(JSON.stringify(newOpState));
 
-    apolloClient.refetchQueries({ include: 'active' });
-    await apolloClient.clearStore();
+    if (type === 'query') {
+      apolloClient.refetchQueries({ include: 'active' });
+      await apolloClient.clearStore();
+    }
   };
 
   return (
