@@ -3,7 +3,11 @@ import { addMocksToSchema } from '@graphql-tools/mock';
 import { ApolloLink, FetchResult, Observable, Operation } from '@apollo/client';
 import { IResolvers } from '@graphql-tools/utils';
 import { CreateLinkOptions, LinkSchemaProps } from './types';
-import { LOADING_ERROR_CODE, NETWORK_ERROR_CODE, APOLLO_MOCK_OPERATION_STATE_KEY } from './constants';
+import {
+  LOADING_ERROR_CODE,
+  NETWORK_ERROR_CODE,
+  APOLLO_MOCK_OPERATION_STATE_KEY,
+} from './constants';
 import { getCookie } from './dev-tools/hooks';
 import { reactiveOperationState } from './nextjs';
 import { delay } from './utils/delay';

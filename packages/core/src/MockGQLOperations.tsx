@@ -41,17 +41,17 @@ interface MockGQLOperationMap<TMockGQLOperations extends MockGQLOperationsType<a
   query: Record<
     string,
     CreateOperationState<
-      TMockGQLOperations["state"]["operation"][string],
-      TMockGQLOperations["state"]["state"][string],
-      TMockGQLOperations["models"]
+      TMockGQLOperations['state']['operation'][string],
+      TMockGQLOperations['state']['state'][string],
+      TMockGQLOperations['models']
     >
   >[];
   mutation: Record<
     string,
     CreateOperationState<
-      TMockGQLOperations["state"]["operation"][string],
-      TMockGQLOperations["state"]["state"][string],
-      TMockGQLOperations["models"]
+      TMockGQLOperations['state']['operation'][string],
+      TMockGQLOperations['state']['state'][string],
+      TMockGQLOperations['models']
     >
   >[];
 }
@@ -70,7 +70,7 @@ export interface MockGQLOperationsType<
 }
 
 export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
-  private readonly _modelsInstance: OperationModels<any>
+  private readonly _modelsInstance: OperationModels<any>;
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
   private readonly enableDevTools?: boolean;
   private _models: TMockGQLOperations['models'] = {};
@@ -86,7 +86,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   constructor({ introspectionResult, enableDevTools }: MockGQLOperationsConfig) {
     this.introspectionResult = introspectionResult;
     this.enableDevTools = enableDevTools;
-    this._modelsInstance = OperationModels.getInstance()
+    this._modelsInstance = OperationModels.getInstance();
   }
 
   get operations(): MockGQLOperationType<TMockGQLOperations['state']>['operations'] {
@@ -190,7 +190,9 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
         info: Parameters<TMockGQLOperations['state']['operation'][K]>[3]
       ): ReturnType<ResolverFn<any, any, any, any>> => {
         const currentState = scenario[name] ? scenario[name] : 'SUCCESS';
-        const currentStateArray = (typeof state === 'function' ? state(parent, variables, context, info) : state) as OperationStateObject<
+        const currentStateArray = (
+          typeof state === 'function' ? state(parent, variables, context, info) : state
+        ) as OperationStateObject<
           TMockGQLOperations['state']['state'][K],
           ReturnType<TMockGQLOperations['state']['operation'][K]>,
           TMockGQLOperations['models']
@@ -213,10 +215,10 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
               extensions: { code: LOADING_ERROR_CODE },
             });
           case 'graphql-error':
-            if (result.error){
+            if (result.error) {
               throw result.error;
             } else {
-              throw new GraphQLError('GraphQL error')
+              throw new GraphQLError('GraphQL error');
             }
           case 'network-error':
             throw new GraphQLError(result.error?.message ?? 'Network error', {
@@ -224,7 +226,6 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
             });
           default:
             console.error(`Invalid operation variant provide - ${variant}`);
-
         }
       },
     });

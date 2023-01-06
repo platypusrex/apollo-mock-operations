@@ -14,10 +14,7 @@ export class OperationModel<TModel extends OperationType<any, any>> {
   private _models = new Map<number, ResolverReturnType<TModel[keyof TModel]>>();
   private readonly _name: keyof TModel;
 
-  constructor(
-    name: keyof TModel,
-    models: NonEmptyArray<ResolverReturnType<TModel[keyof TModel]>>
-  ) {
+  constructor(name: keyof TModel, models: NonEmptyArray<ResolverReturnType<TModel[keyof TModel]>>) {
     this._name = name;
     models?.forEach((model, i) => {
       this._models.set(i, model);
@@ -33,7 +30,7 @@ export class OperationModel<TModel extends OperationType<any, any>> {
       newMap.set(i, model);
     });
     this._models = newMap;
-  }
+  };
 
   private updateOperationModelCookie = (
     models: Map<number, ResolverReturnType<TModel[keyof TModel]>>
@@ -41,12 +38,15 @@ export class OperationModel<TModel extends OperationType<any, any>> {
     const modelStateCookie = getCookie(APOLLO_MOCK_MODEL_STORE_KEY);
     if (modelStateCookie) {
       const parsedModelState = (parseJSON(modelStateCookie) as any) ?? {};
-      setCookie(APOLLO_MOCK_MODEL_STORE_KEY, JSON.stringify({
-        ...parsedModelState,
-        [this._name]: Array.from(models.values()),
-      }));
+      setCookie(
+        APOLLO_MOCK_MODEL_STORE_KEY,
+        JSON.stringify({
+          ...parsedModelState,
+          [this._name]: Array.from(models.values()),
+        })
+      );
     }
-  }
+  };
 
   private getModelDataFromQuery = ({
     where,
