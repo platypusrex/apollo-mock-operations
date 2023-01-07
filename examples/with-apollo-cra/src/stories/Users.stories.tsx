@@ -11,7 +11,7 @@ export default {
   args: { includeUserAddress: true },
 } as ComponentMeta<typeof Users>;
 
-const Template: StoryWithApollo<typeof MockProvider> = (props) => (
+const Template: StoryWithApollo<typeof MockProvider, typeof Users> = (props) => (
   <Users
     {...props}
     link={(user) => (
