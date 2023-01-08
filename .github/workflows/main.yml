@@ -1,0 +1,41 @@
+name: Node.js CI
+on: [push, pull_request]
+jobs:
+  build:
+    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: [14.x, 16.x, 18.x]
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Setup turbo cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules/.cache
+          key:
+            turbo-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn-lock.json') }}
+
+      - name: Install deps and build (with cache)
+        uses: bahmutov/npm-install@v1
+        with:
+          install-command: yarn --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+#      - name: Test
+#        run: yarn test --ci --coverage --maxWorkers=2
+
+      - name: Build
+        run: yarn build
