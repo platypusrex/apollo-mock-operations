@@ -16,7 +16,6 @@
     "build": "yarn clean && concurrently \"yarn build:cjs\" \"yarn build:esm\" \"yarn build:ts\"",
     "clean": "rimraf dist",
     "clean:deps": "rimraf node_modules",
-    "check:types": "tsc --project tsconfig.type.json",
     "lint": "eslint src/**/*.ts",
     "generate": "graphql-codegen --config codegen.ts"
   },

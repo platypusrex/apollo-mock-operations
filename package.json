@@ -18,10 +18,11 @@
     "storybook": "turbo run storybook --scope='@examples/with-apollo'",
     "start:all": "turbo run start storybook --parallel",
     "lint": "eslint --cache '{packages,examples}/*/{src,test}/**.{ts,tsx,js,md}'",
+    "lint:ci": "eslint --cache 'packages/*/{src,test}/**.{ts,tsx,js,md}'",
     "lint:fix": "eslint '{packages,examples}/*/{src,test}/**.{ts,tsx,js,md}' --fix",
     "format": "prettier --check \"**/*.{ts,tsx,js,md}\"",
-    "check:types": "yarn turbo run check:types --scope='@graphql-mock-operations/*'",
-    "ci": "yarn lint && turbo run check:types && turbo run build --filter=@apollo-mock-operations/*",
+    "check:types": "yarn turbo run check:types --filter=@apollo-mock-operations/*",
+    "ci": "yarn lint:ci && turbo run check:types build --filter=@apollo-mock-operations/*",
     "ci:version": "changeset version",
     "prerelease": "yarn ci",
     "release": "yarn prerelease && changeset publish && git push --follow-tags"
