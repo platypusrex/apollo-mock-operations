@@ -21,7 +21,7 @@
     "lint:fix": "eslint '{packages,examples}/*/{src,test}/**.{ts,tsx,js,md}' --fix",
     "format": "prettier --check \"**/*.{ts,tsx,js,md}\"",
     "check:types": "yarn turbo run check:types --scope='@graphql-mock-operations/*'",
-    "ci": "yarn lint && turbo run check:types build",
+    "ci": "yarn lint && turbo run check:types && turbo run build --filter=@apollo-mock-operations/*",
     "ci:version": "changeset version",
     "prerelease": "yarn ci",
     "release": "yarn prerelease && changeset publish && git push --follow-tags"
