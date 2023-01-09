@@ -1,7 +1,7 @@
 {
   "name": "@examples/with-apollo-nextjs",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.1.0",
   "scripts": {
     "dev": "concurrently \"next dev\" \"yarn generate --watch\"",
     "dev:mocks": "NEXT_PUBLIC_MOCK_OPERATIONS=enabled next dev",
