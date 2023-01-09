@@ -24,7 +24,7 @@ jobs:
         with:
           path: node_modules/.cache
           key:
-            turbo-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn-lock.json') }}
+            turbo-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
