@@ -12,7 +12,7 @@ export interface OperationMeta {
 // shared type that describe shape of any mocked operation state object
 export interface OperationState<
   TMockOperation extends OperationType<any, any>,
-  TOperationState extends readonly string[]
+  TOperationState extends string
 > {
   operation: TMockOperation;
   state: Record<keyof TMockOperation, TOperationState>;
