@@ -3,8 +3,9 @@ import { buildClientSchema } from 'graphql/utilities';
 import { GraphQLSchema, IntrospectionQuery } from 'graphql';
 import { GraphQLArgument } from 'graphql/type/definition';
 import { MockedDevTools } from './ApolloMockedDevtools';
+import type { MockGQLOperationMap } from '../types';
 
-type GetDevToolsComponentOptions<TOperations> = {
+type GetDevToolsComponentOptions<TOperations extends MockGQLOperationMap<any>> = {
   operations: TOperations;
   introspection: IntrospectionQuery;
   enabled?: boolean;
@@ -12,7 +13,7 @@ type GetDevToolsComponentOptions<TOperations> = {
 
 type GetDevToolsComponentResponse = React.FC;
 
-export function getDevToolsComponent<TOperations>({
+export function getDevToolsComponent<TOperations extends MockGQLOperationMap<any>>({
   operations,
   introspection,
   enabled,
@@ -29,12 +30,12 @@ export function getDevToolsComponent<TOperations>({
       return acc;
     }, {} as Record<string, any>);
 
-  const extractOperationState = (operationState: any, type: 'query' | 'mutation') => {
+  const extractOperationState = (operationState: MockGQLOperationMap<any>, type: 'query' | 'mutation') => {
     const schemaInfo: GraphQLSchema = buildClientSchema(introspection);
     const queryTypeFields = schemaInfo.getQueryType()?.getFields();
     const mutationTypeFields = schemaInfo.getMutationType()?.getFields();
 
-    return operationState[type].map((operation: any) => {
+    return operationState[type].map((operation) => {
       const [[name, state]] = Object.entries(operation);
       let operationArgs = {};
 
@@ -48,8 +49,7 @@ export function getDevToolsComponent<TOperations>({
 
       const operationResults =
         typeof state === 'function' ? state({}, operationArgs, {}, {}) : state;
-      const resolverState = operationResults.map((s: any) => s.state);
-      return { [name]: resolverState };
+      return { [name]: Object.keys(operationResults) };
     });
   };
 

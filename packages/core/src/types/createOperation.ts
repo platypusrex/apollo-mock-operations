@@ -7,28 +7,30 @@ type LoadingPayload = {
   variant: Extract<PayloadType, 'loading'>;
 };
 
-type GraphQLErrorPayload = {
+type GraphQLErrorPayload<TModels = any> = {
   variant: Extract<PayloadType, 'graphql-error'>;
-  error?: GraphQLError;
+  error?: PayloadFn<GraphQLError, TModels>;
 };
 
-type NetworkErrorPayload = {
+type NetworkErrorPayload<TModels = any> = {
   variant: Extract<PayloadType, 'network-error'>;
-  error?: Error;
+  error?: PayloadFn<Error, TModels>;
 };
 
-type DataPayload<T> =
+type DataPayload<T, TModels = any> =
   T extends GraphqlError | NetworkError | OperationLoading
     ? never
     : T extends Promise<infer U>
-      ? { variant: Extract<PayloadType, 'data'>; data: U }
-      : { variant: Extract<PayloadType, 'data'>; data: T };
+      ? { variant: Extract<PayloadType, 'data'>; data: PayloadFn<U, TModels> }
+      : { variant: Extract<PayloadType, 'data'>; data: PayloadFn<T, TModels> }
 
-export type OperationPayload<T> =
+export type OperationPayload<T, TModels = any> =
   | LoadingPayload
-  | GraphQLErrorPayload
-  | NetworkErrorPayload
-  | DataPayload<T>;
+  | GraphQLErrorPayload<TModels>
+  | NetworkErrorPayload<TModels>
+  | DataPayload<T, TModels>;
+
+type PayloadFn<T, TModels = any> = T | ((models: TModels) => T)
 
 export interface OperationStateObject<
   TOperationState extends string,
@@ -47,16 +49,26 @@ export type OperationPayloadTuple<
   [I in keyof TOperationState]: OperationStateObject<TOperationState[I], TOperationReturn, TModels>
 } & { length: TOperationState['length'] };
 
+export type OperationStatePayload<
+  TMockOperation extends OperationType<any, any>[keyof TMockOperation],
+  TOperationState extends string,
+  TModels = any
+> = Required<
+  Record<
+    TOperationState,
+    OperationPayload<ReturnType<TMockOperation>, TModels>
+  >
+>;
 
 export type CreateOperationState<
   TMockOperation extends OperationType<any, any>[keyof TMockOperation],
-  TOperationState extends readonly string[],
+  TOperationState extends string,
   TModels = any
 > =
   | ((
-  parent: Parameters<TMockOperation>[0],
-  args: Parameters<TMockOperation>[1],
-  context: Parameters<TMockOperation>[2],
-  info: Parameters<TMockOperation>[3]
-) => OperationPayloadTuple<TOperationState, ReturnType<TMockOperation>, TModels>)
-  | OperationPayloadTuple<TOperationState, ReturnType<TMockOperation>, TModels>;
+    parent: Parameters<TMockOperation>[0],
+    args: Parameters<TMockOperation>[1],
+    context: Parameters<TMockOperation>[2],
+    info: Parameters<TMockOperation>[3]
+) => OperationStatePayload<TMockOperation, TOperationState, TModels>)
+  | OperationStatePayload<TMockOperation, TOperationState, TModels>

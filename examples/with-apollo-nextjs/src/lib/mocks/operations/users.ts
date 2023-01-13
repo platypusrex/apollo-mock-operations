@@ -1,24 +1,18 @@
 import { GraphQLError } from 'graphql';
 import { mockInstance } from '../builder';
 
-mockInstance.query('users', [
-  {
-    state: 'SUCCESS',
-    payload: ({ user }) => ({
-      variant: 'data',
-      data: user.models,
-    }),
+mockInstance.query('users', {
+  LOADING: { variant: 'loading' },
+  SUCCESS: {
+    variant: 'data',
+    data: ({ user }) => user.models,
   },
-  {
-    state: 'LOADING',
-    payload: { variant: 'loading' },
+  NETWORK_ERROR: {
+    variant: 'network-error',
+    error: new Error('Server responded with 500'),
   },
-  {
-    state: 'NETWORK_ERROR',
-    payload: { variant: 'network-error', error: new Error('Server responded with 500') },
+  GQL_ERROR: {
+    variant: 'graphql-error',
+    error: new GraphQLError('Server responded with 403'),
   },
-  {
-    state: 'GQL_ERROR',
-    payload: { variant: 'graphql-error', error: new GraphQLError('Server responded with 403') },
-  },
-]);
+});

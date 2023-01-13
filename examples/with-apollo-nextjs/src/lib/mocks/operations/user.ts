@@ -1,24 +1,18 @@
 import { GraphQLError } from 'graphql';
 import { mockInstance } from '../builder';
 
-mockInstance.query('user', (_, { id }) => [
-  {
-    state: 'SUCCESS',
-    payload: ({ user }) => ({
-      variant: 'data',
-      data: user.findOne({ where: { id } }),
-    }),
+mockInstance.query('user', (_, { id }) => ({
+  SUCCESS: {
+    variant: 'data',
+    data: ({ user }) => user.findOne({ where: { id } }),
   },
-  {
-    state: 'EMPTY',
-    payload: { variant: 'data', data: null },
+  EMPTY: { variant: 'data', data: null },
+  NETWORK_ERROR: {
+    variant: 'network-error',
+    error: new Error('Server responded with 500'),
   },
-  {
-    state: 'NETWORK_ERROR',
-    payload: { variant: 'network-error', error: new Error('Server responded with 500') },
+  GQL_ERROR: {
+    variant: 'graphql-error',
+    error: new GraphQLError('Server responded with 404'),
   },
-  {
-    state: 'GQL_ERROR',
-    payload: { variant: 'graphql-error', error: new GraphQLError('Server responded with 404') },
-  },
-]);
+}));

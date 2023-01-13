@@ -6,68 +6,26 @@ import type { IntrospectionQuery } from 'graphql';
 import { GraphQLError } from 'graphql';
 import type { IntrospectionObjectType } from 'graphql/utilities/getIntrospectionQuery';
 import { OperationModels } from './OperationModels';
-import { OperationModel } from './OperationModel';
 import { getDevToolsComponent } from './dev-tools';
 import type { ApolloMockedDevtools } from './dev-tools/types';
 import { createApolloClient, createLoadingApolloClient, createMockApolloLink } from './utils';
 import type { CreateApolloClient } from './utils';
 import { LOADING_ERROR_CODE, NETWORK_ERROR_CODE } from './constants';
 import type {
-  AnyObject,
   CreateOperationState,
+  MockGQLOperationMap,
+  MockGQLOperationType,
+  MockGQLOperationsCreate,
+  MockGQLOperationsConfig,
+  MockGQLOperationsType,
   MockProviderProps,
   NonEmptyArray,
   OperationFn,
-  OperationState,
-  OperationStateObject,
+  OperationStatePayload,
   ProtectedMockedProviderProps,
   ResolverFn,
   ResolverReturnType,
 } from './types';
-
-interface MockGQLOperationsCreate<TQueryOperations, TMutationOperations> {
-  Query: TQueryOperations;
-  Mutation: TMutationOperations;
-}
-
-interface MockGQLOperationType<TOperationState> {
-  operations?: {
-    query: OperationFn<TOperationState, AnyObject, AnyObject>[];
-    mutation?: OperationFn<TOperationState, AnyObject, AnyObject>[];
-  };
-}
-
-interface MockGQLOperationMap<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
-  query: Record<
-    string,
-    CreateOperationState<
-      TMockGQLOperations['state']['operation'][string],
-      TMockGQLOperations['state']['state'][string],
-      TMockGQLOperations['models']
-    >
-  >[];
-  mutation: Record<
-    string,
-    CreateOperationState<
-      TMockGQLOperations['state']['operation'][string],
-      TMockGQLOperations['state']['state'][string],
-      TMockGQLOperations['models']
-    >
-  >[];
-}
-
-interface MockGQLOperationsConfig {
-  introspectionResult: IntrospectionQuery | any;
-  enableDevTools?: boolean;
-}
-
-export interface MockGQLOperationsType<
-  TOperationState extends Record<'state', OperationState<any, readonly string[]>>,
-  TModels extends Record<'models', OperationModel<any>>
-> {
-  state: TOperationState;
-  models?: TModels;
-}
 
 export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
   private readonly _modelsInstance: OperationModels<any>;
@@ -190,38 +148,39 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
         info: Parameters<TMockGQLOperations['state']['operation'][K]>[3]
       ): ReturnType<ResolverFn<any, any, any, any>> => {
         const currentState = scenario[name] ? scenario[name] : 'SUCCESS';
-        const currentStateArray = (
-          typeof state === 'function' ? state(parent, variables, context, info) : state
-        ) as OperationStateObject<
+        const currentStateArray: OperationStatePayload<
           TMockGQLOperations['state']['state'][K],
           ReturnType<TMockGQLOperations['state']['operation'][K]>,
           TMockGQLOperations['models']
-        >[];
+        > = typeof state === 'function' ? state(parent, variables, context, info) : state;
 
-        const currentStateObj = [...currentStateArray].find((s) => s.state === currentState);
+        const currentStateObj = currentStateArray[currentState as keyof typeof currentStateArray];
+
         if (!currentStateObj) {
           throw new Error(`${String(name)} operation: unable to match state`);
         }
 
-        const { payload } = currentStateObj;
-        const result = typeof payload === 'function' ? payload(this._models) : payload;
-        const { variant } = result;
+        const { variant } = currentStateObj;
 
         switch (variant) {
           case 'data':
-            return result.data;
+            const { data } = currentStateObj;
+            return typeof data === 'function' ? data(this._models) : data;
           case 'loading':
             throw new GraphQLError('loading', {
               extensions: { code: LOADING_ERROR_CODE },
             });
           case 'graphql-error':
-            if (result.error) {
-              throw result.error;
+            const { error: gqlError } = currentStateObj;
+            if (gqlError) {
+              throw typeof gqlError === 'function' ? gqlError(this._models) : gqlError;
             } else {
               throw new GraphQLError('GraphQL error');
             }
           case 'network-error':
-            throw new GraphQLError(result.error?.message ?? 'Network error', {
+            const { error } = currentStateObj;
+            const networkError = typeof error === 'function' ? error(this._models) : error;
+            throw new GraphQLError(networkError?.message ?? 'Network error', {
               extensions: { code: NETWORK_ERROR_CODE },
             });
           default:
