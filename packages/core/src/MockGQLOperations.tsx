@@ -156,14 +156,11 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
 
         const currentStateObj = currentStateArray[currentState as keyof typeof currentStateArray];
 
-        // const currentStateObj = [...currentStateArray].find((s) => s.state === currentState);
         if (!currentStateObj) {
           throw new Error(`${String(name)} operation: unable to match state`);
         }
 
         const { variant } = currentStateObj;
-        // const result = typeof payload === 'function' ? payload(this._models) : payload;
-        // const { variant } = result;
 
         switch (variant) {
           case 'data':
