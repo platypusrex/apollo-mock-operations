@@ -1,7 +1,24 @@
 {
   "name": "@apollo-mock-operations/storybook-addon",
-  "version": "0.0.3",
   "author": "Frank Cooke",
+  "description": "Storybook addon for mocked Apollo client operations",
+  "keywords": [
+    "typescript",
+    "graphql",
+    "apollo",
+    "mock",
+    "mocking",
+    "storybook",
+    "cypress",
+    "jest",
+    "testing",
+    "next"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/platypusrex/apollo-mock-operations.git"
+  },
+  "version": "0.0.3",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

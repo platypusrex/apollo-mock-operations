@@ -1,11 +1,28 @@
 {
   "name": "@apollo-mock-operations/codegen-plugin",
+  "author": "Frank Cooke",
+  "description": "A graphql-codegen plugin for generating mocked operation resolvers",
+  "keywords": [
+    "typescript",
+    "graphql",
+    "apollo",
+    "mock",
+    "mocking",
+    "storybook",
+    "cypress",
+    "jest",
+    "testing",
+    "next"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/platypusrex/apollo-mock-operations.git"
+  },
   "version": "0.0.3",
+  "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/dts/index.d.ts",
-  "author": "Frank Cooke",
-  "license": "MIT",
   "files": [
     "dist"
   ],
