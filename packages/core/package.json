@@ -1,8 +1,25 @@
 {
   "name": "@apollo-mock-operations/core",
-  "version": "0.0.3",
   "author": "Frank Cooke",
+  "description": "Core module utilized in intercepting and mocking requests for Apollo client",
+  "keywords": [
+    "typescript",
+    "graphql",
+    "apollo",
+    "mock",
+    "mocking",
+    "storybook",
+    "cypress",
+    "jest",
+    "testing",
+    "next"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/platypusrex/apollo-mock-operations.git"
+  },
   "license": "MIT",
+  "version": "0.0.3",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/dts/index.d.ts",

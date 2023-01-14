@@ -1,7 +1,29 @@
 {
   "name": "apollo-mock-operations",
-  "version": "0.0.0",
   "private": true,
+  "version": "0.0.0",
+  "author": "Frank Cooke",
+  "description": "Intuitive and typesafe Apollo GraphQL operation mocking for client side testing, storybook, and beyond",
+  "keywords": [
+    "typescript",
+    "graphql",
+    "apollo",
+    "mock",
+    "mocking",
+    "storybook",
+    "cypress",
+    "jest",
+    "testing",
+    "next"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/platypusrex/apollo-mock-operations.git"
+  },
+  "bugs": {
+    "url": "https://github.com/platypusrex/apollo-mock-operations/issues"
+  },
+  "homepage": "https://github.com/platypusrex/apollo-mock-operations/#readme",
   "workspaces": [
     "packages/*",
     "examples/*"
