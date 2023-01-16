@@ -37,6 +37,7 @@ export interface MockGQLOperationMap<TMockGQLOperations extends MockGQLOperation
 
 export interface MockGQLOperationsConfig {
   introspectionResult: IntrospectionQuery | any;
+  defaultOperationState: string;
   enableDevTools?: boolean;
 }
 

@@ -4,10 +4,10 @@ import { parseJSON } from '../utils/parseJSON';
 import { useCookie } from './hooks';
 import { getInitialOperationState } from './utils';
 import { OperationStateSelect, PlusIcon, OperationSection } from './components';
-import { ApolloMockedDevtools, OperationMap, OperationSessionState } from './types';
+import { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
 
-export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap }) => {
+export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, defaultOperationState }) => {
   const apolloClient = useApolloClient();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,7 +27,7 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
   }, [operationStateCookie]);
 
   useEffect(() => {
-    const initialState = getInitialOperationState(operationMap);
+    const initialState = getInitialOperationState(operationMap, defaultOperationState);
     setCookie(JSON.stringify(initialState));
   }, []);
 
@@ -109,7 +109,7 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
                     key={`${operation[0]}-${i}`}
                     operationName={operation[0]}
                     operationState={operation[1]}
-                    value={parsedOperations?.query[operation[0]]}
+                    value={parsedOperations?.query[operation[0]] ?? defaultOperationState}
                     onChange={(e) => handleSetOperationState(e, 'query')}
                   />
                 );
@@ -125,7 +125,7 @@ export const MockedDevTools: React.FC<ApolloMockedDevtools> = ({ operationMap })
                     key={`${operation[0]}-${i}`}
                     operationName={operation[0]}
                     operationState={operation[1]}
-                    value={parsedOperations?.mutation[operation[0]]}
+                    value={parsedOperations?.mutation[operation[0]] ?? defaultOperationState}
                     onChange={(e) => handleSetOperationState(e, 'mutation')}
                   />
                 );

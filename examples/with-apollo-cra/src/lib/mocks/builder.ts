@@ -9,5 +9,6 @@ export interface MockGQLOperationsType {
 
 export const mockBuilder = new MockGQLOperations<MockGQLOperationsType>({
   introspectionResult,
+  defaultOperationState: 'SUCCESS',
   enableDevTools: process.env.REACT_APP_MOCK_OPERATIONS === 'enabled',
 });

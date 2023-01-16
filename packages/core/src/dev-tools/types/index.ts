@@ -3,8 +3,9 @@ export type OperationMap = {
   mutation: Record<string, string[]>[];
 };
 
-export type ApolloMockedDevtools = {
+export type MockedDevtoolsProps = {
   operationMap: OperationMap;
+  defaultOperationState: string;
 };
 
 export type OperationSessionState = {
