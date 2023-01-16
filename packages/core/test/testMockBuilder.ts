@@ -38,4 +38,3 @@ mockBuilder.query('book', {
   GQL_ERROR: { variant: 'graphql-error' },
   NETWORK_ERROR: { variant: 'network-error' },
 });
-

@@ -42,7 +42,11 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     query: [],
   };
 
-  constructor({ introspectionResult, enableDevTools, defaultOperationState }: MockGQLOperationsConfig) {
+  constructor({
+    introspectionResult,
+    enableDevTools,
+    defaultOperationState,
+  }: MockGQLOperationsConfig) {
     this.introspectionResult = introspectionResult;
     this.enableDevTools = enableDevTools;
     this.defaultOperationState = defaultOperationState;
@@ -58,7 +62,9 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     return { ...models, _unsafeForceUpdateModelData };
   }
 
-  createDevtools = (): React.FC<Omit<MockedDevtoolsProps, 'operationMap' | 'defaultOperationState'>> => {
+  createDevtools = (): React.FC<
+    Omit<MockedDevtoolsProps, 'operationMap' | 'defaultOperationState'>
+  > => {
     return getDevToolsComponent({
       operations: this._operationMap,
       introspection: this.introspectionResult,
