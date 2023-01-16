@@ -1,11 +1,11 @@
-import { ApolloMockedDevtools } from '../dev-tools/types';
+import { MockedDevtoolsProps } from '../dev-tools/types';
 import { GetServerSideProps } from './types';
 import { reactiveOperationState } from './reactiveOperationState';
 import { APOLLO_MOCK_MODEL_STORE_KEY, APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
 import { MockGQLOperations } from '../MockGQLOperations';
 
 type GetServerSideApolloMockedProps = (mockInstance: MockGQLOperations<any>) =>
-  GetServerSideProps<Omit<ApolloMockedDevtools, 'operationMap'>>;
+  GetServerSideProps<Omit<MockedDevtoolsProps, 'operationMap' | 'defaultOperationState'>>;
 export const getServerSideApolloMockedProps: GetServerSideApolloMockedProps = (
   mockInstance: MockGQLOperations<any>
 ) =>

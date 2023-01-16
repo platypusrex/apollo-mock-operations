@@ -7,7 +7,7 @@ import { GraphQLError } from 'graphql';
 import type { IntrospectionObjectType } from 'graphql/utilities/getIntrospectionQuery';
 import { OperationModels } from './OperationModels';
 import { getDevToolsComponent } from './dev-tools';
-import type { ApolloMockedDevtools } from './dev-tools/types';
+import type { MockedDevtoolsProps } from './dev-tools/types';
 import { createApolloClient, createLoadingApolloClient, createMockApolloLink } from './utils';
 import type { CreateApolloClient } from './utils';
 import { LOADING_ERROR_CODE, NETWORK_ERROR_CODE } from './constants';
@@ -28,9 +28,10 @@ import type {
 } from './types';
 
 export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
-  private readonly _modelsInstance: OperationModels<any>;
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
   private readonly enableDevTools?: boolean;
+  private readonly defaultOperationState: string;
+  private readonly _modelsInstance: OperationModels<any>;
   private _models: TMockGQLOperations['models'] = {};
   private _operations: MockGQLOperationType<TMockGQLOperations['state']>['operations'] = {
     mutation: [],
@@ -41,9 +42,10 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     query: [],
   };
 
-  constructor({ introspectionResult, enableDevTools }: MockGQLOperationsConfig) {
+  constructor({ introspectionResult, enableDevTools, defaultOperationState }: MockGQLOperationsConfig) {
     this.introspectionResult = introspectionResult;
     this.enableDevTools = enableDevTools;
+    this.defaultOperationState = defaultOperationState;
     this._modelsInstance = OperationModels.getInstance();
   }
 
@@ -56,10 +58,11 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     return { ...models, _unsafeForceUpdateModelData };
   }
 
-  createDevtools = (): React.FC<Omit<ApolloMockedDevtools, 'operationMap'>> => {
+  createDevtools = (): React.FC<Omit<MockedDevtoolsProps, 'operationMap' | 'defaultOperationState'>> => {
     return getDevToolsComponent({
       operations: this._operationMap,
       introspection: this.introspectionResult,
+      defaultOperationState: this.defaultOperationState,
       enabled: this.enableDevTools,
     });
   };
@@ -147,7 +150,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
         context: Parameters<TMockGQLOperations['state']['operation'][K]>[2],
         info: Parameters<TMockGQLOperations['state']['operation'][K]>[3]
       ): ReturnType<ResolverFn<any, any, any, any>> => {
-        const currentState = scenario[name] ? scenario[name] : 'SUCCESS';
+        const currentState = scenario[name] ? scenario[name] : this.defaultOperationState;
         const currentStateArray: OperationStatePayload<
           TMockGQLOperations['state']['state'][K],
           ReturnType<TMockGQLOperations['state']['operation'][K]>,
