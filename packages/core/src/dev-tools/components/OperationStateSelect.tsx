@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import styles from './OperationStateSelect.module.css';
+import { OperationSelectContainer, FormControl, SelectContainer } from '../styles';
 
 interface OperationStateSelectProps {
   operationName: string;
@@ -10,9 +10,9 @@ interface OperationStateSelectProps {
 
 export const OperationStateSelect: React.FC<OperationStateSelectProps> = React.memo(
   ({ operationName, operationState, value, onChange }) => (
-    <div className={styles.content}>
-      <div className={styles.formControl}>
-        <div className={styles.selectContainer}>
+    <OperationSelectContainer>
+      <FormControl>
+        <SelectContainer>
           <label>{operationName}</label>
           <select
             name={operationName}
@@ -26,8 +26,8 @@ export const OperationStateSelect: React.FC<OperationStateSelectProps> = React.m
               </option>
             ))}
           </select>
-        </div>
-      </div>
-    </div>
+        </SelectContainer>
+      </FormControl>
+    </OperationSelectContainer>
   )
 );

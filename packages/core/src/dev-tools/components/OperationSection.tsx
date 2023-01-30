@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './OperationSection.module.css';
+import { OperationSectionContainer } from '../styles';
 
 interface OperationSectionProps {
   title: string;
@@ -7,9 +7,8 @@ interface OperationSectionProps {
 }
 
 export const OperationSection: React.FC<OperationSectionProps> = ({ title, children }) => (
-  // @ts-ignore
-  <div className={styles.contentBody}>
+  <OperationSectionContainer>
     <h2>{title}</h2>
     {children}
-  </div>
+  </OperationSectionContainer>
 );

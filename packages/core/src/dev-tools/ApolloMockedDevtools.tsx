@@ -4,9 +4,9 @@ import { parseJSON } from '../utils/parseJSON';
 import { useCookie } from './hooks';
 import { getInitialOperationState } from './utils';
 import { OperationStateSelect, OperationSection, ToggleButton } from './components';
+import { Container, ContainerBody, ContainerFooter, ContainerHeader } from './styles';
 import { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
-import styles from './ApolloMockedDevtools.module.css';
 
 export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, defaultOperationState }) => {
   const apolloClient = useApolloClient();
@@ -86,17 +86,11 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
   return (
     <footer>
       <ToggleButton ref={buttonRef} open={!drawerVisible} onClick={toggleDrawer} />
-      <section
-        ref={containerRef}
-        // @ts-ignore
-        className={styles[drawerVisible ? 'containerVisible' : 'container']}
-      >
-        {/* @ts-ignore */}
-        <div className={styles.containerHeader}>
+      <Container visible={drawerVisible} ref={containerRef}>
+        <ContainerHeader>
           <h1>Operations</h1>
-        </div>
-        {/* @ts-ignore */}
-        <div className={styles.containerBody}>
+        </ContainerHeader>
+        <ContainerBody>
           {operationMap.query.length > 0 && (
             <OperationSection title="Query">
               {operationMap.query.map((query, i) => {
@@ -129,10 +123,9 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
               })}
             </OperationSection>
           )}
-        </div>
-        {/* @ts-ignore */}
-        <div className={styles.containerFooter} />
-      </section>
+        </ContainerBody>
+        <ContainerFooter />
+      </Container>
     </footer>
   );
 };

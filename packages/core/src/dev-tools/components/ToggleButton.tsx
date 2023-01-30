@@ -1,6 +1,6 @@
 import React, { MutableRefObject } from 'react';
 import { PlusIcon } from './PlusIcon';
-import styles from './ToggleButton.module.css';
+import { Toggle } from '../styles';
 
 interface ToggleButtonProps {
   ref: MutableRefObject<HTMLButtonElement | null>;
@@ -10,14 +10,13 @@ interface ToggleButtonProps {
 
 export const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProps>(
   ({ open, onClick }, ref) => (
-    <button
+    <Toggle
+      open={open}
       ref={ref}
-      // @ts-ignore
-      className={styles[open ? 'toggleButton' : 'toggleButtonClose']}
       aria-label={!open ? 'close' : 'open'}
       onClick={onClick}
     >
       <PlusIcon open={open} />
-    </button>
+    </Toggle>
   )
 );
