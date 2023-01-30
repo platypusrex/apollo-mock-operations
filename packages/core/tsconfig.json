@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.options.json",
   "compilerOptions": {
-    "noEmit": true,
-    "esModuleInterop": true
+    "noEmit": true
   },
   "files": [
     "test/introspection.json"

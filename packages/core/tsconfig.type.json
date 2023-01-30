@@ -4,8 +4,7 @@
     "declarationDir": "dist/dts",
     "outDir": "dist/dts",
     "rootDir": "src",
-    "emitDeclarationOnly": true,
-    "esModuleInterop": true
+    "emitDeclarationOnly": true
   },
   "exclude": [
     "dist/dts",
