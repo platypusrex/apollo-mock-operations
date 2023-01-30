@@ -3,9 +3,10 @@ import { useApolloClient } from '@apollo/client';
 import { parseJSON } from '../utils/parseJSON';
 import { useCookie } from './hooks';
 import { getInitialOperationState } from './utils';
-import { OperationStateSelect, PlusIcon, OperationSection } from './components';
+import { OperationStateSelect, OperationSection, ToggleButton } from './components';
 import { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
+import styles from './ApolloMockedDevtools.module.css';
 
 export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, defaultOperationState }) => {
   const apolloClient = useApolloClient();
@@ -84,22 +85,18 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
 
   return (
     <footer>
-      <button
-        ref={buttonRef}
-        className={`mock-devtools__button ${drawerVisible ? 'close' : ''}`}
-        aria-label={drawerVisible ? 'close' : 'open'}
-        onClick={toggleDrawer}
-      >
-        <PlusIcon className={drawerVisible ? 'close' : ''} />
-      </button>
+      <ToggleButton ref={buttonRef} open={!drawerVisible} onClick={toggleDrawer} />
       <section
         ref={containerRef}
-        className={`mock-devtools__content ${drawerVisible ? 'visible' : ''}`}
+        // @ts-ignore
+        className={styles[drawerVisible ? 'containerVisible' : 'container']}
       >
-        <div className="mock-devtools__content-header">
+        {/* @ts-ignore */}
+        <div className={styles.containerHeader}>
           <h1>Operations</h1>
         </div>
-        <div className="mock-devtools__content-body">
+        {/* @ts-ignore */}
+        <div className={styles.containerBody}>
           {operationMap.query.length > 0 && (
             <OperationSection title="Query">
               {operationMap.query.map((query, i) => {
@@ -133,7 +130,8 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
             </OperationSection>
           )}
         </div>
-        <div className="mock-devtools__content-footer" />
+        {/* @ts-ignore */}
+        <div className={styles.containerFooter} />
       </section>
     </footer>
   );

@@ -5,7 +5,6 @@ import { ApolloProvider } from '@apollo/client';
 import { client } from './lib/apollo/client';
 import { Devtools } from './lib/mocks';
 import reportWebVitals from './reportWebVitals';
-import '@apollo-mock-operations/core/devtools-styles.css'
 import './index.css';
 
 ReactDOM.render(

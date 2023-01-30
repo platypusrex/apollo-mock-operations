@@ -11,6 +11,7 @@ logs/
 /.vscode/
 .eslintcache
 .npm
+.swc/
 
 # dependencies
 node_modules

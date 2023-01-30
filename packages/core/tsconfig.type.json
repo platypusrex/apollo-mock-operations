@@ -4,13 +4,13 @@
     "declarationDir": "dist/dts",
     "outDir": "dist/dts",
     "rootDir": "src",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "exclude": [
     "dist/dts",
     "tests"
   ],
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

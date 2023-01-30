@@ -1,10 +1,11 @@
 import React from 'react';
+import styles from './PlusIcon.module.css';
 
 interface PlusIconProps {
-  className: string;
+  open: boolean;
 }
 
-export const PlusIcon: React.FC<PlusIconProps> = ({ className }) => (
+export const PlusIcon: React.FC<PlusIconProps> = ({ open }) => (
   <svg
     aria-hidden="true"
     focusable="false"
@@ -12,7 +13,8 @@ export const PlusIcon: React.FC<PlusIconProps> = ({ className }) => (
     width="16"
     height="16"
     fill="currentColor"
-    className={`mock-devtools__icon ${className}`}
+    // @ts-ignore
+    className={styles[!open ? 'iconClose' : 'icon']}
     viewBox="0 0 16 16"
   >
     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />

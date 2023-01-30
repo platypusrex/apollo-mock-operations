@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "version": "0.2.0",
-  "main": "dist/cjs/index.js",
+  "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/dts/index.d.ts",
   "files": [
@@ -31,8 +31,8 @@
     "access": "public"
   },
   "scripts": {
-    "build:cjs": "swc src -d dist/cjs --config-file ../../.swcrc -C module.type=commonjs",
-    "build:esm": "swc src -d dist/esm --config-file ../../.swcrc -C module.type=es6",
+    "build:cjs": "swc src -d dist/cjs --config-file ../../.swcrc -C module.type=commonjs --copy-files",
+    "build:esm": "swc src -d dist/esm --config-file ../../.swcrc -C module.type=es6 --copy-files",
     "build:ts": "tsc --project tsconfig.type.json",
     "build": "yarn clean && concurrently \"yarn build:cjs\" \"yarn build:esm\" \"yarn build:ts\"",
     "clean": "rimraf dist",
@@ -46,7 +46,8 @@
     "graphql": "^16.6.0",
     "react": "^18.2.0",
     "rimraf": "^3.0.2",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "typescript-plugin-css-modules": "^4.1.1"
   },
   "dependencies": {
     "@graphql-tools/merge": "^8.2.3",

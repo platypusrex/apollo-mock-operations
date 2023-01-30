@@ -64,6 +64,7 @@
     "eslint-plugin-react": "^7.31.11",
     "graphql": "16.6.0",
     "prettier": "latest",
+    "swc-plugin-auto-css-modules": "^1.3.0",
     "turbo": "latest"
   },
   "resolutions": {

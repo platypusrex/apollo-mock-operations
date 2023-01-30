@@ -14,10 +14,11 @@
     "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
-    "@examples/common": "*",
     "@apollo/client": "^3.7.1",
+    "@examples/common": "*",
     "graphql": "^16.6.0",
     "next": "13.0.5",
+    "next-global-css": "^1.3.1",
     "next-merge-props": "^1.0.1",
     "nextjs-apollo-client": "^0.3.0",
     "react": "18.2.0",

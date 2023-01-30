@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.options.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDirs": ["src", "test"]
+    "esModuleInterop": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "files": [
     "test/introspection.json"

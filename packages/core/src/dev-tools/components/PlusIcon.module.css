@@ -1,0 +1,16 @@
+.icon {
+  display: inline-block;
+  vertical-align: -0.125em;
+  fill: currentcolor;
+  width: 1em;
+  height: 1em;
+  font-size: 1.875rem;
+  color: #fff;
+  transition: transform 0.2s ease-in-out;
+}
+
+.iconClose {
+  composes: icon;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease-in-out;
+}

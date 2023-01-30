@@ -1,0 +1,30 @@
+.toggleButton {
+  cursor: pointer;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  border: none;
+  box-shadow: 0 1px 10px -1px rgba(0,0,0,0.25);
+  background: #3f20ba;
+  transition: background 0.2s ease-in-out;
+  z-index: 1;
+}
+
+.toggleButton:hover {
+  background: #311c87;
+  transition: background 0.2s ease-in-out;
+}
+
+.toggleButtonClose {
+  composes: toggleButton;
+  background: #BA0F30;
+  transition: background 0.2s ease-in-out;
+}
+
+.toggleButtonClose:hover {
+  background: #AE002B;
+  transition: background 0.2s ease-in-out;
+}
