@@ -1,4 +1,3 @@
-import '@apollo-mock-operations/core/devtools-styles.css';
 import '@examples/common/common.css';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';

@@ -10,7 +10,5 @@
     "dist/dts",
     "tests"
   ],
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

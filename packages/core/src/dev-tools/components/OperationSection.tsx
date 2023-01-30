@@ -1,4 +1,5 @@
 import React from 'react';
+import { OperationSectionContainer } from '../styles';
 
 interface OperationSectionProps {
   title: string;
@@ -6,8 +7,8 @@ interface OperationSectionProps {
 }
 
 export const OperationSection: React.FC<OperationSectionProps> = ({ title, children }) => (
-  <div className="mock-devtools__content-body-query">
+  <OperationSectionContainer>
     <h2>{title}</h2>
     {children}
-  </div>
+  </OperationSectionContainer>
 );

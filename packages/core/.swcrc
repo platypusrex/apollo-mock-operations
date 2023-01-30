@@ -1,0 +1,24 @@
+{
+  "jsc": {
+    "experimental": {
+      "plugins": [
+        ["@swc/plugin-styled-components", {
+          "displayName": true,
+          "ssr": true
+        }]
+      ]
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    },
+    "target": "es2020"
+  },
+  "sourceMaps": true,
+  "inlineSourcesContent": false
+}

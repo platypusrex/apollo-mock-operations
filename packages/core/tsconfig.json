@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.options.json",
   "compilerOptions": {
-    "noEmit": true,
-    "rootDirs": ["src", "test"]
+    "noEmit": true
   },
   "files": [
     "test/introspection.json"

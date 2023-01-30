@@ -1,4 +1,5 @@
 import React, { ChangeEvent } from 'react';
+import { OperationSelectContainer, FormControl, SelectContainer } from '../styles';
 
 interface OperationStateSelectProps {
   operationName: string;
@@ -9,19 +10,24 @@ interface OperationStateSelectProps {
 
 export const OperationStateSelect: React.FC<OperationStateSelectProps> = React.memo(
   ({ operationName, operationState, value, onChange }) => (
-    <div className="mock-devtools__content-body-operation">
-      <div className="mock-devtools__form-control">
-        <div className="mock-devtools__select-container">
+    <OperationSelectContainer>
+      <FormControl>
+        <SelectContainer>
           <label>{operationName}</label>
-          <select name={operationName} id="operation-state" value={value} onChange={onChange}>
+          <select
+            name={operationName}
+            id={`operation-state-${operationName}`}
+            value={value}
+            onChange={onChange}
+          >
             {operationState.map((state, i) => (
               <option key={`${state}-${i}`} value={state}>
                 {state}
               </option>
             ))}
           </select>
-        </div>
-      </div>
-    </div>
+        </SelectContainer>
+      </FormControl>
+    </OperationSelectContainer>
   )
 );
