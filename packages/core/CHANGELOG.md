@@ -1,5 +1,13 @@
 # @apollo-mock-operations/core
 
+## 0.2.1
+
+### Patch Changes
+
+- b29197b: This introduces a change to how the devtools component is styled. More specifically, it
+  introduces a css-in-js solution (styled-components) and removes the need for a consumer to import
+  a stylesheet.
+
 ## 0.2.0
 
 ### Minor Changes
