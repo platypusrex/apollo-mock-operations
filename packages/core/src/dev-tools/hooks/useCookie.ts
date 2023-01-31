@@ -58,6 +58,18 @@ export const getCookie = (name: string, initialValue = '') => {
   );
 };
 
+export const destroyCookie = (name: string) => {
+  const options = { path: '/', };
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1)
+  const expires = yesterday.toUTCString();
+  console.log({ expires, cookie: `${name}=;expires=${expires}${stringifyOptions(options)}` });
+
+  document.cookie = `${name}=;expires=${expires}${stringifyOptions(options)}`;
+}
+
 type UseCookie = [string, (value: string, options?: CookieOptions) => void];
 
 export const useCookie = (key: string, initialValue = ''): UseCookie => {
