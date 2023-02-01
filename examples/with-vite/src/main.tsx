@@ -1,10 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client';
-import { App } from './App'
+import { App } from './App';
 import { client } from './lib/apollo/client';
 import { Devtools } from './lib/mocks';
-import './index.css'
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -12,5 +12,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <Devtools />
       <App />
     </ApolloProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
