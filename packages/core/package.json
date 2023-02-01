@@ -33,7 +33,6 @@
     "build:cjs": "swc src -d dist/cjs --config-file .swcrc -C module.type=commonjs",
     "build:esm": "swc src -d dist/esm --config-file .swcrc -C module.type=es6",
     "build:ts": "tsc --project tsconfig.type.json",
-    "build:tsup": "yarn clean && tsup --config tsup.config.ts",
     "build": "yarn clean && concurrently \"yarn build:cjs\" \"yarn build:esm\" \"yarn build:ts\"",
     "clean": "rimraf dist",
     "clean:deps": "rimraf node_modules",
