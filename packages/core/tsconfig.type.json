@@ -4,7 +4,9 @@
     "declarationDir": "dist/dts",
     "outDir": "dist/dts",
     "rootDir": "src",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "composite": false,
+    "jsx": "react"
   },
   "exclude": [
     "dist/dts",

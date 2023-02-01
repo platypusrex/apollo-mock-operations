@@ -1,10 +1,5 @@
 {
   "jsc": {
-    "experimental": {
-      "plugins": [
-        ["@swc/plugin-emotion", {}]
-      ]
-    },
     "parser": {
       "syntax": "typescript",
       "tsx": true

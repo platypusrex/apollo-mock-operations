@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 export const Container = styled.section<{ visible: boolean }>`
   transition: height 0.2s ease-in-out, transform 0.3s ease-in-out;
@@ -126,7 +126,7 @@ export const SelectContainer = styled.div`
   position: relative;
   
   &:after {
-    content: "\\203A";
+    content: "\203A";
     font-size: 25px;
     color: #3a3a3a;
     transform: rotate(90deg);
