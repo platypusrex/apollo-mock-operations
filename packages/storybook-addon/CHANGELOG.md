@@ -1,5 +1,12 @@
 # @apollo-mock-operations/storybook-addon
 
+## 0.1.1
+
+### Patch Changes
+
+- a9f095c: Restructures the projects swc configuration. This is in support of migrating from
+  styled-components to emotino for the devtools component.
+
 ## 0.1.0
 
 ### Minor Changes
