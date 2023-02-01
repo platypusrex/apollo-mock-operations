@@ -1,5 +1,12 @@
 # @apollo-mock-operations/core
 
+## 0.2.2
+
+### Patch Changes
+
+- a9f095c: Restructures the projects swc configuration. This is in support of migrating from
+  styled-components to emotino for the devtools component.
+
 ## 0.2.1
 
 ### Patch Changes
