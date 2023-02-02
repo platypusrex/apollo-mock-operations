@@ -9,10 +9,13 @@
       "path": "examples/server"
     },
     {
-      "path": "examples/with-apollo-nextjs"
+      "path": "examples/with-nextjs"
     },
     {
-      "path": "examples/with-apollo-cra"
+      "path": "examples/with-cra"
+    },
+    {
+      "path": "examples/with-vite"
     },
     {
       "path": "packages/core"
