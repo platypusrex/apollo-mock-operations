@@ -3,16 +3,16 @@ import { addMocksToSchema } from '@graphql-tools/mock';
 import { ApolloLink, FetchResult, Observable, Operation } from '@apollo/client';
 import { IResolvers } from '@graphql-tools/utils';
 import { CreateLinkOptions, LinkSchemaProps } from './types';
-import {
-  LOADING_ERROR_CODE,
-  NETWORK_ERROR_CODE,
-  APOLLO_MOCK_OPERATION_STATE_KEY,
-} from './constants';
 import { getCookie } from './dev-tools/hooks';
 import { reactiveOperationState } from './nextjs';
 import { delay } from './utils/delay';
 import { isSSR } from './utils/isSSR';
 import { parseJSON } from './utils/parseJSON';
+import {
+  LOADING_ERROR_CODE,
+  NETWORK_ERROR_CODE,
+  APOLLO_MOCK_OPERATION_STATE_KEY,
+} from './constants';
 
 type ApolloMockLinkConfig<TState = any> = {
   mocks: LinkSchemaProps;
@@ -63,7 +63,14 @@ export class ApolloMockLink extends ApolloLink {
       onResolved,
     } = this.mocks;
 
-    const resolvers = this.createOperations ? this.getOperationState() : mockResolvers;
+    const mockedOperations = this.createOperations ? this.getOperationState() : mockResolvers;
+    const resolvers = Object.keys(mockedOperations ?? {}).reduce<IResolvers>((operation, curr) => {
+      if (mockedOperations && Object.keys(mockedOperations[curr]).length) {
+        operation[curr] = mockedOperations[curr];
+      }
+      return operation;
+    }, {});
+
     const schema = buildClientSchema(introspectionResult);
     const mockOptions = { schema, resolvers };
     const schemaWithMocks = addMocksToSchema(mockOptions);

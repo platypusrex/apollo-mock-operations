@@ -8,12 +8,12 @@
     "dev:mocks": "VITE_MOCK_OPERATION=enabled && vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "generate": "graphql-codegen --config codegen.ts",
+    "generate": "graphql-codegen --config codegen.cjs",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.6",
+    "@apollo/client": "^3.7.1",
     "@examples/common": "*",
     "graphql": "^16.6.0",
     "react": "^18.2.0",
