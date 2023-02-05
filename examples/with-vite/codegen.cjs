@@ -1,6 +1,4 @@
-import type { CodegenConfig } from '@graphql-codegen/cli';
-
-const config: CodegenConfig = {
+const config = {
   overwrite: true,
   schema: "http://localhost:4000",
   documents: "../common/src/gql/**/*.ts",
@@ -29,4 +27,4 @@ const config: CodegenConfig = {
   },
 };
 
-export default config;
+module.exports = config;

@@ -1,12 +1,12 @@
-import { AnyObject } from './util';
-import { IntrospectionQuery } from 'graphql/index';
+import { IntrospectionQuery } from 'graphql';
 import { OperationModel } from '../OperationModel';
-import { OperationFn, OperationState } from './shared';
+import { AnyObject } from './util';
 import { CreateOperationState } from './createOperation';
+import { OperationFn, OperationState } from './shared';
 
 export interface MockGQLOperationsCreate<TQueryOperations, TMutationOperations> {
   Query: TQueryOperations;
-  Mutation: TMutationOperations;
+  Mutation?: TMutationOperations;
 }
 
 export interface MockGQLOperationType<TOperationState> {
