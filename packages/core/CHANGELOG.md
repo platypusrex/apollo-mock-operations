@@ -1,5 +1,11 @@
 # @apollo-mock-operations/core
 
+## 0.2.3
+
+### Patch Changes
+
+- 79e6002: Fixes "Mutation" defined in resolvers, but not in schema issue.
+
 ## 0.2.2
 
 ### Patch Changes
