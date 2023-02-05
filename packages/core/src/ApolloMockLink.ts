@@ -63,10 +63,10 @@ export class ApolloMockLink extends ApolloLink {
       onResolved,
     } = this.mocks;
 
-    const mockedOperations= this.createOperations ? this.getOperationState() : mockResolvers;
+    const mockedOperations = this.createOperations ? this.getOperationState() : mockResolvers;
     const resolvers = Object.keys(mockedOperations ?? {}).reduce<IResolvers>((operation, curr) => {
       if (mockedOperations && Object.keys(mockedOperations[curr]).length) {
-        operation[curr] = mockedOperations[curr]
+        operation[curr] = mockedOperations[curr];
       }
       return operation;
     }, {});
@@ -95,12 +95,12 @@ export class ApolloMockLink extends ApolloLink {
         // @ts-ignore
         .then((result) => {
           onResolved &&
-          onResolved({
-            operationName,
-            variables,
-            query: source,
-            result,
-          });
+            onResolved({
+              operationName,
+              variables,
+              query: source,
+              result,
+            });
 
           const loading = result.errors?.find(
             (error) => error?.extensions?.code === LOADING_ERROR_CODE
