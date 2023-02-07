@@ -7,10 +7,9 @@ export interface MockGQLOperationsType {
   models: Models;
 }
 
-console.log(import.meta.env.VITE_MOCK_OPERATION);
-
 export const mockBuilder = new MockGQLOperations<MockGQLOperationsType>({
   introspectionResult,
   defaultOperationState: 'SUCCESS',
   enableDevTools: import.meta.env.VITE_MOCK_OPERATION === 'enabled',
 });
+

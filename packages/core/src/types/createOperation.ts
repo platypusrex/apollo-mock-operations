@@ -60,15 +60,19 @@ export type OperationStatePayload<
   >
 >;
 
+type CreateOperationReturnType<
+  TMockOperation extends OperationType<any, any>[keyof TMockOperation],
+  TOperationState extends string,
+  TModels = any
+> = {
+  defaultState: TOperationState,
+  resolver:
+    | ((...args: Parameters<TMockOperation>) => OperationStatePayload<TMockOperation, TOperationState, TModels>)
+    | OperationStatePayload<TMockOperation, TOperationState, TModels>
+}
+
 export type CreateOperationState<
   TMockOperation extends OperationType<any, any>[keyof TMockOperation],
   TOperationState extends string,
   TModels = any
-> =
-  | ((
-    parent: Parameters<TMockOperation>[0],
-    args: Parameters<TMockOperation>[1],
-    context: Parameters<TMockOperation>[2],
-    info: Parameters<TMockOperation>[3]
-) => OperationStatePayload<TMockOperation, TOperationState, TModels>)
-  | OperationStatePayload<TMockOperation, TOperationState, TModels>
+> = CreateOperationReturnType<TMockOperation, TOperationState, TModels>

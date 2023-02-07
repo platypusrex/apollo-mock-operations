@@ -30,7 +30,7 @@ import type {
 export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
   private readonly enableDevTools?: boolean;
-  private readonly defaultOperationState: string;
+  private readonly defaultOperationState?: string;
   private readonly _modelsInstance: OperationModels<any>;
   private _models: TMockGQLOperations['models'] = {};
   private _operations: MockGQLOperationType<TMockGQLOperations['state']>['operations'] = {
@@ -65,7 +65,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   createDevtools = (): React.FC<
     Omit<MockedDevtoolsProps, 'operationMap' | 'defaultOperationState'>
   > => {
-    return getDevToolsComponent({
+    return getDevToolsComponent<MockGQLOperationMap<TMockGQLOperations>>({
       operations: this._operationMap,
       introspection: this.introspectionResult,
       defaultOperationState: this.defaultOperationState,
@@ -106,14 +106,14 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
 
   query = <K extends keyof TMockGQLOperations['state']['operation']>(
     name: K,
-    state: CreateOperationState<
+    options: CreateOperationState<
       TMockGQLOperations['state']['operation'][K],
       TMockGQLOperations['state']['state'][K],
       TMockGQLOperations['models']
     >
   ): void => {
-    const operation = this.createOperation(name, state);
-    this._operationMap.query = [...this._operationMap.query, { [name]: state }];
+    const operation = this.createOperation(name, options);
+    this._operationMap.query = [...this._operationMap.query, { [name]: options }];
 
     if (this._operations) {
       this._operations.query = [...((this._operations.query as any) ?? []), operation];
@@ -122,14 +122,14 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
 
   mutation = <K extends keyof TMockGQLOperations['state']['operation']>(
     name: K,
-    state: CreateOperationState<
+    options: CreateOperationState<
       TMockGQLOperations['state']['operation'][K],
       TMockGQLOperations['state']['state'][K],
       TMockGQLOperations['models']
     >
   ): void => {
-    const operation = this.createOperation(name, state);
-    this._operationMap.mutation = [...this._operationMap.mutation, { [name]: state }];
+    const operation = this.createOperation(name, options);
+    this._operationMap.mutation = [...this._operationMap.mutation, { [name]: options }];
 
     if (this._operations) {
       this._operations.mutation = [...((this._operations.mutation as any) ?? []), operation];
@@ -139,7 +139,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   private createOperation =
     <K extends keyof TMockGQLOperations['state']['operation']>(
       name: K,
-      state: CreateOperationState<
+      options: CreateOperationState<
         TMockGQLOperations['state']['operation'][K],
         TMockGQLOperations['state']['state'][K],
         TMockGQLOperations['models']
@@ -150,18 +150,19 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
       Parameters<TMockGQLOperations['state']['operation'][K]>
     > =>
     (scenario: Record<K, TMockGQLOperations['state']['state'][K]>) => ({
-      [name]: (
-        parent: Parameters<TMockGQLOperations['state']['operation'][K]>[0],
-        variables: Parameters<TMockGQLOperations['state']['operation'][K]>[1],
-        context: Parameters<TMockGQLOperations['state']['operation'][K]>[2],
-        info: Parameters<TMockGQLOperations['state']['operation'][K]>[3]
-      ): ReturnType<ResolverFn<any, any, any, any>> => {
-        const currentState = scenario[name] ? scenario[name] : this.defaultOperationState;
+      [name]: (...args: any): ReturnType<ResolverFn<any, any, any, any>> => {
+        const { defaultState, resolver } = options;
+        const currentState = scenario[name]
+          ? scenario[name]
+          : defaultState
+          ? defaultState
+          : this.defaultOperationState;
+
         const currentStateArray: OperationStatePayload<
           TMockGQLOperations['state']['state'][K],
           ReturnType<TMockGQLOperations['state']['operation'][K]>,
           TMockGQLOperations['models']
-        > = typeof state === 'function' ? state(parent, variables, context, info) : state;
+        > = typeof resolver === 'function' ? resolver(...args) : resolver;
 
         const currentStateObj = currentStateArray[currentState as keyof typeof currentStateArray];
 

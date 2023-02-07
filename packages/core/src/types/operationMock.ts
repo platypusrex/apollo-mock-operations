@@ -20,8 +20,8 @@ export interface MockGQLOperationMap<TMockGQLOperations extends MockGQLOperation
   query: Record<
     string,
     CreateOperationState<
-      TMockGQLOperations['state']['operation'][string],
-      TMockGQLOperations['state']['state'][string],
+      TMockGQLOperations['state']['operation'][keyof TMockGQLOperations['state']['operation']],
+      TMockGQLOperations['state']['state'][keyof TMockGQLOperations['state']['state']],
       TMockGQLOperations['models']
     >
   >[];
@@ -37,7 +37,7 @@ export interface MockGQLOperationMap<TMockGQLOperations extends MockGQLOperation
 
 export interface MockGQLOperationsConfig {
   introspectionResult: IntrospectionQuery | any;
-  defaultOperationState: string;
+  defaultOperationState?: string;
   enableDevTools?: boolean;
 }
 

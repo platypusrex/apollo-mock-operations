@@ -29,7 +29,7 @@ export interface MockProviderProps<
 > {
   loading?: boolean;
   operationState?: RequireAtLeastOne<{
-    [K in keyof TOperationState['state']]: TOperationState['state'][K][number]
+    [K in keyof TOperationState['state']]: TOperationState['state'][K]
   }>
   mergeOperations?:
     | RequireAtLeastOne<TOperationState['operation']>
