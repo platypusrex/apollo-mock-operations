@@ -24,32 +24,30 @@ export class OperationModels<TModels extends Record<string, OperationModel<any>>
     name: K,
     models: NonEmptyArray<ResolverReturnType<OperationType<any, any>[K]>>
   ) => {
-    if (!isSSR()) {
-      const persistedModelState = getCookie(APOLLO_MOCK_MODEL_STORE_KEY);
-      if (persistedModelState) {
-        const parsedModelState =
-          parseJSON<Record<K, NonEmptyArray<ResolverReturnType<OperationType<any, any>[K]>>>>(
-            persistedModelState
-          );
-        const modelData = parsedModelState?.[name] ?? models;
-        setCookie(
-          APOLLO_MOCK_MODEL_STORE_KEY,
-          JSON.stringify({
-            ...parsedModelState,
-            [name]: modelData,
-          })
+    if (isSSR()) return models;
+
+    const persistedModelState = getCookie(APOLLO_MOCK_MODEL_STORE_KEY);
+    if (persistedModelState) {
+      const parsedModelState =
+        parseJSON<Record<K, NonEmptyArray<ResolverReturnType<OperationType<any, any>[K]>>>>(
+          persistedModelState
         );
-        return modelData;
-      } else {
-        setCookie(
-          APOLLO_MOCK_MODEL_STORE_KEY,
-          JSON.stringify({
-            [name]: models,
-          })
-        );
-        return models;
-      }
+      const modelData = parsedModelState?.[name] ?? models;
+      setCookie(
+        APOLLO_MOCK_MODEL_STORE_KEY,
+        JSON.stringify({
+          ...parsedModelState,
+          [name]: modelData,
+        })
+      );
+      return modelData;
     } else {
+      setCookie(
+        APOLLO_MOCK_MODEL_STORE_KEY,
+        JSON.stringify({
+          [name]: models,
+        })
+      );
       return models;
     }
   };
