@@ -19,7 +19,7 @@
     "url": "git+https://github.com/platypusrex/apollo-mock-operations.git"
   },
   "license": "MIT",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/dts/index.d.ts",
