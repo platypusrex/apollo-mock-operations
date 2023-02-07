@@ -5,7 +5,7 @@ import { useCookie } from './hooks';
 import { getInitialOperationState } from './utils';
 import { OperationStateSelect, OperationSection, ToggleButton } from './components';
 import { Container, ContainerBody, ContainerFooter, ContainerHeader } from './styles';
-import { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
+import type { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
 
 export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, defaultOperationState }) => {
@@ -17,10 +17,7 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
 
   const [operationStateCookie, setCookie] = useCookie(
     APOLLO_MOCK_OPERATION_STATE_KEY,
-    JSON.stringify({
-      query: {},
-      mutation: {},
-    })
+    JSON.stringify({ query: {}, mutation: {} })
   );
 
   const parsedOperations = useMemo<OperationSessionState>(() => {
@@ -69,14 +66,13 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
     e: ChangeEvent<HTMLSelectElement>,
     type: keyof OperationMap
   ) => {
-    const key = e.target.name;
-    const value = e.target.value;
-
+    const { name, value } = e.target;
     const newOpState = {
       ...parsedOperations,
-      [type]: { ...parsedOperations[type], [key]: value },
+      [type]: { ...parsedOperations[type], [name]: value },
     };
     setCookie(JSON.stringify(newOpState));
+
     if (type === 'query') {
       apolloClient.refetchQueries({ include: 'active' });
       await apolloClient.clearStore();
@@ -99,8 +95,8 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
                   <OperationStateSelect
                     key={`${operation[0]}-${i}`}
                     operationName={operation[0]}
-                    operationState={operation[1]}
-                    value={parsedOperations?.query[operation[0]] ?? defaultOperationState}
+                    operationState={operation[1].options}
+                    value={parsedOperations?.query[operation[0]] ?? operation[1].defaultState ?? defaultOperationState}
                     onChange={(e) => handleSetOperationState(e, 'query')}
                   />
                 );
@@ -115,8 +111,8 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
                   <OperationStateSelect
                     key={`${operation[0]}-${i}`}
                     operationName={operation[0]}
-                    operationState={operation[1]}
-                    value={parsedOperations?.mutation[operation[0]] ?? defaultOperationState}
+                    operationState={operation[1].options}
+                    value={parsedOperations?.mutation[operation[0]] ?? operation[1].defaultState ?? defaultOperationState}
                     onChange={(e) => handleSetOperationState(e, 'mutation')}
                   />
                 );

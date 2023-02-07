@@ -8,7 +8,7 @@ import type { MockGQLOperationMap } from '../types';
 type GetDevToolsComponentOptions<TOperations extends MockGQLOperationMap<any>> = {
   operations: TOperations;
   introspection: IntrospectionQuery;
-  defaultOperationState: string;
+  defaultOperationState?: string;
   enabled?: boolean;
 };
 
@@ -50,8 +50,14 @@ export function getDevToolsComponent<TOperations extends MockGQLOperationMap<any
       }
 
       const operationResults =
-        typeof state === 'function' ? state({}, operationArgs, {}, {}) : state;
-      return { [name]: Object.keys(operationResults) };
+        typeof state.resolver === 'function' ? state.resolver({}, operationArgs, {}, {}) : state.resolver;
+
+      return {
+        [name]: {
+          defaultState: state.defaultState,
+          options: Object.keys(operationResults)
+        }
+      };
     });
   };
 

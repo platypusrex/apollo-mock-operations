@@ -5,17 +5,18 @@ import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../../constants';
 
 const getOperationState = (
   operations: OperationMap['query'] | OperationMap['mutation'],
-  defaultState: string
+  defaultState?: string
 ) =>
   operations.reduce<{ [key: string]: string }>((acc, curr) => {
     const [[key, value]] = Object.entries(curr);
-    acc[key] = value.find((v) => v === defaultState) || value[0];
+    const state = value.defaultState ?? defaultState ?? value.options[0];
+    acc[key] = value.options.find((v) => v === state) as string
     return acc;
   }, {});
 
 export const getInitialOperationState = (
   operationMap: OperationMap,
-  defaultOperationState: string
+  defaultOperationState?: string
 ) => {
   const operationState = getCookie(APOLLO_MOCK_OPERATION_STATE_KEY);
   if (!operationState) {
