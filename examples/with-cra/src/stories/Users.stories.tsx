@@ -37,8 +37,6 @@ NetworkError.parameters = {
     operationState: {
       users: 'NETWORK_ERROR',
       book: 'NETWORK_ERROR',
-      deleteUser: 'SUCCESS',
-      createUser: ''
     },
   },
 };

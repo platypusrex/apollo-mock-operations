@@ -10,7 +10,7 @@ mockBuilder.mutation('createUser', {
       data: ({ user }) => {
         if (!name || !email) {
           new GraphQLError(`Email and name are required`, {
-            extensions: { code: 'FUCK_STICK' },
+            extensions: { code: 'BAD_USER_INPUT' },
           })
         }
 
