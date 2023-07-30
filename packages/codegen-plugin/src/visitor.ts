@@ -305,7 +305,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         name,
         defaultSuffix
       );
-      const { /*result: operationFunction,*/ operation } = this.getOperationFunctionDefinition(
+      const { operation } = this.getOperationFunctionDefinition(
         // @ts-ignore
         selectionSetObject,
         name,
@@ -322,7 +322,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       );
 
       return {
-        definition: [argsResult, typeResult, /*operationFunction,*/ operationType].join('\n'),
+        definition: [argsResult, typeResult, operationType].join('\n'),
         operation,
       };
     });
@@ -345,7 +345,6 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         fragmentRootType!,
         node.selectionSet
       ) as SelectionSetToObject;
-      // const { transformedSelectionSets, grouped } = selectionSet.transformGroupedSelections();
       const { modelName, modelTypeDef } = selectionSet.transformModelSelectionSetToType(
         node.name.value,
         fragmentSuffix,
