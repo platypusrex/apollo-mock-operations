@@ -7,7 +7,8 @@ import type {
   InMemoryCacheConfig,
   NormalizedCacheObject
 } from '@apollo/client';
-import type { OperationMeta, OperationState } from './shared';
+import type { MockGQLOperationsType } from './operationMock';
+import type { OperationMeta } from './shared';
 import type { RequireAtLeastOne } from './util';
 
 type ClientOptions = Pick<
@@ -23,25 +24,31 @@ type ClientOptions = Pick<
 
 type CacheOptions = Omit<InMemoryCacheConfig, 'addTypename'>;
 
-export interface MockProviderProps<
-  TOperationState extends OperationState<any, any>,
+export type OperationStateType<TMockOperations extends MockGQLOperationsType> =
+  & { [K in keyof TMockOperations['Query']]: TMockOperations['Query'][K]['state']}
+  & { [K in keyof TMockOperations['Mutation']]: TMockOperations['Mutation'][K]['state']};
+
+export type MergeResolversType<TMockOperations extends MockGQLOperationsType> =
+  & { [K in keyof TMockOperations['Query']]: TMockOperations['Query'][K]['resolver']}
+  & { [K in keyof TMockOperations['Mutation']]: TMockOperations['Mutation'][K]['resolver']};
+
+export type ProtectedMockedProviderProps = {
+  onResolved?: (operationMeta: OperationMeta) => void;
+}
+
+export type MockProviderProps<
+  TMockOperations extends MockGQLOperationsType,
   TModels = any
-> {
+> = {
   loading?: boolean;
-  operationState?: RequireAtLeastOne<{
-    [K in keyof TOperationState['state']]: TOperationState['state'][K]
-  }>
+  operationState?: RequireAtLeastOne<OperationStateType<TMockOperations>>
   mergeOperations?:
-    | RequireAtLeastOne<TOperationState['operation']>
-    | ((models: TModels) => RequireAtLeastOne<TOperationState['operation']>);
+    | RequireAtLeastOne<MergeResolversType<TMockOperations>>
+    | ((models: TModels) => RequireAtLeastOne<MergeResolversType<TMockOperations>>);
   delay?: number;
   cacheOptions?: CacheOptions;
   clientOptions?: ClientOptions;
   links?: (cache?: InMemoryCache) => ApolloLink[];
   Provider?: React.ComponentType<any>;
   children?: ReactNode;
-}
-
-export interface ProtectedMockedProviderProps {
-  onResolved?: (operationMeta: OperationMeta) => void;
-}
+};

@@ -1,59 +1,75 @@
 import { GraphQLError } from 'graphql';
-import { MockGQLOperations, OperationModelType, OperationState } from '../src';
-import { UserMockOperation, BookMockOperation } from './testTypes';
+import { MockGQLOperations } from '../src';
 import introspectionResult from './introspection.json';
+import { MockOperations, OperationModels } from './testTypes';
 
-type MockOperationsState = {
-  state: OperationState<UserMockOperation, 'SUCCESS' | 'GQL_ERROR'> &
-    OperationState<BookMockOperation, 'SUCCESS' | 'GQL_ERROR' | 'NETWORK_ERROR'>;
-  models: OperationModelType<UserMockOperation> & OperationModelType<BookMockOperation>;
-};
-
-const mockBuilder = new MockGQLOperations<MockOperationsState>({
+const builder = new MockGQLOperations<MockOperations, OperationModels>({
   introspectionResult,
   defaultOperationState: 'SUCCESS',
 });
 
-mockBuilder.query('user', {
+builder.mutation('createUser', {
+  defaultState: 'SUCCESS',
+  resolver: (_, { input }) => ({
+    GQL_ERROR: { variant: 'graphql-error', error: new GraphQLError('You broke it.') },
+    SUCCESS: {
+      variant: 'data',
+      data: ({ User }) =>
+        User.create({
+          data: {
+            id: (User.models.length + 1).toString(),
+            name: input.name,
+            email: input.email,
+          },
+        }),
+    },
+  }),
+});
+
+builder.query('user', {
   defaultState: 'SUCCESS',
   resolver: (_, { id }) => ({
     SUCCESS: {
       variant: 'data',
-      data: ({ user }) => {
+      data: ({ User }) => {
         if ('foo' === 'foo') {
           throw new GraphQLError('boom');
         }
-        return user.findOne({ where: { id } });
+        return User.findOne({ where: { id } });
       },
     },
     GQL_ERROR: {
       variant: 'network-error',
-      error: ({ user }) => new Error(`${user.models[0].name} not found`),
+      error: ({ User }) => new Error(`${User.models[0].name} not found`),
     },
+    NETWORK_ERROR: { variant: 'network-error' },
+    EMPTY: { variant: 'data', data: null },
   }),
 });
 
-mockBuilder.query('book', {
+builder.query('book', {
   defaultState: 'SUCCESS',
   resolver: (_, { id }) => ({
     SUCCESS: {
       variant: 'data',
-      data: ({ book }) => book.findOne({ where: { id } }),
+      data: ({ Book }) => Book.findOne({ where: { id } }),
     },
+    EMPTY: { variant: 'data', data: null },
     GQL_ERROR: { variant: 'graphql-error' },
     NETWORK_ERROR: { variant: 'network-error' },
+    LOADING: { variant: 'loading' },
   }),
 });
 
-mockBuilder.query('user', {
+builder.query('user', {
   defaultState: 'SUCCESS',
   resolver: () => ({
     SUCCESS: {
       variant: 'data',
-      data: ({ user }) => user.models[0],
+      data: ({ User }) => User.models[0],
     },
-    GQL_ERROR: {
-      variant: 'graphql-error',
-    },
+    GQL_ERROR: { variant: 'graphql-error' },
+    NETWORK_ERROR: { variant: 'network-error' },
+    EMPTY: { variant: 'data', data: null },
   }),
 });

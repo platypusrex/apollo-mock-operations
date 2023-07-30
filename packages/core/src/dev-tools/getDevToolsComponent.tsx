@@ -1,9 +1,9 @@
 import React from 'react';
 import { buildClientSchema } from 'graphql/utilities';
-import { GraphQLSchema, IntrospectionQuery } from 'graphql';
-import { GraphQLArgument } from 'graphql/type/definition';
-import { MockedDevTools } from './ApolloMockedDevtools';
+import type { GraphQLSchema, IntrospectionQuery } from 'graphql';
+import type { GraphQLArgument } from 'graphql/type/definition';
 import type { MockGQLOperationMap } from '../types';
+import { MockedDevTools } from './ApolloMockedDevtools';
 
 type GetDevToolsComponentOptions<TOperations extends MockGQLOperationMap<any>> = {
   operations: TOperations;

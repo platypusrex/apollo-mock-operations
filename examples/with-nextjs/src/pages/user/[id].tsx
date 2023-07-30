@@ -19,6 +19,7 @@ const UserDetailPage = () => {
 };
 
 export const getServerSideProps = mergeProps(
+  // @ts-ignore TODO: typing issue with mockInstance and ssr function input signature
   getServerSideApolloMockedProps(mockInstance),
   getServerSideApolloProps({
     hydrateQueries: ['user', 'booksByAuthor'],

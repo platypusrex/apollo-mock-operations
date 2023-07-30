@@ -7,13 +7,13 @@ import {
 } from 'graphql';
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptDocumentsPluginConfig } from './config';
+import { ApolloMockOperationsPluginConfig } from './config';
 import { TypeScriptDocumentsVisitor } from './visitor';
 
-export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.ComplexPluginOutput> = (
+export const plugin: PluginFunction<ApolloMockOperationsPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   rawDocuments: Types.DocumentFile[],
-  config: TypeScriptDocumentsPluginConfig
+  config: ApolloMockOperationsPluginConfig
 ) => {
   const documents = config.flattenGeneratedTypes
     ? optimizeOperations(schema, rawDocuments, {
@@ -38,7 +38,12 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
     ...(config.externalFragments ?? []),
   ];
 
+  const fragmentNodes = allAst.definitions.filter(
+    (d) => d.kind === Kind.FRAGMENT_DEFINITION
+  ) as FragmentDefinitionNode[];
+
   const visitor = new TypeScriptDocumentsVisitor(schema, config, allFragments);
+
   const operationNodes = allAst.definitions.filter(
     (d) => d.kind === 'OperationDefinition'
   ) as OperationDefinitionNode[];
@@ -48,6 +53,9 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig, Types.Compl
   const operationObjectArr = definitions.map((def) => def.operation);
   const combinedOperationDefinitions = visitor.getCombinedOperationsDefinition(operationObjectArr);
 
+  const models = visitor.getModelDefinition(fragmentNodes);
+  const modelDefs = models.map((model) => model.modelTypeDef);
+  const combinedModelDefinitions = visitor.getCombinedModelsDefinitions(models);
   if (config.addOperationExport) {
     const exportConsts: any[] = [];
 
@@ -74,7 +82,13 @@ type ResolverType<TResult, TArgs> = Record<keyof TResult, ResolverFn<TResult[key
   `;
 
   return {
-    content: [headers, ...operationDefinitions, ...combinedOperationDefinitions].join('\n'),
+    content: [
+      headers,
+      ...operationDefinitions,
+      ...combinedOperationDefinitions,
+      ...modelDefs,
+      combinedModelDefinitions,
+    ].join('\n'),
     prepend: [
       imports,
       ...visitor.getImports(),

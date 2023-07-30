@@ -35,6 +35,7 @@
     "clean": "turbo run clean --parallel",
     "clean:deps": "turbo run clean:deps --parallel",
     "clean:all": "turbo run clean:all --parallel",
+    "generate": "turbo run generate",
     "build": "turbo run build",
     "build:packages": "turbo run build --filter=@apollo-mock-operations/*",
     "dev": "turbo run dev --scope='@examples/*'",

@@ -17,6 +17,10 @@
       "outputs": [],
       "cache": false
     },
+    "generate": {
+      "outputs": [],
+      "cache": true
+    },
     "dev": {
       "dependsOn": [],
       "cache": false

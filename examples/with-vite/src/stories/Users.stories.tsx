@@ -54,8 +54,8 @@ export const FirstUserOnly = Template.bind({});
 FirstUserOnly.parameters = {
   apolloClient: {
     operationState: { createUser: 'GQL_ERROR' },
-    mergeOperations: ({ user }) => ({
-      users: () => [user.models[0]],
+    mergeOperations: ({ User }) => ({
+      users: () => [User.models[0]],
     }),
   },
 };
@@ -63,8 +63,8 @@ FirstUserOnly.parameters = {
 export const BookById = Template.bind({});
 BookById.parameters = {
   apolloClient: {
-    mergeOperations: ({ book }) => ({
-      book: () => book.findOne({ where: { id: '2' } }),
+    mergeOperations: ({ Book }) => ({
+      book: () => Book.findOne({ where: { id: '2' } }),
     }),
   },
 };

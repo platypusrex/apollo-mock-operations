@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AnyObject } from '../../types';
+import type { AnyObject } from '../../types';
 
 const createMemoryStorage = (): Storage => {
   let storage: Record<string, string> = {};

@@ -12,9 +12,6 @@
       "path": "examples/with-nextjs"
     },
     {
-      "path": "examples/with-cra"
-    },
-    {
       "path": "examples/with-vite"
     },
     {

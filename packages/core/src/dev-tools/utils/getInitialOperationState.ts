@@ -1,6 +1,6 @@
 import { parseJSON } from '../../utils/parseJSON';
 import { getCookie } from '../hooks';
-import { OperationMap, OperationSessionState } from '../types';
+import type { OperationMap, OperationSessionState } from '../types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../../constants';
 
 const getOperationState = (

@@ -5,7 +5,7 @@ mockInstance.mutation('deleteUser', {
   resolver: (_, { id }) => ({
     SUCCESS: {
       variant: 'data',
-      data: ({ user }) => user.delete({ where: { id } }),
+      data: ({ User }) => User.delete({ where: { id } }),
     },
   }),
 });

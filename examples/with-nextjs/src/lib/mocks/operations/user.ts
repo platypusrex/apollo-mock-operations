@@ -6,7 +6,7 @@ mockInstance.query('user', {
   resolver: (_, { id }) => ({
     SUCCESS: {
       variant: 'data',
-      data: ({ user }) => user.findOne({ where: { id } }),
+      data: ({ User }) => User.findOne({ where: { id } }),
     },
     EMPTY: { variant: 'data', data: null },
     NETWORK_ERROR: {

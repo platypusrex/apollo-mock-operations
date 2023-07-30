@@ -1,12 +1,12 @@
 import React, { ChangeEvent } from 'react';
 import { OperationSelectContainer, FormControl, SelectContainer } from '../styles';
 
-interface OperationStateSelectProps {
+type OperationStateSelectProps = {
   operationName: string;
   operationState: string[];
   value: string;
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-}
+};
 
 export const OperationStateSelect: React.FC<OperationStateSelectProps> = React.memo(
   ({ operationName, operationState, value, onChange }) => (

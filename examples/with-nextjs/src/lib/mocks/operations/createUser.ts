@@ -7,14 +7,14 @@ mockInstance.mutation('createUser', {
   resolver: (_, { input: { name, email } }) => ({
     SUCCESS: {
       variant: 'data',
-      data: ({ user }) => {
+      data: ({ User }) => {
         if (!name || !email) {
           throw new GraphQLError(`Email and name are required`, {
             extensions: { code: 'BAD_USER_INPUT' },
           });
         }
 
-        return user.create({
+        return User.create({
           data: {
             id: generateUUID(),
             name,

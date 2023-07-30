@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { isSSR } from '../../utils/isSSR';
 
-interface CookieOptions {
+type CookieOptions = {
   days?: number;
   path?: string;
   domain?: string;
   SameSite?: 'None' | 'Lax' | 'Strict';
   Secure?: boolean;
   HttpOnly?: boolean;
-}
+};
 
 export function stringifyOptions(options: CookieOptions) {
   return Object.keys(options).reduce((acc, key) => {
@@ -57,6 +57,18 @@ export const getCookie = (name: string, initialValue = '') => {
     initialValue
   );
 };
+
+export const destroyCookie = (name: string) => {
+  const options = { path: '/', };
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1)
+  const expires = yesterday.toUTCString();
+  console.log({ expires, cookie: `${name}=;expires=${expires}${stringifyOptions(options)}` });
+
+  document.cookie = `${name}=;expires=${expires}${stringifyOptions(options)}`;
+}
 
 type UseCookie = [string, (value: string, options?: CookieOptions) => void];
 

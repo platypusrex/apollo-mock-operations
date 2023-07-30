@@ -1,9 +1,9 @@
 import React from 'react';
 import { Icon } from '../styles';
 
-interface PlusIconProps {
+type PlusIconProps = {
   open: boolean;
-}
+};
 
 export const PlusIcon: React.FC<PlusIconProps> = ({ open }) => (
   <Icon

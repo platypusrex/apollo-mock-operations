@@ -43,6 +43,23 @@ export const ContainerFooter = styled.div`
   padding: 26px;
 `;
 
+export const StyledButton = styled.button`
+  cursor: pointer;
+  color: #fff;
+  background: #3f20ba;
+  border: none;
+  border-radius: 0.25rem;
+  height: 28px;
+  margin-left: auto;
+  padding-inline: 0.675rem;
+  transition: background 0.2s ease-in-out;
+
+  &:hover {
+    background: #311c87;
+    transition: background 0.2s ease-in-out;
+  }
+`;
+
 export const Toggle = styled.button<{ open: boolean }>`
   cursor: pointer;
   border-radius: 50%;

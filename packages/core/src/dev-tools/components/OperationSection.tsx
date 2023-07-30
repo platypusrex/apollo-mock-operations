@@ -1,10 +1,10 @@
 import React from 'react';
 import { OperationSectionContainer } from '../styles';
 
-interface OperationSectionProps {
+type OperationSectionProps = {
   title: string;
   children: React.ReactNode;
-}
+};
 
 export const OperationSection: React.FC<OperationSectionProps> = ({ title, children }) => (
   <OperationSectionContainer>

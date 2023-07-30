@@ -79,12 +79,19 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
     }
   };
 
+  // const handleResetStore = async () => {
+  //   destroyCookie(APOLLO_MOCK_MODEL_STORE_KEY);
+  //   await apolloClient.clearStore();
+  //   window.location.reload()
+  // }
+
   return (
     <footer>
       <ToggleButton ref={buttonRef} open={!drawerVisible} onClick={toggleDrawer} />
       <Container visible={drawerVisible} ref={containerRef}>
         <ContainerHeader>
           <h1>Operations</h1>
+          {/*<Button onClick={handleResetStore}>Reset store</Button>*/}
         </ContainerHeader>
         <ContainerBody>
           {operationMap.query.length > 0 && (

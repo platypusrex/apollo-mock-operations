@@ -1,50 +1,57 @@
-import { IntrospectionQuery } from 'graphql';
-import { OperationModel } from '../OperationModel';
-import { AnyObject } from './util';
-import { CreateOperationState } from './createOperation';
-import { OperationFn, OperationState } from './shared';
+import type { IntrospectionQuery } from 'graphql';
+import type { AnyObject } from './util';
+import type { CreateOperationState } from './createOperation';
+import type { OperationFn, ResolverFn /*OperationState*/ } from './shared';
 
-export interface MockGQLOperationsCreate<TQueryOperations, TMutationOperations> {
+export type MockGQLOperationsCreate<TQueryOperations, TMutationOperations> = {
   Query: TQueryOperations;
   Mutation?: TMutationOperations;
-}
+};
 
-export interface MockGQLOperationType<TOperationState> {
+export type MockGQLOperationType<TMockOperationsType extends MockGQLOperationsType> = {
   operations?: {
-    query: OperationFn<TOperationState, AnyObject, AnyObject>[];
-    mutation?: OperationFn<TOperationState, AnyObject, AnyObject>[];
+    query: OperationFn<TMockOperationsType['Query']['state'], AnyObject, AnyObject>[];
+    mutation?: OperationFn<TMockOperationsType['Mutation']['state'], AnyObject, AnyObject>[];
   };
-}
+};
 
-export interface MockGQLOperationMap<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
+export type MockGQLOperationMap<TMockGQLOperations extends MockGQLOperationsType> = {
   query: Record<
     string,
     CreateOperationState<
-      TMockGQLOperations['state']['operation'][keyof TMockGQLOperations['state']['operation']],
-      TMockGQLOperations['state']['state'][keyof TMockGQLOperations['state']['state']],
-      TMockGQLOperations['models']
+      TMockGQLOperations['Query'][keyof TMockGQLOperations['Query']]['resolver'],
+      TMockGQLOperations['Query'][keyof TMockGQLOperations['Query']]['state'],
+      keyof TMockGQLOperations['Query']
     >
   >[];
   mutation: Record<
     string,
     CreateOperationState<
-      TMockGQLOperations['state']['operation'][string],
-      TMockGQLOperations['state']['state'][string],
-      TMockGQLOperations['models']
+      TMockGQLOperations['Mutation'][keyof TMockGQLOperations['Mutation']]['resolver'],
+      TMockGQLOperations['Mutation'][keyof TMockGQLOperations['Mutation']]['state'],
+      keyof TMockGQLOperations['Mutation']
     >
   >[];
-}
+};
 
-export interface MockGQLOperationsConfig {
+export type MockGQLOperationsConfig = {
   introspectionResult: IntrospectionQuery | any;
   defaultOperationState?: string;
   enableDevTools?: boolean;
-}
+};
 
-export interface MockGQLOperationsType<
-  TOperationState extends Record<'state', OperationState<any, string>>,
-  TModels extends Record<'models', OperationModel<any>>
-> {
-  state: TOperationState;
-  models?: TModels;
-}
+export type MockRootOperationsType = Record<
+  string,
+  {
+    type: 'Query' | 'Mutation';
+    resolver: ResolverFn<any, any, any, any>;
+    state: string;
+  }
+>;
+
+export type MockGQLOperationsType = {
+  Query: MockRootOperationsType;
+  Mutation: MockRootOperationsType;
+};
+
+export type MockModelsType = Record<string, { [key: string]: any }>
