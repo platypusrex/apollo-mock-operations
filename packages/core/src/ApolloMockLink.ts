@@ -1,8 +1,8 @@
 import { buildClientSchema, graphql, print } from 'graphql';
 import { addMocksToSchema } from '@graphql-tools/mock';
 import { ApolloLink, FetchResult, Observable, Operation } from '@apollo/client';
-import { IResolvers } from '@graphql-tools/utils';
-import { CreateLinkOptions, LinkSchemaProps } from './types';
+import type { IResolvers } from '@graphql-tools/utils';
+import type { CreateLinkOptions, LinkSchemaProps } from './types';
 import { getCookie } from './dev-tools/hooks';
 import { reactiveOperationState } from './nextjs';
 import { delay } from './utils/delay';

@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { isSSR } from '../../utils/isSSR';
 
-interface CookieOptions {
+type CookieOptions = {
   days?: number;
   path?: string;
   domain?: string;
   SameSite?: 'None' | 'Lax' | 'Strict';
   Secure?: boolean;
   HttpOnly?: boolean;
-}
+};
 
 export function stringifyOptions(options: CookieOptions) {
   return Object.keys(options).reduce((acc, key) => {

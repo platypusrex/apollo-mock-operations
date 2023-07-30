@@ -1,6 +1,6 @@
 import { mockInstance } from '../builder';
 
-mockInstance.createModel('book', [
+mockInstance.createModel('Book', [
   { id: '1', title: 'Hamlet', numPages: 214, authorId: '1' },
   { id: '2', title: 'Macbeth', numPages: 110, authorId: '1' },
   { id: '3', title: 'Othello', numPages: 320, authorId: '1' },

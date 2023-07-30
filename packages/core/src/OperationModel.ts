@@ -2,28 +2,21 @@ import deepmerge from 'deepmerge';
 import { parseJSON } from './utils/parseJSON';
 import { getCookie, setCookie } from './dev-tools/hooks';
 import { APOLLO_MOCK_MODEL_STORE_KEY } from './constants';
-import type {
-  DeepPartial,
-  NonEmptyArray,
-  OperationType,
-  ResolverReturnType,
-  WhereQuery,
-} from './types';
+import type { DeepPartial, MockModelsType, NonEmptyArray, WhereQuery } from './types';
 
-export class OperationModel<TModel extends OperationType<any, any>> {
-  private _models = new Map<number, ResolverReturnType<TModel[keyof TModel]>>();
+export class OperationModel<TModel extends MockModelsType> {
+  private _models = new Map<number, TModel>();
   private readonly _name: keyof TModel;
 
-  constructor(name: keyof TModel, models: NonEmptyArray<ResolverReturnType<TModel[keyof TModel]>>) {
+  constructor(name: keyof TModel, models: NonEmptyArray<TModel>) {
     this._name = name;
     models?.forEach((model, i) => {
       this._models.set(i, model);
     });
   }
 
-  public _unsafeForceUpdateModelData = (
-    modelData: NonEmptyArray<ResolverReturnType<TModel[keyof TModel]>>
-  ) => {
+  // @ts-ignore prevent exposing this to consumers
+  private _unsafeForceUpdateModelData = (modelData: NonEmptyArray<TModel>) => {
     // TODO: compare and update existing model map rather than replacing with entirely new map
     const newMap = new Map();
     modelData.forEach((model, i) => {
@@ -32,9 +25,7 @@ export class OperationModel<TModel extends OperationType<any, any>> {
     this._models = newMap;
   };
 
-  private updateOperationModelCookie = (
-    models: Map<number, ResolverReturnType<TModel[keyof TModel]>>
-  ) => {
+  private updateOperationModelCookie = (models: Map<number, TModel>) => {
     const modelStateCookie = getCookie(APOLLO_MOCK_MODEL_STORE_KEY);
     if (modelStateCookie) {
       const parsedModelState = (parseJSON(modelStateCookie) as any) ?? {};
@@ -51,7 +42,7 @@ export class OperationModel<TModel extends OperationType<any, any>> {
   private getModelDataFromQuery = ({
     where,
   }: WhereQuery<TModel>): {
-    models: { key: number; data: ResolverReturnType<TModel[keyof TModel]> }[];
+    models: { key: number; data: TModel }[];
     size: number;
   } | null => {
     const modelProps = Object.entries(where ?? {});
@@ -72,47 +63,40 @@ export class OperationModel<TModel extends OperationType<any, any>> {
     };
   };
 
-  get models(): ResolverReturnType<TModel[keyof TModel]>[] {
+  get models(): TModel[] {
     return Array.from(this._models.values());
   }
 
-  findFirst = (): ResolverReturnType<TModel[keyof TModel]> | null => {
+  findFirst = (): TModel | null => {
     const [firstModel] = this._models.values();
     if (!firstModel) return null;
     return firstModel;
   };
 
-  findLast = (): ResolverReturnType<TModel[keyof TModel]> | null => {
+  findLast = (): TModel | null => {
     const model = Array.from(this._models.values()).at(this._models.size - 1);
     if (!model) return null;
     return model;
   };
 
-  findOne = ({ where }: WhereQuery<TModel>): ResolverReturnType<TModel[keyof TModel]> | null => {
+  findOne = ({ where }: WhereQuery<TModel>): TModel | null => {
     const result = this.getModelDataFromQuery({ where });
     return result?.models.length ? result.models[0].data : null;
   };
 
-  findMany = ({ where }: WhereQuery<TModel>): ResolverReturnType<TModel[keyof TModel]>[] | null => {
+  findMany = ({ where }: WhereQuery<TModel>): TModel[] | null => {
     const result = this.getModelDataFromQuery({ where });
     return result?.models.map((model) => model.data) ?? null;
   };
 
-  create = ({
-    data,
-  }: {
-    data: ResolverReturnType<TModel[keyof TModel]>;
-  }): ResolverReturnType<TModel[keyof TModel]> => {
+  create = ({ data }: { data: TModel }): TModel => {
     this._models.set(this._models.size, data);
     this.updateOperationModelCookie(this._models);
 
     return data;
   };
 
-  update = (
-    { where }: WhereQuery<TModel>,
-    { data }: { data: DeepPartial<ResolverReturnType<TModel[keyof TModel]>> }
-  ): ResolverReturnType<TModel[keyof TModel]> => {
+  update = ({ where }: WhereQuery<TModel>, { data }: { data: DeepPartial<TModel> }): TModel => {
     const result = this.getModelDataFromQuery({ where });
     if (result && result?.size > 2) {
       // eslint-disable-next-line no-console
@@ -125,15 +109,16 @@ export class OperationModel<TModel extends OperationType<any, any>> {
       throw new Error('Model not found. Please provide a unique key/value pair.');
     }
 
-    const model = result.models[0].data;
-    const updatedModel = deepmerge<ResolverReturnType<TModel[keyof TModel]>>(model.data, data);
+    const model = result.models[0];
+    // @ts-ignore TODO: resolve issue with deep partial of TModel passed to deepmerge fn
+    const updatedModel = deepmerge<TModel>(model.data, data);
     this._models.set(model.key, { ...this._models.get(model.key), ...updatedModel });
     this.updateOperationModelCookie(this._models);
 
     return updatedModel;
   };
 
-  delete = ({ where }: WhereQuery<TModel>): ResolverReturnType<TModel[keyof TModel]> => {
+  delete = ({ where }: WhereQuery<TModel>): TModel => {
     const result = this.getModelDataFromQuery({ where });
     if (!result) {
       throw new Error('Delete model: model not found. Please provide a unique key/value pair.');

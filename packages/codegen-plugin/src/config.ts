@@ -6,7 +6,7 @@ import { AvoidOptionalsConfig, RawDocumentsConfig } from '@graphql-codegen/visit
  *
  * Note: In most configurations, this plugin requires you to use `typescript as well, because it depends on its base types.
  */
-export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
+export interface ApolloMockOperationsPluginConfig extends RawDocumentsConfig {
   /**
    * @description The [GraphQL spec]{@link https://spec.graphql.org/draft/#sel-FAHjBJFCAACE_Gh7d}
    * allows arrays and a single primitive value for list input. This allows to
@@ -187,4 +187,6 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   maybeValue?: string;
+  defaultState?: string;
+  operationState?: Record<string, string[]>;
 }

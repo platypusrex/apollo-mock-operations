@@ -1,5 +1,5 @@
-import { ParsedUrlQuery } from 'querystring';
-import { IncomingMessage, ServerResponse } from 'http';
+import type { ParsedUrlQuery } from 'querystring';
+import type { IncomingMessage, ServerResponse } from 'http';
 
 export type Redirect =
   | {

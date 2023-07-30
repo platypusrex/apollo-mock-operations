@@ -1,22 +1,22 @@
-import type { AnyObject } from './util';
 import { GraphQLError, GraphQLResolveInfo } from 'graphql';
+import type { AnyObject } from './util';
 
 // object that include info on any given graphQL operation
-export interface OperationMeta {
+export type OperationMeta = {
   query: string;
   operationName: string;
   variables: { [key: string]: any };
   result: { [key: string]: any };
-}
+};
 
 // shared type that describe shape of any mocked operation state object
-export interface OperationState<
+export type OperationState<
   TMockOperation extends OperationType<any, any>,
   TOperationState extends string
-> {
+> = {
   operation: TMockOperation;
   state: Record<keyof TMockOperation, TOperationState>;
-}
+};
 
 // shared type that describes the expected shape of a mocked operation
 export type OperationType<TResult, TArgs> = Record<

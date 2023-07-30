@@ -11,7 +11,7 @@ const TestComponent: React.FC<ComponentProps<typeof MockProvider>> = (props) => 
 
 describe('Users', () => {
   describe('Loading states', () => {
-    const book = models.book.findOne({ where: { id: '1' } });
+    const book = models.Book.findOne({ where: { id: '1' } });
     it('should show loading state for specific operation', async () => {
       render(<TestComponent operationState={{ users: 'LOADING' }} />);
 
@@ -65,14 +65,14 @@ describe('Users', () => {
   });
 
   it('find one from list using operation models', async () => {
-    const user = models.user.findFirst();
+    const user = models.User.findFirst();
     render(<TestComponent />);
     const userCard = await screen.findByText(user?.name ?? '', { exact: true });
     expect(userCard).toBeInTheDocument();
   });
 
   it('find all from list using operation models', async () => {
-    const users = models.user.models;
+    const users = models.User.models;
     render(<TestComponent />);
     for (const user of users) {
       const headingNode = await screen.findByText(user.name);

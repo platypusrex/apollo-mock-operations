@@ -11,9 +11,12 @@ import {
 import {
   AvoidOptionalsConfig,
   BaseDocumentsVisitor,
+  block,
   DeclarationBlock,
   generateFragmentImportStatement,
   getConfigValue,
+  indent,
+  indentMultiline,
   LoadedFragment,
   NameAndType,
   normalizeAvoidOptionals,
@@ -22,7 +25,8 @@ import {
   SelectionSetProcessorConfig,
   wrapTypeWithModifiers,
 } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptDocumentsPluginConfig } from './config';
+import { FragmentDefinitionNode } from 'graphql/language/ast';
+import { ApolloMockOperationsPluginConfig } from './config';
 import { SelectionSetToObject } from './set-selection-set-to-object';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
@@ -52,12 +56,14 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
-  TypeScriptDocumentsPluginConfig,
+  ApolloMockOperationsPluginConfig,
   TypeScriptDocumentsParsedConfig
 > {
+  operationState?: Record<string, string[]>;
+  defaultState: string;
   constructor(
     schema: GraphQLSchema,
-    config: TypeScriptDocumentsPluginConfig,
+    config: ApolloMockOperationsPluginConfig,
     allFragments: LoadedFragment[]
   ) {
     super(
@@ -73,6 +79,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema
     );
 
+    this.operationState = config.operationState;
+    this.defaultState = config.defaultState ?? 'SUCCESS';
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const defaultMaybeValue = 'T | null';
     const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
@@ -166,7 +174,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   ): { operation: { kind: string; name: string }; result: string } => {
     const content = `ResolverType<${type}, ${args}>`;
     const operationFunctionName = this.convertName(name, {
-      suffix: 'MockOperation',
+      suffix: 'Operation',
     });
     return {
       operation: {
@@ -181,29 +189,66 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     };
   };
 
+  getOperationTypeDefinition = (
+    selectionSetObject: SelectionSetObject,
+    name: string,
+    type: string,
+    args: string
+  ): { operation: { kind: string; name: string }; result: string } => {
+    const operationFunctionName = this.convertName(name, { suffix: 'Operation' });
+    const operationName = `${selectionSetObject.name.replace('?', '')}`;
+    const resolverFn = `ResolverFn<${type}, any, any, ${args}>`;
+    const operationState =
+      (this.operationState ?? {})[operationName]?.map((state) => `'${state}'`).join(' | ') ??
+      `'${this.defaultState}'`;
+
+    const operationFields = [
+      `kind: '${selectionSetObject.operationKind}'`,
+      `resolver: ${resolverFn}`,
+      ...(operationState ? [`state: ${operationState}`] : []),
+    ].map((field) => indent(this.getPunctuation(field)));
+
+    const operationTypeResult = indentMultiline(`${operationName}: ${block(operationFields)}`);
+
+    return {
+      operation: {
+        kind: selectionSetObject.operationKind,
+        name: operationFunctionName,
+      },
+      result: new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .asKind('type')
+        .withName(operationFunctionName)
+        .withBlock(operationTypeResult).string,
+    };
+  };
+
   getCombinedOperationsDefinition = (operations: { kind: string; name: string }[]): string[] => {
     const queryOperations = operations.filter((op) => op.kind === 'Query');
     const mutationOperations = operations.filter((op) => op.kind === 'Mutation');
-    const queryContent = queryOperations.map((op) => op.name).join('\n\t & ');
-    const mutationContent = mutationOperations.map((op) => op.name).join('\n\t & ');
+    const queryContent = queryOperations.map((op) => op.name).join('\n\t& ');
+    const mutationContent = mutationOperations.map((op) => op.name).join('\n\t& ');
     const queryDefinitions = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName('QueryMockOperations')
+      .withName('QueryOperations')
       .withContent(queryContent).string;
     const mutationDefinitions = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName('MutationMockOperations')
+      .withName('MutationOperations')
       .withContent(mutationContent).string;
 
-    const combinedQueryContent =
-      '{\n\tQuery: Partial<QueryMockOperations>;\n\tMutation: Partial<MutationMockOperations>;\n}';
+    // const combinedQueryContent = indentMultiline('Query: QueryOperations; Mutation: MutationOperations;');
+    const combinedQueryContent = ['Query: QueryOperations', 'Mutation: MutationOperations']
+      .map((field) => indent(this.getPunctuation(field)))
+      .join('\n');
+
     const combinedDefinitions = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName('MockOperations')
-      .withContent(combinedQueryContent).string;
+      .withBlock(combinedQueryContent).string;
 
     return [queryDefinitions, mutationDefinitions, combinedDefinitions];
   };
@@ -247,7 +292,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       }, {} as SelectionSetObject);
 
       const name = this.internalHandleAnonymousOperation(node);
-      const defaultSuffix = 'MockOperation';
+      const defaultSuffix = 'Operation';
 
       const { name: args, result: argsResult } = this.getOperationArgsDefinition(
         node,
@@ -260,7 +305,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         name,
         defaultSuffix
       );
-      const { result: operationFunction, operation } = this.getOperationFunctionDefinition(
+      const { /*result: operationFunction,*/ operation } = this.getOperationFunctionDefinition(
+        // @ts-ignore
+        selectionSetObject,
+        name,
+        type,
+        args
+      );
+
+      const { result: operationType } = this.getOperationTypeDefinition(
         // @ts-ignore
         selectionSetObject,
         name,
@@ -269,12 +322,40 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       );
 
       return {
-        definition: [argsResult, typeResult, operationFunction].join('\n'),
+        definition: [argsResult, typeResult, /*operationFunction,*/ operationType].join('\n'),
         operation,
       };
     });
 
-  protected getPunctuation = (): string => ';';
+  getCombinedModelsDefinitions = (models: { modelName: string; modelTypeDef: string }[]) => {
+    const modelContent = models.map((model) => model.modelName).join(indent('\n& '));
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName('OperationModels')
+      .withContent(modelContent).string;
+  };
+
+  getModelDefinition = (nodes: FragmentDefinitionNode[]) => {
+    return nodes.map((node) => {
+      const fragmentRootType = this._schema.getType(node.typeCondition.name.value);
+      const fragmentSuffix = 'Model';
+      const selectionSet = this._selectionSetToObject.createNext(
+        fragmentRootType!,
+        node.selectionSet
+      ) as SelectionSetToObject;
+      // const { transformedSelectionSets, grouped } = selectionSet.transformGroupedSelections();
+      const { modelName, modelTypeDef } = selectionSet.transformModelSelectionSetToType(
+        node.name.value,
+        fragmentSuffix,
+        this._declarationBlockConfig
+      );
+      return { modelName, modelTypeDef };
+    });
+  };
+
+  protected getPunctuation = (str: string): string => str.concat(';');
 
   protected applyVariablesWrapper = (variablesBlock: string): string => {
     const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
@@ -337,16 +418,15 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     const operationResultName = this.convertName(name, {
       suffix: `${suffix}Result`,
     });
-    const operationResultString = `\t${selectionSetObject.name.replace('?', '')}: ${
-      selectionSetObject.type
-    }`;
+    const operationResult = selectionSetObject.type.replaceAll(',', ';');
+
     return {
       name: operationResultName,
       result: new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
         .withName(operationResultName)
-        .withBlock(operationResultString).string,
+        .withContent(operationResult).string,
     };
   };
 }

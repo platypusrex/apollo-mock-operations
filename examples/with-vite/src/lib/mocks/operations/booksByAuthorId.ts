@@ -5,7 +5,7 @@ mockBuilder.query('booksByAuthorId', {
   resolver: (_, { authorId }) => ({
     SUCCESS: {
       variant: 'data',
-      data: ({ book }) => book.models.filter((book) => book.authorId === authorId),
+      data: ({ Book }) => Book.models.filter((book) => book.authorId === authorId),
     },
   })
 })

@@ -7,7 +7,7 @@ mockBuilder.query('book', {
     LOADING: { variant: 'loading' },
     SUCCESS: {
       variant: 'data',
-      data: ({ book }) => book.findOne({ where: { id } })
+      data: ({ Book }) => Book.findOne({ where: { id } })
     },
     EMPTY: {
       variant: 'data',

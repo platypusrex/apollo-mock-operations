@@ -7,7 +7,7 @@ mockInstance.query('users', {
     LOADING: { variant: 'loading' },
     SUCCESS: {
       variant: 'data',
-      data: ({ user }) => user.models,
+      data: ({ User }) => User.models,
     },
     NETWORK_ERROR: {
       variant: 'network-error',

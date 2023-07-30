@@ -2,13 +2,13 @@ import type { IResolvers } from '@graphql-tools/utils';
 import type { IntrospectionQuery } from 'graphql';
 import type { OperationMeta } from './shared';
 
-export interface CreateLinkOptions {
+export type CreateLinkOptions = {
   delay?: number;
   onResolved?: (operationMeta: OperationMeta) => void;
   loading?: boolean;
-}
+};
 
-export interface LinkSchemaProps extends CreateLinkOptions {
+export type LinkSchemaProps = CreateLinkOptions & {
   resolvers: IResolvers;
   introspectionResult: IntrospectionQuery | any;
   rootValue?: any;

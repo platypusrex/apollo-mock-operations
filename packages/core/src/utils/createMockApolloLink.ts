@@ -13,7 +13,7 @@ type CreateMockApolloLinkOptions<TState> = {
 type CreateMockApolloLinkResponse = (httpLink: HttpLink | BatchHttpLink) => ApolloLink;
 
 export const createMockApolloLink =
-  <TState extends MockGQLOperationsType<any, any>>({
+  <TState extends Partial<MockGQLOperationsType['Query' | 'Mutation']['state']>>({
     mocks,
     createOperations,
     enabled,

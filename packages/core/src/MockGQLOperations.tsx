@@ -13,6 +13,7 @@ import type { CreateApolloClient } from './utils';
 import { LOADING_ERROR_CODE, NETWORK_ERROR_CODE } from './constants';
 import type {
   CreateOperationState,
+  MergeResolversType,
   MockGQLOperationMap,
   MockGQLOperationType,
   MockGQLOperationsCreate,
@@ -21,19 +22,24 @@ import type {
   MockProviderProps,
   NonEmptyArray,
   OperationFn,
+  OperationModelsType,
   OperationStatePayload,
   ProtectedMockedProviderProps,
+  RequireAtLeastOne,
   ResolverFn,
-  ResolverReturnType,
+  MockModelsType,
 } from './types';
 
-export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<any, any>> {
+export class MockGQLOperations<
+  TMockGQLOperations extends MockGQLOperationsType,
+  TModels extends MockModelsType
+> {
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
   private readonly enableDevTools?: boolean;
   private readonly defaultOperationState?: string;
-  private readonly _modelsInstance: OperationModels<any>;
-  private _models: TMockGQLOperations['models'] = {};
-  private _operations: MockGQLOperationType<TMockGQLOperations['state']>['operations'] = {
+  private readonly _modelsInstance: OperationModels<TModels>;
+  private _models: OperationModelsType<TModels> = {} as OperationModelsType<TModels>;
+  private _operations: MockGQLOperationType<TMockGQLOperations>['operations'] = {
     mutation: [],
     query: [],
   };
@@ -53,13 +59,13 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     this._modelsInstance = OperationModels.getInstance();
   }
 
-  get operations(): MockGQLOperationType<TMockGQLOperations['state']>['operations'] {
+  get operations(): MockGQLOperationType<TMockGQLOperations>['operations'] {
     return this._operations;
   }
 
-  get models(): TMockGQLOperations['models'] {
-    const { models, _unsafeForceUpdateModelData } = this._modelsInstance;
-    return { ...models, _unsafeForceUpdateModelData };
+  get models(): OperationModelsType<TModels> {
+    const { models } = this._modelsInstance;
+    return models;
   }
 
   createDevtools = (): React.FC<
@@ -82,7 +88,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   };
 
   createProvider =
-    (): React.FC<MockProviderProps<TMockGQLOperations['state'], TMockGQLOperations['models']>> =>
+    (): React.FC<MockProviderProps<TMockGQLOperations, OperationModelsType<TModels>>> =>
     ({ children, Provider = ApolloProvider, loading, ...props }) => {
       const client = React.useMemo(() => {
         if (loading) {
@@ -93,10 +99,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
       return <Provider client={client}>{children}</Provider>;
     };
 
-  createModel = <K extends keyof TMockGQLOperations['state']['operation']>(
-    name: K,
-    data: NonEmptyArray<ResolverReturnType<TMockGQLOperations['state']['operation'][K]>>
-  ): void => {
+  createModel = <K extends keyof TModels>(name: K, data: NonEmptyArray<TModels[K]>): void => {
     const modelData = this._modelsInstance.createModel(name, data);
     this._models = {
       ...this._models,
@@ -104,15 +107,16 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     };
   };
 
-  query = <K extends keyof TMockGQLOperations['state']['operation']>(
+  query = <K extends keyof TMockGQLOperations['Query']>(
     name: K,
     options: CreateOperationState<
-      TMockGQLOperations['state']['operation'][K],
-      TMockGQLOperations['state']['state'][K],
-      TMockGQLOperations['models']
+      TMockGQLOperations['Query'][K]['resolver'],
+      TMockGQLOperations['Query'][K]['state'],
+      OperationModelsType<TModels>
     >
   ): void => {
     const operation = this.createOperation(name, options);
+    // @ts-ignore
     this._operationMap.query = [...this._operationMap.query, { [name]: options }];
 
     if (this._operations) {
@@ -120,15 +124,16 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     }
   };
 
-  mutation = <K extends keyof TMockGQLOperations['state']['operation']>(
+  mutation = <K extends keyof TMockGQLOperations['Mutation']>(
     name: K,
     options: CreateOperationState<
-      TMockGQLOperations['state']['operation'][K],
-      TMockGQLOperations['state']['state'][K],
-      TMockGQLOperations['models']
+      TMockGQLOperations['Mutation'][K]['resolver'],
+      TMockGQLOperations['Mutation'][K]['state'],
+      OperationModelsType<TModels>
     >
   ): void => {
     const operation = this.createOperation(name, options);
+    // @ts-ignore
     this._operationMap.mutation = [...this._operationMap.mutation, { [name]: options }];
 
     if (this._operations) {
@@ -137,19 +142,15 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   };
 
   private createOperation =
-    <K extends keyof TMockGQLOperations['state']['operation']>(
+    <K extends keyof TMockGQLOperations['Query' | 'Mutation']>(
       name: K,
       options: CreateOperationState<
-        TMockGQLOperations['state']['operation'][K],
-        TMockGQLOperations['state']['state'][K],
-        TMockGQLOperations['models']
+        TMockGQLOperations['Query' | 'Mutation'][K]['resolver'],
+        TMockGQLOperations['Query' | 'Mutation'][K]['state'],
+        OperationModelsType<TModels>
       >
-    ): OperationFn<
-      TMockGQLOperations['state']['state'],
-      any,
-      Parameters<TMockGQLOperations['state']['operation'][K]>
-    > =>
-    (scenario: Record<K, TMockGQLOperations['state']['state'][K]>) => ({
+    ) =>
+    (scenario: Record<K, TMockGQLOperations['Query' | 'Mutation'][K]['state']>) => ({
       [name]: (...args: any): ReturnType<ResolverFn<any, any, any, any>> => {
         const { defaultState, resolver } = options;
         const currentState = scenario[name]
@@ -159,9 +160,9 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
           : this.defaultOperationState;
 
         const currentStateArray: OperationStatePayload<
-          TMockGQLOperations['state']['state'][K],
-          ReturnType<TMockGQLOperations['state']['operation'][K]>,
-          TMockGQLOperations['models']
+          TMockGQLOperations['Query' | 'Mutation'][K]['resolver'],
+          ReturnType<TMockGQLOperations['Query' | 'Mutation'][K]['resolver']>,
+          OperationModelsType<TModels>
         > = typeof resolver === 'function' ? resolver(...args) : resolver;
 
         const currentStateObj = currentStateArray[currentState as keyof typeof currentStateArray];
@@ -205,7 +206,7 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
     delay,
     onResolved,
     ...rest
-  }: MockProviderProps<TMockGQLOperations['state'], TMockGQLOperations['models']> &
+  }: MockProviderProps<TMockGQLOperations, OperationModelsType<TModels>> &
     ProtectedMockedProviderProps): CreateApolloClient => ({
     mocks: {
       delay,
@@ -216,25 +217,27 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
             typeof mergeOperations === 'function' ? mergeOperations(this._models) : mergeOperations,
             operationState
           )
-        : this.createOperations(operationState),
+        : this.createOperations(
+            operationState as Partial<TMockGQLOperations['Query' | 'Mutation']['state']>
+          ),
     },
     ...rest,
   });
 
   private mapOperations = (
-    operations: OperationFn<TMockGQLOperations['state'], any, any>[],
-    state?: TMockGQLOperations['state']
+    operations: OperationFn<TMockGQLOperations['Query' | 'Mutation']['state'], any, any>[],
+    state?: TMockGQLOperations['Query' | 'Mutation']['state']
   ): MockGQLOperationsCreate<any, any> => {
-    const defaultState = (state ?? {}) as TMockGQLOperations['state'];
+    const defaultState = (state ?? {}) as TMockGQLOperations['Query' | 'Mutation']['state'];
 
     return operations.reduce<MockGQLOperationsCreate<any, any>>((operationObj, operation) => {
       const key = Object.keys(
-        operation({} as TMockGQLOperations['state'])
-      )[0] as keyof TMockGQLOperations['state'];
+        operation({} as TMockGQLOperations['Query' | 'Mutation']['state'])
+      )[0] as keyof TMockGQLOperations['Query' | 'Mutation']['state'];
       const operationState = Object.keys(defaultState) ? { [key]: defaultState[key] } : {};
 
       operationObj[key as keyof MockGQLOperationsCreate<any, any>] = operation(
-        operationState as unknown as TMockGQLOperations['state']
+        operationState as unknown as TMockGQLOperations['Query' | 'Mutation']['state']
       )[key];
 
       return operationObj;
@@ -244,23 +247,25 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
   private generateResolverKey = (key: keyof MockGQLOperationType<any>['operations']): string =>
     (key as string).charAt(0).toUpperCase() + (key as string).slice(1);
 
-  private createOperations = (state?: TMockGQLOperations['state']): IResolvers =>
+  private createOperations = (
+    state?: Partial<TMockGQLOperations['Query' | 'Mutation']['state']>
+  ): IResolvers =>
     [this._operations ?? []].reduce<IResolvers>((operationObj, operation) => {
       const keys = Object.keys(operation);
       for (const key of keys as (keyof typeof operation)[]) {
         operationObj[this.generateResolverKey(key)] = this.mapOperations(
           this._operations?.[key] ?? [],
-          state
+          state as any
         );
       }
       return operationObj;
     }, {});
 
   private mergeOperations(
-    operations: Partial<TMockGQLOperations['state']['operation']>,
+    operations: RequireAtLeastOne<MergeResolversType<TMockGQLOperations>>,
     operationState?: MockProviderProps<
-      TMockGQLOperations['state'],
-      TMockGQLOperations['models']
+      TMockGQLOperations,
+      OperationModelsType<TModels>
     >['operationState']
   ): IResolvers {
     const rootResolverTypes = (
@@ -283,7 +288,9 @@ export class MockGQLOperations<TMockGQLOperations extends MockGQLOperationsType<
       return acc;
     }, {});
 
-    const defaultOperations = this.createOperations(operationState);
+    const defaultOperations = this.createOperations(
+      operationState as Partial<TMockGQLOperations['Query' | 'Mutation']['state']>
+    );
 
     return mergeResolvers([defaultOperations, customOperations]);
   }
