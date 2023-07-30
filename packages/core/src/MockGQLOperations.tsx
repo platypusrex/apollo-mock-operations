@@ -155,9 +155,7 @@ export class MockGQLOperations<
         const { defaultState, resolver } = options;
         const currentState = scenario[name]
           ? scenario[name]
-          : defaultState
-          ? defaultState
-          : this.defaultOperationState;
+          : defaultState;
 
         const currentStateArray: OperationStatePayload<
           TMockGQLOperations['Query' | 'Mutation'][K]['resolver'],

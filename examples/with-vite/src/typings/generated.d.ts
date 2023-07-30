@@ -128,7 +128,7 @@ declare global {
 
   export type BookOperation = {
     book: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<BookOperationResult, any, any, BookOperationArgs>;
       state: 'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'GQL_ERROR' | 'LOADING';
     };
@@ -148,7 +148,7 @@ declare global {
 
   export type BooksByAuthorIdOperation = {
     booksByAuthorId: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<BooksByAuthorIdOperationResult, any, any, BooksByAuthorIdOperationArgs>;
       state: 'SUCCESS';
     };
@@ -166,7 +166,7 @@ declare global {
 
   export type BooksOperation = {
     books: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<BooksOperationResult, any, any, BooksOperationArgs>;
       state: 'SUCCESS';
     };
@@ -193,7 +193,7 @@ declare global {
 
   export type CreateUserOperation = {
     createUser: {
-      kind: 'Mutation';
+      type: 'Mutation';
       resolver: ResolverFn<CreateUserOperationResult, any, any, CreateUserOperationArgs>;
       state: 'SUCCESS' | 'GQL_ERROR';
     };
@@ -220,7 +220,7 @@ declare global {
 
   export type DeleteUserOperation = {
     deleteUser: {
-      kind: 'Mutation';
+      type: 'Mutation';
       resolver: ResolverFn<DeleteUserOperationResult, any, any, DeleteUserOperationArgs>;
       state: 'SUCCESS';
     };
@@ -247,7 +247,7 @@ declare global {
 
   export type UserOperation = {
     user: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<UserOperationResult, any, any, UserOperationArgs>;
       state: 'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'GQL_ERROR';
     };
@@ -273,7 +273,7 @@ declare global {
 
   export type UsersOperation = {
     users: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<UsersOperationResult, any, any, UsersOperationArgs>;
       state: 'SUCCESS' | 'LOADING' | 'NETWORK_ERROR' | 'GQL_ERROR';
     };

@@ -43,7 +43,7 @@ export type MockGQLOperationsConfig = {
 export type MockRootOperationsType = Record<
   string,
   {
-    kind: 'Query' | 'Mutation';
+    type: 'Query' | 'Mutation';
     resolver: ResolverFn<any, any, any, any>;
     state: string;
   }

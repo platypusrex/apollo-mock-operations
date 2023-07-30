@@ -203,7 +203,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       `'${this.defaultState}'`;
 
     const operationFields = [
-      `kind: '${selectionSetObject.operationKind}'`,
+      `type: '${selectionSetObject.operationKind}'`,
       `resolver: ${resolverFn}`,
       ...(operationState ? [`state: ${operationState}`] : []),
     ].map((field) => indent(this.getPunctuation(field)));

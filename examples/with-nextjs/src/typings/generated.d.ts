@@ -1,5 +1,104 @@
 import { GraphQLError, GraphQLResolveInfo } from 'graphql';
 declare global {
+  export type Maybe<T> = T | null;
+  export type InputMaybe<T> = Maybe<T>;
+  export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+  export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+    [SubKey in K]?: Maybe<T[SubKey]>;
+  };
+  export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+  /** All built-in and custom scalars, mapped to their actual values */
+  export type Scalars = {
+    ID: string;
+    String: string;
+    Boolean: boolean;
+    Int: number;
+    Float: number;
+  };
+
+  export type Address = {
+    __typename?: 'Address';
+    addressLineOne: Scalars['String'];
+    addressLineTwo?: Maybe<Scalars['String']>;
+    city: Scalars['String'];
+    state: Scalars['String'];
+    zip: Scalars['String'];
+  };
+
+  export type Book = {
+    __typename?: 'Book';
+    author?: Maybe<User>;
+    authorId: Scalars['ID'];
+    id: Scalars['ID'];
+    numPages: Scalars['Int'];
+    title: Scalars['String'];
+  };
+
+  export type CreateBookInput = {
+    authorId: Scalars['ID'];
+    numPages: Scalars['Int'];
+    title: Scalars['String'];
+  };
+
+  export type CreateUserInput = {
+    email: Scalars['String'];
+    name: Scalars['String'];
+  };
+
+  export type Mutation = {
+    __typename?: 'Mutation';
+    createBook: Book;
+    createUser: User;
+    deleteBook?: Maybe<Book>;
+    deleteUser?: Maybe<User>;
+  };
+
+  export type MutationCreateBookArgs = {
+    input: CreateBookInput;
+  };
+
+  export type MutationCreateUserArgs = {
+    input: CreateUserInput;
+  };
+
+  export type MutationDeleteBookArgs = {
+    id: Scalars['ID'];
+  };
+
+  export type MutationDeleteUserArgs = {
+    id: Scalars['ID'];
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+    book?: Maybe<Book>;
+    books: Array<Book>;
+    booksByAuthorId?: Maybe<Array<Book>>;
+    user?: Maybe<User>;
+    users: Array<User>;
+  };
+
+  export type QueryBookArgs = {
+    id: Scalars['ID'];
+  };
+
+  export type QueryBooksByAuthorIdArgs = {
+    authorId: Scalars['ID'];
+  };
+
+  export type QueryUserArgs = {
+    id: Scalars['ID'];
+  };
+
+  export type User = {
+    __typename?: 'User';
+    address?: Maybe<Array<Address>>;
+    books?: Maybe<Array<Book>>;
+    email: Scalars['String'];
+    id: Scalars['ID'];
+    name: Scalars['String'];
+  };
+
   export type GraphqlError = { graphQLError?: GraphQLError };
   export type NetworkError = { networkError?: Error };
   export type OperationLoading = { loading?: boolean };
@@ -29,7 +128,7 @@ declare global {
 
   export type BookOperation = {
     book: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<BookOperationResult, any, any, BookOperationArgs>;
       state: 'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'GQL_ERROR' | 'LOADING';
     };
@@ -49,7 +148,7 @@ declare global {
 
   export type BooksByAuthorIdOperation = {
     booksByAuthorId: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<BooksByAuthorIdOperationResult, any, any, BooksByAuthorIdOperationArgs>;
       state: 'SUCCESS';
     };
@@ -67,7 +166,7 @@ declare global {
 
   export type BooksOperation = {
     books: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<BooksOperationResult, any, any, BooksOperationArgs>;
       state: 'SUCCESS';
     };
@@ -94,7 +193,7 @@ declare global {
 
   export type CreateUserOperation = {
     createUser: {
-      kind: 'Mutation';
+      type: 'Mutation';
       resolver: ResolverFn<CreateUserOperationResult, any, any, CreateUserOperationArgs>;
       state: 'SUCCESS' | 'GQL_ERROR';
     };
@@ -121,7 +220,7 @@ declare global {
 
   export type DeleteUserOperation = {
     deleteUser: {
-      kind: 'Mutation';
+      type: 'Mutation';
       resolver: ResolverFn<DeleteUserOperationResult, any, any, DeleteUserOperationArgs>;
       state: 'SUCCESS';
     };
@@ -148,7 +247,7 @@ declare global {
 
   export type UserOperation = {
     user: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<UserOperationResult, any, any, UserOperationArgs>;
       state: 'SUCCESS' | 'EMPTY' | 'NETWORK_ERROR' | 'GQL_ERROR';
     };
@@ -174,7 +273,7 @@ declare global {
 
   export type UsersOperation = {
     users: {
-      kind: 'Query';
+      type: 'Query';
       resolver: ResolverFn<UsersOperationResult, any, any, UsersOperationArgs>;
       state: 'SUCCESS' | 'LOADING' | 'NETWORK_ERROR' | 'GQL_ERROR';
     };
