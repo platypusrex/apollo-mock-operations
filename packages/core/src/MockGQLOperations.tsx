@@ -153,9 +153,7 @@ export class MockGQLOperations<
     (scenario: Record<K, TMockGQLOperations['Query' | 'Mutation'][K]['state']>) => ({
       [name]: (...args: any): ReturnType<ResolverFn<any, any, any, any>> => {
         const { defaultState, resolver } = options;
-        const currentState = scenario[name]
-          ? scenario[name]
-          : defaultState;
+        const currentState = scenario[name] ? scenario[name] : defaultState;
 
         const currentStateArray: OperationStatePayload<
           TMockGQLOperations['Query' | 'Mutation'][K]['resolver'],

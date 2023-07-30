@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { parseJSON } from '../utils/parseJSON';
-import { useCookie, destroyCookie } from './hooks';
+import { useCookie } from './hooks';
 import { getInitialOperationState } from './utils';
-import { Button, OperationStateSelect, OperationSection, ToggleButton } from './components';
+import { OperationStateSelect, OperationSection, ToggleButton } from './components';
 import { Container, ContainerBody, ContainerFooter, ContainerHeader } from './styles';
 import type { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
-import { APOLLO_MOCK_MODEL_STORE_KEY, APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
+import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
 
 export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, defaultOperationState }) => {
   const apolloClient = useApolloClient();
@@ -79,11 +79,11 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
     }
   };
 
-  const handleResetStore = async () => {
-    destroyCookie(APOLLO_MOCK_MODEL_STORE_KEY);
-    await apolloClient.clearStore();
-    window.location.reload()
-  }
+  // const handleResetStore = async () => {
+  //   destroyCookie(APOLLO_MOCK_MODEL_STORE_KEY);
+  //   await apolloClient.clearStore();
+  //   window.location.reload()
+  // }
 
   return (
     <footer>
@@ -91,7 +91,7 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
       <Container visible={drawerVisible} ref={containerRef}>
         <ContainerHeader>
           <h1>Operations</h1>
-          <Button onClick={handleResetStore}>Reset store</Button>
+          {/*<Button onClick={handleResetStore}>Reset store</Button>*/}
         </ContainerHeader>
         <ContainerBody>
           {operationMap.query.length > 0 && (

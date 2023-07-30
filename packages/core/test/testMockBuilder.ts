@@ -14,16 +14,17 @@ builder.mutation('createUser', {
     GQL_ERROR: { variant: 'graphql-error', error: new GraphQLError('You broke it.') },
     SUCCESS: {
       variant: 'data',
-      data: ({ User }) => User.create({
-        data: {
-          id: (User.models.length + 1).toString(),
-          name: input.name,
-          email: input.email,
-        }
-      })
-    }
-  })
-})
+      data: ({ User }) =>
+        User.create({
+          data: {
+            id: (User.models.length + 1).toString(),
+            name: input.name,
+            email: input.email,
+          },
+        }),
+    },
+  }),
+});
 
 builder.query('user', {
   defaultState: 'SUCCESS',
@@ -42,7 +43,7 @@ builder.query('user', {
       error: ({ User }) => new Error(`${User.models[0].name} not found`),
     },
     NETWORK_ERROR: { variant: 'network-error' },
-    EMPTY: { variant: 'data', data: null }
+    EMPTY: { variant: 'data', data: null },
   }),
 });
 
