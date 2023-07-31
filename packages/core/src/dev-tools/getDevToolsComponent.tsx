@@ -8,7 +8,6 @@ import { MockedDevTools } from './ApolloMockedDevtools';
 type GetDevToolsComponentOptions<TOperations extends MockGQLOperationMap<any>> = {
   operations: TOperations;
   introspection: IntrospectionQuery;
-  defaultOperationState?: string;
   enabled?: boolean;
 };
 
@@ -17,7 +16,6 @@ type GetDevToolsComponentResponse = React.FC;
 export function getDevToolsComponent<TOperations extends MockGQLOperationMap<any>>({
   operations,
   introspection,
-  defaultOperationState,
   enabled,
 }: GetDevToolsComponentOptions<TOperations>): GetDevToolsComponentResponse {
   if (!enabled) return () => null;
@@ -67,9 +65,6 @@ export function getDevToolsComponent<TOperations extends MockGQLOperationMap<any
   };
 
   return (): React.ReactElement => (
-    <MockedDevTools
-      operationMap={operationMap}
-      defaultOperationState={defaultOperationState}
-    />
+    <MockedDevTools operationMap={operationMap} />
   );
 }

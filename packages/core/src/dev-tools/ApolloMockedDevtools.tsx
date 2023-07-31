@@ -8,7 +8,7 @@ import { Container, ContainerBody, ContainerFooter, ContainerHeader } from './st
 import type { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
 
-export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, defaultOperationState }) => {
+export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap }) => {
   const apolloClient = useApolloClient();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,7 +25,7 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
   }, [operationStateCookie]);
 
   useEffect(() => {
-    const initialState = getInitialOperationState(operationMap, defaultOperationState);
+    const initialState = getInitialOperationState(operationMap);
     setCookie(JSON.stringify(initialState));
   }, []);
 
@@ -103,7 +103,7 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
                     key={`${operation[0]}-${i}`}
                     operationName={operation[0]}
                     operationState={operation[1].options}
-                    value={parsedOperations?.query[operation[0]] ?? operation[1].defaultState ?? defaultOperationState}
+                    value={parsedOperations?.query[operation[0]] ?? operation[1].defaultState}
                     onChange={(e) => handleSetOperationState(e, 'query')}
                   />
                 );
@@ -119,7 +119,7 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap, de
                     key={`${operation[0]}-${i}`}
                     operationName={operation[0]}
                     operationState={operation[1].options}
-                    value={parsedOperations?.mutation[operation[0]] ?? operation[1].defaultState ?? defaultOperationState}
+                    value={parsedOperations?.mutation[operation[0]] ?? operation[1].defaultState}
                     onChange={(e) => handleSetOperationState(e, 'mutation')}
                   />
                 );
