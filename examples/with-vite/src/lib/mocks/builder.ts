@@ -6,7 +6,6 @@ export const mockBuilder = new MockGQLOperations<
   OperationModels
 >({
   introspectionResult,
-  defaultOperationState: 'SUCCESS',
   enableDevTools: import.meta.env.VITE_MOCK_OPERATION === 'enabled',
 });
 

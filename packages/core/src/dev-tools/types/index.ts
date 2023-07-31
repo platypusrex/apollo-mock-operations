@@ -10,7 +10,6 @@ export type OperationMap = {
 
 export type MockedDevtoolsProps = {
   operationMap: OperationMap;
-  defaultOperationState?: string;
 };
 
 export type OperationSessionState = {

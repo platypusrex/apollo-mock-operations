@@ -36,7 +36,6 @@ export type MockGQLOperationMap<TMockGQLOperations extends MockGQLOperationsType
 
 export type MockGQLOperationsConfig = {
   introspectionResult: IntrospectionQuery | any;
-  defaultOperationState?: string;
   enableDevTools?: boolean;
 };
 

@@ -36,7 +36,6 @@ export class MockGQLOperations<
 > {
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
   private readonly enableDevTools?: boolean;
-  private readonly defaultOperationState?: string;
   private readonly _modelsInstance: OperationModels<TModels>;
   private _models: OperationModelsType<TModels> = {} as OperationModelsType<TModels>;
   private _operations: MockGQLOperationType<TMockGQLOperations>['operations'] = {
@@ -48,14 +47,9 @@ export class MockGQLOperations<
     query: [],
   };
 
-  constructor({
-    introspectionResult,
-    enableDevTools,
-    defaultOperationState,
-  }: MockGQLOperationsConfig) {
+  constructor({ introspectionResult, enableDevTools }: MockGQLOperationsConfig) {
     this.introspectionResult = introspectionResult;
     this.enableDevTools = enableDevTools;
-    this.defaultOperationState = defaultOperationState;
     this._modelsInstance = OperationModels.getInstance();
   }
 
@@ -68,13 +62,10 @@ export class MockGQLOperations<
     return models;
   }
 
-  createDevtools = (): React.FC<
-    Omit<MockedDevtoolsProps, 'operationMap' | 'defaultOperationState'>
-  > => {
+  createDevtools = (): React.FC<Omit<MockedDevtoolsProps, 'operationMap'>> => {
     return getDevToolsComponent<MockGQLOperationMap<TMockGQLOperations>>({
       operations: this._operationMap,
       introspection: this.introspectionResult,
-      defaultOperationState: this.defaultOperationState,
       enabled: this.enableDevTools,
     });
   };
