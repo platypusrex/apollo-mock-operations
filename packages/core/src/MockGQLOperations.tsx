@@ -47,10 +47,7 @@ export class MockGQLOperations<
     query: [],
   };
 
-  constructor({
-    introspectionResult,
-    enableDevTools,
-  }: MockGQLOperationsConfig) {
+  constructor({ introspectionResult, enableDevTools }: MockGQLOperationsConfig) {
     this.introspectionResult = introspectionResult;
     this.enableDevTools = enableDevTools;
     this._modelsInstance = OperationModels.getInstance();
@@ -65,9 +62,7 @@ export class MockGQLOperations<
     return models;
   }
 
-  createDevtools = (): React.FC<
-    Omit<MockedDevtoolsProps, 'operationMap'>
-  > => {
+  createDevtools = (): React.FC<Omit<MockedDevtoolsProps, 'operationMap'>> => {
     return getDevToolsComponent<MockGQLOperationMap<TMockGQLOperations>>({
       operations: this._operationMap,
       introspection: this.introspectionResult,
