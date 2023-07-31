@@ -1,5 +1,13 @@
 # @apollo-mock-operations/core
 
+## 0.3.1
+
+### Patch Changes
+
+- ecf08b1: This removes the `defaultOperationState` option from the MockGQLOperations config. This
+  configuration doesn't really serve a purpose as long as the default state is a required config
+  when created query and mutation operation mocks.
+
 ## 0.3.0
 
 ### Minor Changes
