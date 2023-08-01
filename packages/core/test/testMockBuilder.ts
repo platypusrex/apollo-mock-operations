@@ -5,7 +5,6 @@ import { MockOperations, OperationModels } from './testTypes';
 
 const builder = new MockGQLOperations<MockOperations, OperationModels>({
   introspectionResult,
-  defaultOperationState: 'SUCCESS',
 });
 
 builder.mutation('createUser', {
