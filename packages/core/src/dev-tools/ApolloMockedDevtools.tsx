@@ -3,7 +3,7 @@ import { useApolloClient } from '@apollo/client';
 import { parseJSON } from '../utils/parseJSON';
 import { useCookie, useIsMounted } from './hooks';
 import { getInitialOperationState } from './utils';
-import { OperationStateSelect, OperationSection, ToggleButton, Styles } from './components';
+import { OperationStateSelect, OperationSection, ToggleButton } from './components';
 import { Container, ContainerBody, ContainerFooter, ContainerHeader } from './styles';
 import type { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
@@ -92,7 +92,6 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap }) 
 
   return (
     <footer>
-      <Styles />
       <ToggleButton ref={buttonRef} open={!drawerVisible} onClick={toggleDrawer} />
       <Container $visible={drawerVisible} ref={containerRef}>
         <ContainerHeader>
