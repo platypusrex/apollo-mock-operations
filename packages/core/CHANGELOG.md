@@ -1,5 +1,13 @@
 # @apollo-mock-operations/core
 
+## 0.3.2
+
+### Patch Changes
+
+- e30f5e8: This is a full migration from yarn to pnpm for dependency management. Also removes the
+  use of emotion for styling the dev tools component in favor of a hand rolled solution. The only
+  dependency added to support this is the lightweight css parsing lib stylis.
+
 ## 0.3.1
 
 ### Patch Changes
