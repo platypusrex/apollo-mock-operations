@@ -1,12 +1,9 @@
 name: Release
-
 on:
   push:
     branches:
       - master
-
 concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   release:
     name: Release
@@ -18,6 +15,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.2
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js 18
         uses: actions/setup-node@v2
         with:
@@ -27,19 +31,19 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules/.cache
-          key: turbo-${{ runner.os }}-18-${{ hashFiles('**/yarn.lock') }}
+          key: turbo-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install Dependencies
-        run: yarn --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
 
       - name: Create PR or Publish release
         id: changesets
         uses: changesets/action@v1
         with:
-          version: yarn ci:version
+          version: pnpm run ci:version
           commit: 'chore: update versions'
           title: 'chore: update versions'
-          publish: yarn release
+          publish: pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

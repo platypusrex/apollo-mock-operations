@@ -7,35 +7,41 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [14.x, 16.x, 18.x]
-        os: [ubuntu-latest]
+        node: [ 16.14.x, 18.x ]
+        os: [ ubuntu-latest ]
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.2
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: false
+
       - name: Use Node ${{ matrix.node }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: 'pnpm'
 
       - name: Setup turbo cache
         uses: actions/cache@v3
         with:
           path: node_modules/.cache
           key:
-            turbo-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+            turbo-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
-        with:
-          install-command: yarn --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
 
       - name: Lint
-        run: yarn lint:ci
+        run: pnpm run lint:ci
 
 #      - name: Test
-#        run: yarn test --ci --coverage --maxWorkers=2
+#        run: pnpm run test -- --maxWorkers=2
 
       - name: Build
-        run: yarn build:packages
+        run: pnpm run build:packages

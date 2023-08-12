@@ -1,9 +1,9 @@
-import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { parseJSON } from '../utils/parseJSON';
-import { useCookie } from './hooks';
+import { useCookie, useIsMounted } from './hooks';
 import { getInitialOperationState } from './utils';
-import { OperationStateSelect, OperationSection, ToggleButton } from './components';
+import { OperationStateSelect, OperationSection, ToggleButton, Styles } from './components';
 import { Container, ContainerBody, ContainerFooter, ContainerHeader } from './styles';
 import type { MockedDevtoolsProps, OperationMap, OperationSessionState } from './types';
 import { APOLLO_MOCK_OPERATION_STATE_KEY } from '../constants';
@@ -14,6 +14,7 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap }) 
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const isMounted = useIsMounted()
 
   const [operationStateCookie, setCookie] = useCookie(
     APOLLO_MOCK_OPERATION_STATE_KEY,
@@ -79,19 +80,24 @@ export const MockedDevTools: React.FC<MockedDevtoolsProps> = ({ operationMap }) 
     }
   };
 
+  // TODO: revisit and solve store reset
   // const handleResetStore = async () => {
   //   destroyCookie(APOLLO_MOCK_MODEL_STORE_KEY);
   //   await apolloClient.clearStore();
   //   window.location.reload()
   // }
 
+  // prevent rendering on the server
+  if (!isMounted) return null;
+
   return (
     <footer>
+      <Styles />
       <ToggleButton ref={buttonRef} open={!drawerVisible} onClick={toggleDrawer} />
-      <Container visible={drawerVisible} ref={containerRef}>
+      <Container $visible={drawerVisible} ref={containerRef}>
         <ContainerHeader>
           <h1>Operations</h1>
-          {/*<Button onClick={handleResetStore}>Reset store</Button>*/}
+          {/*<Button onClick={handleStoreReset}>Reset store</Button>*/}
         </ContainerHeader>
         <ContainerBody>
           {operationMap.query.length > 0 && (

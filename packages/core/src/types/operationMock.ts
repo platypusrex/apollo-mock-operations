@@ -1,7 +1,7 @@
 import type { IntrospectionQuery } from 'graphql';
 import type { AnyObject } from './util';
 import type { CreateOperationState } from './createOperation';
-import type { OperationFn, ResolverFn /*OperationState*/ } from './shared';
+import type { OperationFn, ResolverFn } from './shared';
 
 export type MockGQLOperationsCreate<TQueryOperations, TMutationOperations> = {
   Query: TQueryOperations;

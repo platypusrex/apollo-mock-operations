@@ -1,8 +1,7 @@
-import styled from '@emotion/styled';
+import { styled } from './styled';
 
-export const Container = styled.section<{ visible: boolean }>`
+export const Container = styled('section')<{ $visible: boolean }>`
   transition: height 0.2s ease-in-out, transform 0.3s ease-in-out;
-  transform: translateY(350px);
   background: #fff;
   border: 1px solid #d8d8d8;
   overflow-y: scroll;
@@ -11,39 +10,41 @@ export const Container = styled.section<{ visible: boolean }>`
   left: 0;
   right: 0;
   width: 100%;
-  height: 0;
   display: grid;
-  
-  ${({ visible }) => visible && `
+
+  ${({ $visible }) => $visible ? `
     box-shadow: 0 0 18px -9px rgba(0,0,0,0.5);
     height: 350px;
     transform: translateY(0);
+  ` : `
+    height: 0; 
+    transform: translateY(350px);
   `};
 `;
 
-export const ContainerHeader = styled.div`
+export const ContainerHeader = styled('div')`
   display: flex;
   align-items: center;
   border-bottom: 1px solid #d8d8d8;
   padding: 0.5rem 1rem;
-  
+
   h1 {
     margin: 0;
     font-size: 0.875rem;
   }
 `;
 
-export const ContainerBody = styled.div`
+export const ContainerBody = styled('div')`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   padding: 1rem;
 `;
 
-export const ContainerFooter = styled.div`
+export const ContainerFooter = styled('div')`
   padding: 26px;
 `;
 
-export const StyledButton = styled.button`
+export const StyledButton = styled('button')`
   cursor: pointer;
   color: #fff;
   background: #3f20ba;
@@ -60,7 +61,7 @@ export const StyledButton = styled.button`
   }
 `;
 
-export const Toggle = styled.button<{ open: boolean }>`
+export const Toggle = styled('button')<{ $open: boolean }>`
   cursor: pointer;
   border-radius: 50%;
   height: 45px;
@@ -70,17 +71,17 @@ export const Toggle = styled.button<{ open: boolean }>`
   left: 1rem;
   border: none;
   box-shadow: 0 1px 10px -1px rgba(0,0,0,0.25);
-  background: ${({ open }) => open ? '#3f20ba' : '#BA0F30'};
+  background: ${({ $open }) => $open ? '#3f20ba' : '#BA0F30'};
   transition: background 0.2s ease-in-out;
   z-index: 1;
-  
+
   &:hover {
-    background: ${({ open }) => open ? '#311c87' : '#AE002B'};
+    background: ${({ $open }) => $open ? '#311c87' : '#AE002B'};
     transition: background 0.2s ease-in-out;
   }
 `;
 
-export const Icon = styled.svg<{ open: boolean }>`
+export const Icon = styled('svg')<{ open: boolean }>`
   display: inline-block;
   vertical-align: -0.125em;
   fill: currentcolor;
@@ -92,14 +93,14 @@ export const Icon = styled.svg<{ open: boolean }>`
   transform: ${({ open }) => `rotate(${open ? '0deg' : '45deg'})`};
 `
 
-export const OperationSectionContainer = styled.div`
+export const OperationSectionContainer = styled('div')`
   h2 {
     margin: 0 0 0.875rem;
-    font-size: 0.875rem; 
+    font-size: 0.875rem;
   }
 `;
 
-export const OperationSelectContainer = styled.div`
+export const OperationSelectContainer = styled('div')`
   margin-block-end: 0.5rem;
   display: grid;
   align-items: center;
@@ -114,7 +115,7 @@ export const OperationSelectContainer = styled.div`
   }
 `;
 
-export const FormControl = styled.div`
+export const FormControl = styled('div')`
   display: flex;
   align-items: center;
   margin-block-end: 0.875rem;
@@ -139,10 +140,10 @@ export const FormControl = styled.div`
   }
 `;
 
-export const SelectContainer = styled.div`
+export const SelectContainer = styled('div')`
   position: relative;
-  
-  &:after {
+
+  &::after {
     content: "\203A";
     font-size: 25px;
     color: #3a3a3a;

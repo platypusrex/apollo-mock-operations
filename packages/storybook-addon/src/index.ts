@@ -9,7 +9,7 @@ interface ApolloStoryParameters<TProviderProps extends ReactComponentProps> {
 
 export interface StoryWithApollo<
   TProviderProps extends ReactComponentProps,
-  TComponentProps extends ReactComponentProps = any
+  TComponentProps extends ReactComponentProps = any,
 > extends ComponentStory<TComponentProps> {
   parameters?: ApolloStoryParameters<TProviderProps>;
 }

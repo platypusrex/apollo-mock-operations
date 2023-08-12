@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useState } from 'react';
 import { parseJSON } from '../../utils/parseJSON';
 import { useEventCallback } from './useEventCallback';
 import { useEventListener } from './useEventListener';

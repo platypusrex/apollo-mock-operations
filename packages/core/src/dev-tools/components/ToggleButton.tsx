@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from 'react';
+import React, { type MutableRefObject } from 'react';
 import { PlusIcon } from './PlusIcon';
 import { Toggle } from '../styles';
 
@@ -11,7 +11,7 @@ type ToggleButtonProps = {
 export const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProps>(
   ({ open, onClick }, ref) => (
     <Toggle
-      open={open}
+      $open={open}
       ref={ref}
       aria-label={!open ? 'close' : 'open'}
       onClick={onClick}
