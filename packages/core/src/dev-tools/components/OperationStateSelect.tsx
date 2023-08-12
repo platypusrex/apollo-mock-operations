@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { type ChangeEvent } from 'react';
 import { OperationSelectContainer, FormControl, SelectContainer } from '../styles';
 
 type OperationStateSelectProps = {
@@ -10,9 +10,9 @@ type OperationStateSelectProps = {
 
 export const OperationStateSelect: React.FC<OperationStateSelectProps> = React.memo(
   ({ operationName, operationState, value, onChange }) => (
-    <OperationSelectContainer>
-      <FormControl>
-        <SelectContainer>
+    <OperationSelectContainer id="op-select-container">
+      <FormControl id="form-control">
+        <SelectContainer id="select-container">
           <label>{operationName}</label>
           <select
             name={operationName}

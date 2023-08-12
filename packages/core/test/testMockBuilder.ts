@@ -1,7 +1,7 @@
 import { GraphQLError } from 'graphql';
 import { MockGQLOperations } from '../src';
 import introspectionResult from './introspection.json';
-import { MockOperations, OperationModels } from './testTypes';
+import { type MockOperations, OperationModels } from './testTypes';
 
 const builder = new MockGQLOperations<MockOperations, OperationModels>({
   introspectionResult,

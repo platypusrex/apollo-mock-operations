@@ -32,7 +32,7 @@ import type {
 
 export class MockGQLOperations<
   TMockGQLOperations extends MockGQLOperationsType,
-  TModels extends MockModelsType
+  TModels extends MockModelsType,
 > {
   private readonly introspectionResult: MockGQLOperationsConfig['introspectionResult'];
   private readonly enableDevTools?: boolean;
@@ -217,18 +217,21 @@ export class MockGQLOperations<
   ): MockGQLOperationsCreate<any, any> => {
     const defaultState = (state ?? {}) as TMockGQLOperations['Query' | 'Mutation']['state'];
 
-    return operations.reduce<MockGQLOperationsCreate<any, any>>((operationObj, operation) => {
-      const key = Object.keys(
-        operation({} as TMockGQLOperations['Query' | 'Mutation']['state'])
-      )[0] as keyof TMockGQLOperations['Query' | 'Mutation']['state'];
-      const operationState = Object.keys(defaultState) ? { [key]: defaultState[key] } : {};
+    return operations.reduce<MockGQLOperationsCreate<any, any>>(
+      (operationObj, operation) => {
+        const key = Object.keys(
+          operation({} as TMockGQLOperations['Query' | 'Mutation']['state'])
+        )[0] as keyof TMockGQLOperations['Query' | 'Mutation']['state'];
+        const operationState = Object.keys(defaultState) ? { [key]: defaultState[key] } : {};
 
-      operationObj[key as keyof MockGQLOperationsCreate<any, any>] = operation(
-        operationState as unknown as TMockGQLOperations['Query' | 'Mutation']['state']
-      )[key];
+        operationObj[key as keyof MockGQLOperationsCreate<any, any>] = operation(
+          operationState as unknown as TMockGQLOperations['Query' | 'Mutation']['state']
+        )[key];
 
-      return operationObj;
-    }, {} as MockGQLOperationsCreate<any, any>);
+        return operationObj;
+      },
+      {} as MockGQLOperationsCreate<any, any>
+    );
   };
 
   private generateResolverKey = (key: keyof MockGQLOperationType<any>['operations']): string =>

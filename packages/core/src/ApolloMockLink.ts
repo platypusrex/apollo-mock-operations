@@ -1,6 +1,6 @@
 import { buildClientSchema, graphql, print } from 'graphql';
 import { addMocksToSchema } from '@graphql-tools/mock';
-import { ApolloLink, FetchResult, Observable, Operation } from '@apollo/client';
+import { ApolloLink, type FetchResult, Observable, type Operation } from '@apollo/client';
 import type { IResolvers } from '@graphql-tools/utils';
 import type { CreateLinkOptions, LinkSchemaProps } from './types';
 import { getCookie } from './dev-tools/hooks';
@@ -78,7 +78,7 @@ export class ApolloMockLink extends ApolloLink {
     const apolloLinkOptions: CreateLinkOptions = {};
     if (onResolved) apolloLinkOptions.onResolved = onResolved;
 
-    return new Observable((observer) => {
+    return new Observable((observer: any) => {
       const { query, operationName, variables } = operation;
       const source = print(query);
       delay(delayMS ?? 0)

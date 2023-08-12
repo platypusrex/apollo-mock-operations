@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["esnext", "esnext.asynciterable"],
     "sourceMap": true,
-    "outDir": "./build",
+    "outDir": "./dist",
     "moduleResolution": "node",
     "declaration": true,
     "composite": false,

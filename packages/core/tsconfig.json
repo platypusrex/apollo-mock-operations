@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.options.json",
   "compilerOptions": {
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "preserveSymlinks": true
   },
   "files": [
     "test/introspection.json"
