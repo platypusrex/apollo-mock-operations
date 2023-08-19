@@ -7,42 +7,48 @@ declare global {
     [SubKey in K]?: Maybe<T[SubKey]>;
   };
   export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+  export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+    [_ in K]?: never;
+  };
+  export type Incremental<T> =
+    | T
+    | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
   /** All built-in and custom scalars, mapped to their actual values */
   export type Scalars = {
-    ID: string;
-    String: string;
-    Boolean: boolean;
-    Int: number;
-    Float: number;
+    ID: { input: string; output: string };
+    String: { input: string; output: string };
+    Boolean: { input: boolean; output: boolean };
+    Int: { input: number; output: number };
+    Float: { input: number; output: number };
   };
 
   export type Address = {
     __typename?: 'Address';
-    addressLineOne: Scalars['String'];
-    addressLineTwo?: Maybe<Scalars['String']>;
-    city: Scalars['String'];
-    state: Scalars['String'];
-    zip: Scalars['String'];
+    addressLineOne: Scalars['String']['output'];
+    addressLineTwo?: Maybe<Scalars['String']['output']>;
+    city: Scalars['String']['output'];
+    state: Scalars['String']['output'];
+    zip: Scalars['String']['output'];
   };
 
   export type Book = {
     __typename?: 'Book';
     author?: Maybe<User>;
-    authorId: Scalars['ID'];
-    id: Scalars['ID'];
-    numPages: Scalars['Int'];
-    title: Scalars['String'];
+    authorId: Scalars['ID']['output'];
+    id: Scalars['ID']['output'];
+    numPages: Scalars['Int']['output'];
+    title: Scalars['String']['output'];
   };
 
   export type CreateBookInput = {
-    authorId: Scalars['ID'];
-    numPages: Scalars['Int'];
-    title: Scalars['String'];
+    authorId: Scalars['ID']['input'];
+    numPages: Scalars['Int']['input'];
+    title: Scalars['String']['input'];
   };
 
   export type CreateUserInput = {
-    email: Scalars['String'];
-    name: Scalars['String'];
+    email: Scalars['String']['input'];
+    name: Scalars['String']['input'];
   };
 
   export type Mutation = {
@@ -62,11 +68,11 @@ declare global {
   };
 
   export type MutationDeleteBookArgs = {
-    id: Scalars['ID'];
+    id: Scalars['ID']['input'];
   };
 
   export type MutationDeleteUserArgs = {
-    id: Scalars['ID'];
+    id: Scalars['ID']['input'];
   };
 
   export type Query = {
@@ -79,24 +85,24 @@ declare global {
   };
 
   export type QueryBookArgs = {
-    id: Scalars['ID'];
+    id: Scalars['ID']['input'];
   };
 
   export type QueryBooksByAuthorIdArgs = {
-    authorId: Scalars['ID'];
+    authorId: Scalars['ID']['input'];
   };
 
   export type QueryUserArgs = {
-    id: Scalars['ID'];
+    id: Scalars['ID']['input'];
   };
 
   export type User = {
     __typename?: 'User';
     address?: Maybe<Array<Address>>;
     books?: Maybe<Array<Book>>;
-    email: Scalars['String'];
-    id: Scalars['ID'];
-    name: Scalars['String'];
+    email: Scalars['String']['output'];
+    id: Scalars['ID']['output'];
+    name: Scalars['String']['output'];
   };
 
   export type GraphqlError = { graphQLError?: GraphQLError };
@@ -115,7 +121,7 @@ declare global {
   >;
 
   export type BookOperationArgs = Exact<{
-    id: Scalars['ID'];
+    id: Scalars['ID']['input'];
   }>;
 
   export type BookOperationResult = {
@@ -135,7 +141,7 @@ declare global {
   };
 
   export type BooksByAuthorIdOperationArgs = Exact<{
-    authorId: Scalars['ID'];
+    authorId: Scalars['ID']['input'];
   }>;
 
   export type BooksByAuthorIdOperationResult = Array<{
@@ -174,7 +180,7 @@ declare global {
 
   export type CreateUserOperationArgs = Exact<{
     input: CreateUserInput;
-    includeAddress?: InputMaybe<Scalars['Boolean']>;
+    includeAddress?: InputMaybe<Scalars['Boolean']['input']>;
   }>;
 
   export type CreateUserOperationResult = {
@@ -200,8 +206,8 @@ declare global {
   };
 
   export type DeleteUserOperationArgs = Exact<{
-    id: Scalars['ID'];
-    includeAddress?: InputMaybe<Scalars['Boolean']>;
+    id: Scalars['ID']['input'];
+    includeAddress?: InputMaybe<Scalars['Boolean']['input']>;
   }>;
 
   export type DeleteUserOperationResult = {
@@ -227,8 +233,8 @@ declare global {
   };
 
   export type UserOperationArgs = Exact<{
-    id: Scalars['ID'];
-    includeAddress?: InputMaybe<Scalars['Boolean']>;
+    id: Scalars['ID']['input'];
+    includeAddress?: InputMaybe<Scalars['Boolean']['input']>;
   }>;
 
   export type UserOperationResult = {
@@ -254,7 +260,7 @@ declare global {
   };
 
   export type UsersOperationArgs = Exact<{
-    includeAddress?: InputMaybe<Scalars['Boolean']>;
+    includeAddress?: InputMaybe<Scalars['Boolean']['input']>;
   }>;
 
   export type UsersOperationResult = Array<{

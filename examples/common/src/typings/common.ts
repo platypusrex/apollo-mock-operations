@@ -6,7 +6,7 @@ import {
 } from '@apollo/client';
 
 declare global {
-  type CustomQueryResult<TData, TVariables = OperationVariables> = Omit<
+  type CustomQueryResult<TData, TVariables extends OperationVariables = OperationVariables> = Omit<
     QueryResult<TData, TVariables>,
     'data'
   >;
