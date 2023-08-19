@@ -111,6 +111,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       avoidOptionals: this.config.avoidOptionals,
       convertName: this.convertName.bind(this),
       enumPrefix: this.config.enumPrefix,
+      // @ts-ignore
+      enumSuffix: null,
       formatNamedField,
       namespacedImportName: this.config.namespacedImportName,
       scalars: this.scalars,

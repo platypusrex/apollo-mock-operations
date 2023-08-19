@@ -10,14 +10,14 @@ const config: CodegenConfig = {
       plugins: [
         {
           add: {
-            content: ['declare global {']
-          }
+            content: ['declare global {'],
+          },
         },
         {
           add: {
             placement: 'append',
-            content: '}'
-          }
+            content: '}',
+          },
         },
         'typescript',
         {
@@ -28,15 +28,14 @@ const config: CodegenConfig = {
               users: ['SUCCESS', 'LOADING', 'NETWORK_ERROR', 'GQL_ERROR'],
               user: ['SUCCESS', 'EMPTY', 'NETWORK_ERROR', 'GQL_ERROR'],
               createUser: ['SUCCESS', 'GQL_ERROR'],
-              deleteUser: ['SUCCESS']
-            }
-          }
+              deleteUser: ['SUCCESS'],
+            },
+          },
         },
       ],
-
     },
     'src/lib/mocks/introspection.json': {
-      plugins: ['introspection']
+      plugins: ['introspection'],
     },
   },
 };

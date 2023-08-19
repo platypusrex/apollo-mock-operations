@@ -7,7 +7,7 @@ import { hydrationMap } from './hydrationMap';
 const httpLink = (headers?: IncomingHttpHeaders | null) =>
   new HttpLink({
     uri: 'http://localhost:4000',
-    headers,
+    headers: (headers as Record<string, string>) ?? undefined,
   });
 
 export const { getServerSideApolloProps, useApolloClient } = new NextApolloClient<

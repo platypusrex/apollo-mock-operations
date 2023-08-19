@@ -32,6 +32,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       _namespacedImportName,
       _enumNames,
       _enumPrefix,
+      // @ts-ignore
       _enumValues,
       _applyCoercion,
       _directiveArgumentAndInputFieldMappings
@@ -119,7 +120,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
 
   protected getScalar(name: string): string {
     const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
-    return `${prefix}Scalars['${name}']`;
+    return `${prefix}Scalars['${name}']['input']`;
   }
 
   protected getDirectiveMapping(name: string): string {
