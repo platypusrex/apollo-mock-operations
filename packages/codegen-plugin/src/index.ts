@@ -9,6 +9,7 @@ import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { ApolloMockOperationsPluginConfig } from './config';
 import { TypeScriptDocumentsVisitor } from './visitor';
+import { OperationStateConfig } from './types';
 
 export const plugin: PluginFunction<ApolloMockOperationsPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
@@ -97,4 +98,4 @@ type ResolverType<TResult, TArgs> = Record<keyof TResult, ResolverFn<TResult[key
   };
 };
 
-export { TypeScriptDocumentsVisitor };
+export { TypeScriptDocumentsVisitor, OperationStateConfig };

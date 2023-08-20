@@ -1,3 +1,5 @@
+import { cosmiconfigSync } from 'cosmiconfig';
+import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import {
   GraphQLNamedType,
   GraphQLOutputType,
@@ -79,8 +81,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       schema
     );
 
-    this.operationState = config.operationState;
-    this.defaultState = config.defaultState ?? 'SUCCESS';
+    this.operationState = this.loadOperationStateFromCosmicConfigFile() ?? config.operationState;
+    this.defaultState = 'SUCCESS';
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const defaultMaybeValue = 'T | null';
     const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
@@ -189,6 +191,28 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         .withName(operationFunctionName)
         .withContent(content).string,
     };
+  };
+
+  loadOperationStateFromCosmicConfigFile = () => {
+    const moduleName = 'apolloMock';
+    const result = cosmiconfigSync(moduleName, {
+      searchPlaces: [
+        'package.json',
+        `.${moduleName}rc`,
+        `.${moduleName}rc.json`,
+        `.${moduleName}rc.yaml`,
+        `.${moduleName}rc.yml`,
+        `.${moduleName}rc.js`,
+        `.${moduleName}rc.ts`,
+        `${moduleName}.config.js`,
+        `${moduleName}.config.ts`,
+      ],
+      loaders: {
+        '.ts': TypeScriptLoader(),
+      },
+    }).search();
+
+    return result?.config?.operationState;
   };
 
   getOperationTypeDefinition = (
