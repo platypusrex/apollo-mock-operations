@@ -187,6 +187,34 @@ export interface ApolloMockOperationsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   maybeValue?: string;
-  defaultState?: string;
+  /**
+   * @description Specify the supported state for you mocked operations. If not specified, each operation will
+   * receive a default state value of 'SUCCESS'
+   * @default null
+   *
+   * @exampleMarkdown
+   * ## Allow undefined
+   * ```ts
+   * const config: CodegenConfig = {
+   *   generates: {
+   *     'src/typings/generated.d.ts': {
+   *       plugins: [
+   *         'typescript',
+   *         {
+   *           '@apollo-mock-operations/codegen-plugin': {
+   *             operationState: {
+   *               users: ['SUCCESS', 'LOADING', 'NETWORK_ERROR', 'GQL_ERROR'],
+   *               user: ['SUCCESS', 'EMPTY', 'NETWORK_ERROR', 'GQL_ERROR'],
+   *               createUser: ['SUCCESS', 'GQL_ERROR'],
+   *               deleteUser: ['SUCCESS'],
+   *             },
+   *           },
+   *         },
+   *       ],
+   *     },
+   *   },
+   * }
+   * ```
+   */
   operationState?: Record<string, string[]>;
 }

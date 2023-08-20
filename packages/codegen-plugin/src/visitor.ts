@@ -82,7 +82,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     );
 
     this.operationState = this.loadOperationStateFromCosmicConfigFile() ?? config.operationState;
-    this.defaultState = config.defaultState ?? 'SUCCESS';
+    this.defaultState = 'SUCCESS';
     const preResolveTypes = getConfigValue(config.preResolveTypes, true);
     const defaultMaybeValue = 'T | null';
     const maybeValue = getConfigValue(config.maybeValue, defaultMaybeValue);
@@ -212,16 +212,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
       },
     }).search();
 
-    if (!result) {
-      return null;
-    } else {
-      if (!result?.config?.operationState) {
-        throw new Error(
-          `The provided apolloMock config file must specify an 'operationState' object.`
-        );
-      }
-      return result.config.operationState;
-    }
+    return result?.config?.operationState;
   };
 
   getOperationTypeDefinition = (
