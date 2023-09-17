@@ -25,6 +25,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@apollo-mock-operations/cli": "^0.0.1",
     "@apollo-mock-operations/codegen-plugin": "*",
     "@apollo-mock-operations/core": "*",
     "@apollo-mock-operations/storybook-addon": "*",

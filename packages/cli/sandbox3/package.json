@@ -1,0 +1,27 @@
+{
+  "name": "sandbox3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "graphql-codegen --config codegen.ts",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "keywords": [],
+  "author": "Frank Cooke",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo-mock-operations/core": "workspace:*",
+    "gql-tag": "^1.0.1",
+    "graphql": "16.6.0"
+  },
+  "devDependencies": {
+    "@apollo-mock-operations/codegen-plugin": "workspace:*",
+    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "typescript": "^5.1.6"
+  }
+}
