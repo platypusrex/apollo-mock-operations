@@ -1,9 +1,12 @@
 import { resolve } from 'path';
 import { promises, constants } from 'fs';
-import { templates } from '../constants';
+import { templates, TemplateType } from '../constants';
 
-export const getTemplatesDir = async (template: keyof typeof templates): Promise<string> => {
-  const templateDir = resolve(__dirname, '../../templates', templates[template]);
+export const getTemplatesDir = async (
+  template: keyof typeof templates,
+  templateType: TemplateType
+): Promise<string> => {
+  const templateDir = resolve(__dirname, '../../templates', templateType, templates[template]);
 
   try {
     await promises.access(templateDir, constants.R_OK);

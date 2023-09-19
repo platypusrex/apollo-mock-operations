@@ -5,6 +5,7 @@ type CommonPrompts =
   | 'generationPath'
   | 'introspectionPath'
   | 'configFileName'
+  | 'configFileNameJS'
   | 'scriptName';
 
 export const commonPrompts: Record<CommonPrompts, PromptOptions> = {
@@ -30,6 +31,12 @@ export const commonPrompts: Record<CommonPrompts, PromptOptions> = {
     type: 'Input',
     message: 'How to name the config file?',
     initial: 'codegen.ts',
+    required: true,
+  },
+  configFileNameJS: {
+    type: 'Input',
+    message: 'How to name the config file?',
+    initial: 'codegen.js',
     required: true,
   },
   scriptName: {

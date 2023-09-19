@@ -1,5 +1,5 @@
 import { join, parse, relative } from 'path';
-import { readFile, rename, stat, writeFile } from 'fs-extra';
+import { readFile, stat, writeFile } from 'fs-extra';
 import chalk from 'chalk';
 import type { ListrTask } from 'listr2';
 import type { ListrContext } from '../../../types';
@@ -57,16 +57,16 @@ export const setupTSCoreFiles: ListrTask<ListrContext> = {
 
     for (const template of TEMPLATES) {
       const outputPath = join(outputBasePath, templates[template]);
-      await copyTemplateFiles(template, outputPath);
+      await copyTemplateFiles(template, 'ts', outputPath);
     }
 
-    try {
-      const indexFileDir = join(outputBasePath, templates.builderIndexTS);
-      const indexFilePath = join(process.cwd(), indexFileDir);
-      await rename(indexFilePath, join(process.cwd(), join(outputBasePath, 'index.ts')));
-    } catch (e) {
-      throw new Error('Error updating template name.');
-    }
+    // try {
+    //   const indexFileDir = join(outputBasePath, templates.builderIndexTS);
+    //   const indexFilePath = join(process.cwd(), indexFileDir);
+    //   await rename(indexFilePath, join(process.cwd(), join(outputBasePath, 'index.ts')));
+    // } catch (e) {
+    //   throw new Error('Error updating template name.');
+    // }
 
     const builderFileDir = join(outputBasePath, templates.builderTS);
     const filePath = join(process.cwd(), builderFileDir);

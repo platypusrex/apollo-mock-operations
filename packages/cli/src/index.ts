@@ -3,15 +3,8 @@ import packageJSON from '../package.json';
 import { cliBanner } from './messages';
 import { tasks } from './tasks';
 import { checkForTS, getPkgManager, getPkgJson } from './utils';
-import path from 'path';
 
 const program = new Command();
-
-const path1 = path.join(process.cwd(), 'src/mocking/');
-const path2 = path.join(process.cwd(), 'src/mocking/');
-
-console.log({ cwd: process.cwd(), __dirname, path1, path2 });
-console.log('relative', path.relative(path2, path1));
 
 program
   .name('create-apollo-mocks')

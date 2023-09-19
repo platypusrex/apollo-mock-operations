@@ -36,7 +36,7 @@ export const createTSCodegenConfig: ListrTask<ListrContext> = {
 
           if (ctx.codegen) ctx.codegen.scriptName = scriptName;
 
-          await copyTemplateFiles('codegen', configFileName);
+          await copyTemplateFiles('codegen', 'ts', configFileName);
           const filePath = resolve(process.cwd(), configFileName);
           let configStr = await stringifyFileData(filePath);
 

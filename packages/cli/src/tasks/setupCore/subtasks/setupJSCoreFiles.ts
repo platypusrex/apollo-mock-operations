@@ -1,12 +1,12 @@
 import { join, parse, relative } from 'path';
-import { readFile, rename, writeFile } from 'fs-extra';
+import { readFile, writeFile } from 'fs-extra';
 import chalk from 'chalk';
 import type { ListrTask } from 'listr2';
 import type { ListrContext } from '../../../types';
 import { copyTemplateFiles } from '../../../utils';
 import { templates } from '../../../constants';
 
-const TEMPLATES = ['builderJS', 'builderIndexTS'] as const;
+const TEMPLATES = ['builderJS', 'builderIndexJS'] as const;
 
 export const setupJSCoreFiles: ListrTask<ListrContext> = {
   title: 'Setting up core project files.',
@@ -35,22 +35,22 @@ export const setupJSCoreFiles: ListrTask<ListrContext> = {
 
     for (const template of TEMPLATES) {
       const outputPath = join(outputBasePath, templates[template]);
-      await copyTemplateFiles(template, outputPath);
+      await copyTemplateFiles(template, 'js', outputPath);
     }
 
-    try {
-      const indexFileDir = join(outputBasePath, templates.builderIndexTS);
-      const indexFilePath = join(process.cwd(), indexFileDir);
-      await rename(indexFilePath, join(process.cwd(), join(outputBasePath, 'index.js')));
+    // try {
+    //   // const indexFileDir = join(outputBasePath, templates.builderIndexJS);
+    //   // const indexFilePath = join(process.cwd(), indexFileDir);
+    //   // await rename(indexFilePath, join(process.cwd(), join(outputBasePath, 'index.js')));
+    //
+    //   // const builderFileDir = join(outputBasePath, templates.builderJS);
+    //   // const builderFilePath = join(process.cwd(), builderFileDir);
+    //   // await rename(builderFilePath, join(process.cwd(), join(outputBasePath, 'builder.js')));
+    // } catch (e) {
+    //   throw new Error('Error updating template name.');
+    // }
 
-      const builderFileDir = join(outputBasePath, templates.builderJS);
-      const builderFilePath = join(process.cwd(), builderFileDir);
-      await rename(builderFilePath, join(process.cwd(), join(outputBasePath, 'builder.js')));
-    } catch (e) {
-      throw new Error('Error updating template name.');
-    }
-
-    const builderFileDir = join(outputBasePath, 'builder.js');
+    const builderFileDir = join(outputBasePath, templates.builderJS);
     const filePath = join(process.cwd(), builderFileDir);
     const fileData = await readFile(filePath);
     let fileAsString = fileData.toString('utf-8');

@@ -1,7 +1,3 @@
-export const codegenClientPresetPackages = [
-  '@graphql-typed-document-node/core',
-  '@graphql-codegen/client-preset',
-];
 export const codegenPackageNames = [
   'graphql',
   '@graphql-codegen/cli',
@@ -19,22 +15,17 @@ export const codegenPackageNamesNoTS = [
 
 export const corePackages = ['@apollo-mock-operations/core'];
 
-export const codegenPlugins = ['typescript', '@apollo-mock-operations/codegen-plugin'];
-
-export const introspectionPlugin = ['introspection'];
-// export const commonPackages = {
-//   common() {
-//     '@graphql-codegen/cli',
-//   },
-//
-// };
+export type TemplateType = 'ts' | 'js';
 
 export const templates = {
   codegen: 'codegen.ts',
+  codegenJS: 'codegen.js',
   codegenIntrospection: 'codegen-introspection.ts',
   codegenNoConfig: 'codegen-no-config.ts',
+  codegenNoConfigJS: 'codegen-no-config.js',
   apolloMockConfig: 'apolloMock.config.ts',
   builderTS: 'builder.ts',
-  builderJS: 'builder-js.js',
-  builderIndexTS: 'builder-index.ts',
+  builderJS: 'builder.js',
+  builderIndexTS: 'index.ts',
+  builderIndexJS: 'index.js',
 } as const;

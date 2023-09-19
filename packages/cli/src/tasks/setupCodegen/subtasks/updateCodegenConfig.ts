@@ -5,6 +5,7 @@ import type { ListrContext } from '../../../types';
 import { codegenPackageName, commonPrompts } from '../../../messages';
 import { copyTemplateFiles, dedupArr } from '../../../utils';
 import { writeCodegenConfig } from '../utils';
+import { templates, TemplateType } from '../../../constants';
 
 export const updateCodegenConfig: ListrTask<ListrContext> = {
   title: `Updating ${codegenPackageName} config.`,
@@ -83,26 +84,34 @@ export const updateCodegenConfig: ListrTask<ListrContext> = {
     }
 
     const { pkgJson } = ctx;
-    const scriptNameFromPkgJson =
+    let scriptName =
       Object.keys(pkgJson.scripts ?? {}).find(
         (script) => pkgJson.scripts?.[script]?.includes('graphql-codegen')
       ) ?? '';
 
-    let scriptName;
-    if (!scriptNameFromPkgJson) {
+    if (!scriptName) {
       scriptName = await task.prompt<string>(commonPrompts.scriptName);
       if (!scriptName) throw new Error('The script name is required');
-      ctx.codegen.scriptName = scriptName;
     }
 
+    ctx.codegen.scriptName = scriptName;
+
     let configStr;
-    if (file.ext === '.ts') {
+    if (file.ext === '.ts' || file.ext === '.js') {
       const newConfig = inspect(config, {
         showHidden: false,
         compact: false,
         depth: null,
       });
-      await copyTemplateFiles('codegenNoConfig', `${file.name}${file.ext}`);
+
+      let templateType: TemplateType = 'ts';
+      let template: keyof typeof templates = 'codegenNoConfig';
+
+      if (file.ext === '.js') {
+        templateType = 'js';
+        template = 'codegenNoConfigJS';
+      }
+      await copyTemplateFiles(template, templateType, `${file.name}${file.ext}`);
 
       const fileData = await readFile(file.fullpath);
       configStr = fileData.toString();

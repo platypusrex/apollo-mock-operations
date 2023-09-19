@@ -16,6 +16,6 @@ export const createOperationStateConfig: ListrTask<ListrContext> = {
     }
 
     const templateFile = `${moduleName}.config.ts`;
-    await copyTemplateFiles('apolloMockConfig', templateFile);
+    await copyTemplateFiles('apolloMockConfig', 'ts', templateFile);
   },
 };
