@@ -1,6 +1,11 @@
 import type { ListrBaseClassOptions, ListrTask } from 'listr2';
 import type { ListrContext } from '../../types';
-import { installCoreDependencies, runTypeGeneration, setupJSCoreFiles, setupTSCoreFiles } from './subtasks';
+import {
+  installCoreDependencies,
+  runTypeGeneration,
+  setupJSCoreFiles,
+  setupTSCoreFiles,
+} from './subtasks';
 
 const subTaskOptions: ListrBaseClassOptions = {
   concurrent: false,
