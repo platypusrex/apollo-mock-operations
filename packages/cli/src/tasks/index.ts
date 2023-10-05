@@ -2,7 +2,6 @@ import { Listr, type ListrBaseClassOptions } from 'listr2';
 import type { ListrContext } from '../types';
 import { setupCodegen } from './setupCodegen';
 import { setupCore } from './setupCore';
-import { setupStorybook } from './setupStorybook';
 
 const listrOptions: ListrBaseClassOptions = {
   concurrent: false,
@@ -10,6 +9,6 @@ const listrOptions: ListrBaseClassOptions = {
 };
 
 export const tasks = new Listr<ListrContext>(
-  [setupCodegen, setupCore, setupStorybook],
+  [setupCodegen, setupCore],
   listrOptions
 );
