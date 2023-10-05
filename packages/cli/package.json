@@ -1,6 +1,6 @@
 {
   "name": "@apollo-mock-operations/cli",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A CLI for quickly scaffolding and initializing @apollo-mock-operations in your codebase",
   "keywords": [
     "typescript",
