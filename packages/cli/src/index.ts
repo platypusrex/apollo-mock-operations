@@ -4,7 +4,7 @@ import { cliBanner } from './messages';
 import { tasks } from './tasks';
 import { checkForTS, getPkgManager, getPkgJson } from './utils';
 
-(async function() {
+(async function () {
   const program = new Command();
   const packageJSON = await fs.readJson('./package.json');
 
@@ -32,4 +32,4 @@ import { checkForTS, getPkgManager, getPkgJson } from './utils';
   });
 
   program.parse();
-})()
+})();
