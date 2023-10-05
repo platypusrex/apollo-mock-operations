@@ -6,8 +6,6 @@ export const cliBanner = () => {
     chalk.blueBright(
       figlet.textSync('apollo mocks', {
         font: 'Small', // Graceful, JS Bracket Letters, Ogre, Retangles
-        // horizontalLayout: 'fitted',
-        // verticalLayout: 'fitted',
       })
     )
   );

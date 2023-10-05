@@ -38,18 +38,6 @@ export const setupJSCoreFiles: ListrTask<ListrContext> = {
       await copyTemplateFiles(template, 'js', outputPath);
     }
 
-    // try {
-    //   // const indexFileDir = join(outputBasePath, templates.builderIndexJS);
-    //   // const indexFilePath = join(process.cwd(), indexFileDir);
-    //   // await rename(indexFilePath, join(process.cwd(), join(outputBasePath, 'index.js')));
-    //
-    //   // const builderFileDir = join(outputBasePath, templates.builderJS);
-    //   // const builderFilePath = join(process.cwd(), builderFileDir);
-    //   // await rename(builderFilePath, join(process.cwd(), join(outputBasePath, 'builder.js')));
-    // } catch (e) {
-    //   throw new Error('Error updating template name.');
-    // }
-
     const builderFileDir = join(outputBasePath, templates.builderJS);
     const filePath = join(process.cwd(), builderFileDir);
     const fileData = await readFile(filePath);

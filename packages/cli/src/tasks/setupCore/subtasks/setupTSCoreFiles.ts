@@ -60,14 +60,6 @@ export const setupTSCoreFiles: ListrTask<ListrContext> = {
       await copyTemplateFiles(template, 'ts', outputPath);
     }
 
-    // try {
-    //   const indexFileDir = join(outputBasePath, templates.builderIndexTS);
-    //   const indexFilePath = join(process.cwd(), indexFileDir);
-    //   await rename(indexFilePath, join(process.cwd(), join(outputBasePath, 'index.ts')));
-    // } catch (e) {
-    //   throw new Error('Error updating template name.');
-    // }
-
     const builderFileDir = join(outputBasePath, templates.builderTS);
     const filePath = join(process.cwd(), builderFileDir);
     const fileData = await readFile(filePath);
