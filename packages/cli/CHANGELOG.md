@@ -1,5 +1,14 @@
 # @apollo-mock-operations/cli
 
+## 0.0.2
+
+### Patch Changes
+
+- 7a0ebc7: Fixes several minor issues:
+  - Prevents unnecessary attempt at codegen dependency installation
+  - adds type generation enforcement in core step
+  - fixes issue where fs.copyFile destination was directory and not file
+
 ## 0.0.1
 
 ### Patch Changes
