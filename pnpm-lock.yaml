@@ -3230,7 +3230,7 @@ packages:
       '@graphql-tools/utils': 10.0.5(graphql@16.6.0)
       '@whatwg-node/fetch': 0.8.8
       chalk: 4.1.2
-      cosmiconfig: 8.2.0
+      cosmiconfig: 8.3.6(typescript@5.1.6)
       debounce: 1.2.1
       detect-indent: 6.1.0
       graphql: 16.6.0
@@ -3246,7 +3246,7 @@ packages:
       string-env-interpolation: 1.0.1
       ts-log: 2.2.5
       tslib: 2.6.2
-      yaml: 2.3.1
+      yaml: 2.3.2
       yargs: 17.7.2
     transitivePeerDependencies:
       - '@types/node'
@@ -21237,7 +21237,6 @@ packages:
   /yaml@2.3.2:
     resolution: {integrity: sha512-N/lyzTPaJasoDmfV7YTrYCI0G/3ivm/9wdG0aHuheKowWQwGTsK0Eoiw6utmzAnI6pkJa0DUVygvp3spqqEKXg==}
     engines: {node: '>= 14'}
-    dev: false
 
   /yargs-parser@18.1.3:
     resolution: {integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==}

@@ -1,12 +1,21 @@
 import { join, parse, relative } from 'path';
-import { readFile, stat, writeFile } from 'fs-extra';
+import { readFile, writeFile } from 'fs-extra';
 import chalk from 'chalk';
 import type { ListrTask } from 'listr2';
 import type { ListrContext } from '../../../types';
 import { copyTemplateFiles } from '../../../utils';
 import { templates } from '../../../constants';
 
-const TEMPLATES = ['builderTS', 'builderIndexTS'] as const;
+const TEMPLATES = [
+  {
+    templateName: 'builderTS',
+    outpathFile: 'builder.ts',
+  },
+  {
+    templateName: 'builderIndexTS',
+    outpathFile: 'index.ts',
+  },
+] as const;
 
 export const setupTSCoreFiles: ListrTask<ListrContext> = {
   title: 'Setting up core project files.',
@@ -16,8 +25,12 @@ export const setupTSCoreFiles: ListrTask<ListrContext> = {
 
     const outputBasePath = await task.prompt({
       type: 'Input',
-      message: 'Where would you to setup the core files?',
+      message: 'Where would you to setup the core files? (must be a directory)',
       initial: 'src/mocking/',
+      validate: (val) => {
+        const { ext } = parse(val);
+        return !ext;
+      },
     });
 
     let typesMeta: Record<string, any> | undefined;
@@ -26,12 +39,11 @@ export const setupTSCoreFiles: ListrTask<ListrContext> = {
     if (generation?.clientPreset) {
       const clientPresetPath = generation.clientPreset.outputPath;
       const clientPresetFullPath = join(process.cwd(), clientPresetPath);
-      const stats = await stat(clientPresetFullPath);
+      const { dir, name, ext } = parse(clientPresetFullPath);
 
-      if (stats.isDirectory()) {
+      if (!ext) {
         typesMeta = { path: clientPresetFullPath, fileName: 'graphql', ext: '.ts' };
       } else {
-        const { dir, name, ext } = parse(clientPresetFullPath);
         typesMeta = { path: dir, fileName: name, ext };
       }
     }
@@ -56,8 +68,8 @@ export const setupTSCoreFiles: ListrTask<ListrContext> = {
     }
 
     for (const template of TEMPLATES) {
-      const outputPath = join(outputBasePath, templates[template]);
-      await copyTemplateFiles(template, 'ts', outputPath);
+      const outputPath = join(outputBasePath, template.outpathFile);
+      await copyTemplateFiles(template.templateName, 'ts', outputPath);
     }
 
     const builderFileDir = join(outputBasePath, templates.builderTS);

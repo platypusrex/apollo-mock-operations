@@ -20,6 +20,7 @@ import { checkForTS, getPkgManager, getPkgJson } from './utils';
       const pkgManager = await getPkgManager();
       const pkgJson = getPkgJson();
       const useTS = checkForTS(pkgJson);
+
       await tasks.run({
         pkgJson,
         pkgManager,
