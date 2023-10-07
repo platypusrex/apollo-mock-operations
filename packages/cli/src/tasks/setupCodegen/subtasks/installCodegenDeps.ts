@@ -29,7 +29,7 @@ export const installCodegenDeps: ListrTask<ListrContext> = {
     const missingCodegenDeps = requiredPackages.filter(
       (pkgName) => !codegenPackages.includes(pkgName)
     );
-    if (!missingCodegenDeps) {
+    if (!missingCodegenDeps?.length) {
       task.skip('All required dependencies are installed.');
       return;
     }

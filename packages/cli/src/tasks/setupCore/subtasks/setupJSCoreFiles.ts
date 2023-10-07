@@ -6,7 +6,16 @@ import type { ListrContext } from '../../../types';
 import { copyTemplateFiles } from '../../../utils';
 import { templates } from '../../../constants';
 
-const TEMPLATES = ['builderJS', 'builderIndexJS'] as const;
+const TEMPLATES = [
+  {
+    templateName: 'builderJS',
+    outpathFile: 'builder.ts',
+  },
+  {
+    templateName: 'builderIndexJS',
+    outpathFile: 'index.ts',
+  },
+] as const;
 
 export const setupJSCoreFiles: ListrTask<ListrContext> = {
   title: 'Setting up core project files.',
@@ -34,8 +43,8 @@ export const setupJSCoreFiles: ListrTask<ListrContext> = {
     }
 
     for (const template of TEMPLATES) {
-      const outputPath = join(outputBasePath, templates[template]);
-      await copyTemplateFiles(template, 'js', outputPath);
+      const outputPath = join(outputBasePath, template.outpathFile);
+      await copyTemplateFiles(template.templateName, 'js', outputPath);
     }
 
     const builderFileDir = join(outputBasePath, templates.builderJS);
